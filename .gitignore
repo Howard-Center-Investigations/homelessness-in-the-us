@@ -1,0 +1,87 @@
+*.vim
+.DS_Store
+
+# Data should be stored on the associated AWS
+data/
+# Preserve file structure
+# .gitkeep files allow otherwise ignored folders to be synced to the repo as empty folders
+!data/documentation/.gitkeep
+!data/html_reports/.gitkeep
+!data/source/.gitkeep
+!data/handmade/.gitkeep
+!data/processed/.gitkeep
+!data/public/.gitkeep
+
+scratch/
+!scratch/.gitkeep
+
+packrat/lib*/
+packrat/src/
+
+### Ignored RStudio junk files
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+/*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
+rsconnect/
+
+### Ignored Mac junk files
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+.Rproj.user
+*.icloud
