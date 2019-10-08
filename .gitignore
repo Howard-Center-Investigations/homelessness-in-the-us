@@ -2,7 +2,7 @@
 .DS_Store
 
 # Data should be stored on the associated AWS
-data/
+data/*
 # Preserve file structure
 # .gitkeep files allow otherwise ignored folders to be synced to the repo as empty folders
 !data/.gitkeep
@@ -13,7 +13,7 @@ data/
 !data/processed/.gitkeep
 !data/public/.gitkeep
 
-scratch/
+scratch/*
 !scratch/.gitkeep
 
 packrat/lib*/
