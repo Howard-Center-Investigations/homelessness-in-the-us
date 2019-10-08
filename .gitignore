@@ -5,6 +5,7 @@
 data/
 # Preserve file structure
 # .gitkeep files allow otherwise ignored folders to be synced to the repo as empty folders
+!data/.gitkeep
 !data/documentation/.gitkeep
 !data/html_reports/.gitkeep
 !data/source/.gitkeep
