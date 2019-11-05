@@ -1,0 +1,67 @@
+---
+title: "Untitled"
+author: "Roxanne Ready"
+always_allow_html: yes
+output: 
+  html_document:
+    toc: false
+    df_print: paged
+  md_document:
+    variant: markdown_github
+---
+
+```{r setup, include=FALSE}
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render('data/cleaning.Rmd', output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE)
+
+```
+
+```{r}
+
+#######################
+#### Load Packages ####
+#######################
+
+library(tidyverse)
+library(readxl)
+library(knitr)
+
+```
+
+
+```{r}
+
+#######################
+#### Load Data ########
+#######################
+
+load_path <- paste0(here::here(), "/data/input-data/clean/")
+  
+save_path <- paste0(here::here(), "/data/input-data/clean/")
+
+hud_pit_all <- read_csv(paste0(load_path, "hud-pit-all.csv"))
+zillow_cluster <- read_csv(paste0(load_path, "zillow-cluster.csv"))
+hud_zillow_joined <- read_csv(paste0(load_path, "hud-zillow-joined.csv"))
+
+```
+
+```{r}
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+

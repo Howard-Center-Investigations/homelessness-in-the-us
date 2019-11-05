@@ -1,0 +1,370 @@
+---
+title: "Untitled"
+author: "Roxanne Ready"
+always_allow_html: yes
+output: 
+  html_document:
+    toc: false
+    df_print: kable
+  md_document:
+    variant: markdown_github
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render('data/scripts/rox-markdown.Rmd', output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE)
+
+# Set the Knitr root directory to the project directory, which is one up from where this document is stored
+# (Does not seem to affect links outside code blocks)
+#knitr::opts_knit$set(root.dir = '../..')
+```
+
+```{r}
+# Display styling
+# Use when running calculations, but not when storing a table for future calcs b/c it turns the df into a kable object
+# Only for HTML; does not render properly in .md files. "always_allow_html" in header prevents compile failure but does not fix display issues.
+# df %>%
+#   kable() %>%
+#   kable_styling("striped", fixed_thead = T) %>%
+#   scroll_box(width = "100%", height = "500px")
+```
+
+```{r}
+
+#################
+#### Setup ######
+#################
+
+### Load Packages
+
+# Processing
+library(tidyverse) # For tidy data analysis
+library(here) # For consistent file pathing
+library(ggplot2) # For plotting
+library(aws.s3) # To access Amazon Web Services (see https://github.com/cloudyr/aws.s3)
+# Also uses tidycensus to gather list of states; must be installed not loaded
+# library(readxl) # For direct imports of Excel files
+# library(reticulate) # For accessing API calls
+
+# Presentation
+library(knitr)
+library(kableExtra)
+library(data.table)
+
+### Set system options
+
+# To prevent accidental inclusion of "e"
+options(scipen = 999) 
+
+### Set global variable paths
+load_path <- paste0(here::here(), "/data/input-data/clean/")
+save_path <- paste0(here::here(), "/data/output-data/")
+
+```
+
+```{r}
+
+#######################
+#### Load Data ########
+#######################
+
+# Housing and Urban Development data, 2011-2018
+hud_pit_all <- read_csv(paste0(load_path, "hud-pit-all.csv"))
+
+# Zillow aggregate data and clustering, 2017
+zillow_cluster <- read_csv(paste0(load_path, "zillow-cluster.csv")) %>%
+  mutate_at("coc_number", as.character) %>%
+  # Drop the useless stand-alone number
+  select(-coc_number)
+
+# Byrne crosswalk of tracts to CoCs
+crosswalk <- read_csv(paste0(load_path, "crosswalk-coc-to-tract.csv"))
+
+# American Community Survey 2016 with CoCs appended
+acs_2016 <- read_csv(paste0(here::here(), "/data/input-data/acs-downloads/acs-vars-2016.csv")) %>%
+  dplyr::rename_all(tolower) %>%
+  # Get rid of coc_codes that are NA
+  filter(!is.na(geoid)) %>%
+  right_join(crosswalk, by = c("geoid" = "tract_fips")) %>%
+  select(geoid, coc_code, coc_name, state_code, everything())
+
+# Criminalization data from Housing Not Handcuffs
+criminalization <- read_csv(paste0(load_path, "criminalization-with-cocs.csv")) %>%
+  mutate(score = round(totals/11, 2)) %>%
+  rename(coc_code = CoC)
+
+```
+
+```{r}
+
+######################################
+#### Aggregate Data into CoCs ########
+######################################
+
+# American Community Survey 2016 aggregated into CoCs
+acs_by_coc <- acs_2016 %>%
+  # Group by CoC
+  group_by(coc_code, state_code) %>%
+  # Remove variables that cannot be summed
+  select(coc_code, state_code, ends_with("_count"), ends_with("_sum")) %>%
+  # Sum counted variables
+  dplyr::summarise_if(is.numeric, sum, na.rm = TRUE) %>%
+  # Join median cols
+  left_join(acs_2016 %>%
+    select(coc_code, ends_with("median")) %>%
+    group_by(coc_code) %>%
+    # Take the median of the median columns
+    dplyr::summarise_at(vars(ends_with("median")), median, na.rm = TRUE)) %>%
+  # Join percent cols and gini index
+  left_join(acs_2016 %>%
+    select(coc_code, matches("*perc*"), ends_with("_derived")) %>%
+    group_by(coc_code) %>%
+    dplyr::summarise_at(c(vars(matches("*perc*")), vars(ends_with("_derived"))), mean, na.rm = TRUE))
+
+# American Community Survey 2016 with PIT 2017 and Zillow cluster analysis
+acs_pit_zillow <- acs_by_coc %>%
+  left_join(hud_pit_all %>%
+              select(1:5, matches("*2017"))) %>%
+  right_join(zillow_cluster) %>%
+  select(state_code, coc_code, coc_name, cluster_number_zillow_2017, everything()) %>%
+  select(-coc_number)
+
+# Criminalization data aggregated into CoCs
+criminalization_by_coc <- criminalization %>%
+  group_by(coc_code) %>%
+  # Collapse True/False values
+  summarize_if(is.logical, any) %>%
+  # Re-add total and score columns
+  mutate(total = rowSums(.[2:ncol(.)]),
+         score = round(total/11, 2))
+
+# Save criminalization by CoC
+# write_csv(criminalization_by_coc, paste0(save_path, "criminalization-by-coc.csv"))
+
+# Cleanup
+rm(acs_2016, crosswalk, criminalization)
+
+```
+
+
+```{r}
+
+#######################################
+### Criminalization across clusters ###
+#######################################
+
+# How does the criminalization score of CoCs differ across Zillow clusters?
+# Should find: Mean, median, spread of the score (for each cluster)
+
+# Create a working table combining criminalization data with zillow data
+wk <- zillow_cluster %>%
+  left_join(criminalization_by_coc %>%
+              select(coc_code, score, total)) %>%
+  select(coc_code, coc_name, score, everything())
+
+##################################################
+### Visualizations: Criminalization by Cluster ###
+##################################################
+
+# Save path for graphs
+save_graphs <- paste0(here(), "/graphs/")
+
+# Plot a series of bar charts
+wk %>%
+  filter(cluster_number_zillow_2017 %in% c(1, 2, 3), !is.na(total)) %>%
+  ggplot(aes(x = reorder(coc_code, -total), y = total)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~ cluster_number_zillow_2017, scales = "free_y") +
+  labs(y = "Criminalization Score",
+       x = "Continuum of Care",
+       title = "Criminalization of Homelessness",
+       subtitle = "by Zillow Cluster",
+       caption = "Based on findings from from Housing Not Handcuffs on whether a CoC has laws in any of 11 categories.")
+
+```
+
+
+Questions for Jim / Mallory
+
+Your top-line conclusions are clear and line up with the other studies we've read on the matter: housing density and rental affordability are the strongest predictors of homelessness. What we'd really like to do is go over some of the tables in the report to make sure our understanding of them is right. We are choosing some variables to zero in on to make data sketches of places with high homelessness, so we'd specifically like to go over the variables charts in Appendix E, and possibly get your thoughts on what you would choose if you were doing the same thing.
+
+This is not so much a formal interview as it is getting your help to understand some of the weeds of your work, so we can be confident in the work we're doing that builds off of it. Of course, if you'd like to talk about your work and your conclusions on the record while we have you, we'd welcome that as well. If there is something that, based on your research, you feel is being overlooked in the national conversation about homelessness, that would be particularly helpful for us.
+
+
+```{python}
+
+#"eviction-lab-data-downloads"
+
+```
+
+To-do:
+
+* Cluster-by-Cluster similarities in ACS data
+* get eviction data from Eviction Lab at Princeton University (AWS) (bucket: eviction-lab-data-downloads)
+
+
+```{r}
+
+test_object <-get_object("s3://eviction-lab-data-downloads/AK/all.csv")
+test_data <- read_csv(test_object) 
+rm(test_object)
+
+```
+
+```{r}
+
+#########################
+### Eviction Lab Data ###
+#########################
+
+# Uses aws.a3 package, loaded above
+# Uses tidycensus, must be installed not loaded
+# Accesses data described at https://data-downloads.evictionlab.org/
+
+# Set system environment to access AWS
+Sys.setenv("AWS_ACCESS_KEY_ID" = "AKIA5Y3NHI6ME6UP3VZV", # Replace with your own
+           "AWS_SECRET_ACCESS_KEY" = "p2b5XaWzRqo/iah1COSKNB3nslwbW91R8UHYBEf0", # Replace with your own
+           "AWS_DEFAULT_REGION" = "us-east-1")
+
+# Function to iterate over all US states to download and store tract data for each
+get_all_eviction <- function(geography = "tract", file_type = "csv", year_choice = 2016) {
+  # Store vector holding all states (borrowing the tidycensus package)
+  us <- unique(tidycensus::fips_codes$state)[1:51] 
+  # Set variable to hold path to data
+  path_to_aws <- "s3://eviction-lab-data-downloads/"
+  # Set geography variable baased on user input
+  if (geography == "block"){
+    geography_path <- "/block-groups"
+  }
+  else if (geography == "city"){
+    geography_path <- "/cities"
+  }
+  else if (geography == "county"){
+    geography_path <- "/counties"
+  }
+  else if (geography == "state"){
+    geography_path <- "/states"
+  }
+  else if (geography == "tract"){
+    geography_path <- "/tracts"
+  }
+  # If geography type is not recognized, exit with an appropriate error.
+  else{
+    stop("Geography must be \'tract\' or \'city\'.")
+  }
+  # If file type is CSV
+  if (file_type == "csv"){
+    # Set file suffix
+    file_suffix <- ".csv"
+    # Build dataframe using each element in the US states list
+    for (i in us) {
+      # If dataframe exists, append new dataframe
+      if (exists('x')) {
+        # Import next state's data
+        y <- read_csv(get_object(paste0(path_to_aws, i, geography_path, file_suffix))) %>% 
+          filter(year == year_choice) %>%
+          mutate_at('GEOID', as.character)
+        # Bind the new to the previous
+        x <- rbind(x, y) } 
+      # Else create dataframe
+      else {
+        # Import first state's data
+        x <- read_csv(get_object(paste0(path_to_aws, i, geography_path, file_suffix))) %>%
+          filter(year == year_choice) %>%
+          mutate_at('GEOID', as.character) }}
+  }
+  # If file type is JSON
+  else if (file_type == "json"){
+    # Set file suffix
+    file_suffix <- ".geojson"
+    # INCOMPLETE build GEOJSON object using each element in the US states list INCOMPLETE
+    #for (i in us) {
+      stop("Sorry, this feature is not ready yet.")
+    #}
+    
+  }
+  # If file type is not recognized, exit with an appropriate error.
+  else{
+    stop("File Type must be \'csv\' or \'json\'.")
+  }
+  
+  return(x)
+}
+
+evictions_by_tract_2016 <- get_all_eviction()
+View(evictions_by_tract_2016)
+
+
+```
+
+
+## Spreadsheet for Deb
+
+```{r}
+
+# PIT 2017 and Zillow cluster analysis
+# pit_zillow <- zillow_cluster %>%
+#   full_join(hud_pit_all %>%
+#               select(-coc_number, -coc_name) %>%
+#               select(1:3, matches("*2017")) %>%
+#               dplyr::rename_if(is.numeric, function(x) paste0("pit_", x))
+#             ) %>%
+#   select(-starts_with("cluster_"), everything())
+# 
+# write_excel_csv(pit_zillow, paste0(here(), "/data/output-data/pit-zillow.csv"))
+
+pit_zillow <- read_csv(paste0(here(), "/data/output-data/pit-zillow.csv"))
+hud_hic_all <- read_csv(paste0(here(), "/data/input-data/clean/hud-hic-all.csv"))
+eviction <- read_csv(paste0(here(), "/data/output-data/evictions-coc.csv"))
+
+pit_hic_zillow <- pit_zillow %>%
+  full_join(
+    hud_hic_all %>%
+      select(coc_code, matches("*2017")) %>%
+      dplyr::rename_if(is.numeric, function(x) paste0("hic_", x))
+  ) %>%
+  filter(!is.na(cluster_number_zillow_2017))
+
+pit_hic_zillow_eviction <- pit_hic_zillow %>%
+  select(-cluster_location, -cluster_description) %>%
+  left_join(eviction %>% select(-coc_name, -state_code)) %>%
+  # filter(cluster_number_zillow_2017 == 3)
+  select(1:3, cluster_number_zillow_2017, everything())
+
+#write_csv(pit_hic_zillow_eviction, paste0(here(), "/data/output-data/pit-hic-zillow-eviction.csv"))
+
+# crim <- read_xlsx(paste0(here(), "/data/output-data/coc-data-master-spreadsheet.xlsx"), sheet = "criminalization-by-city", col_names=TRUE) %>%
+#   inner_join(zillow_cluster %>%
+#                select(coc_code, cluster_number_zillow_2017)) %>%
+#   mutate(score = round(totals/11, 2)) %>%
+#   select(-cluster_number_zillow_2017, everything())
+# 
+# crim %>% write_csv(paste0(here(), "/data/input-data/clean/criminalization-by-city.csv"))
+
+```
+
+```{r}
+
+wk <- read_xlsx(paste0(here(), "/data/output-data/coc-data-master-spreadsheet.xlsx"), sheet = "pit_hic_zillow", skip = 1, col_names=TRUE) %>%
+  filter(cluster_number_zillow_2017 == 3) 
+  #write_csv(paste0(here(), "/data/input-data/clean/pit-hic-zillow-3.csv"))
+
+```
+
+Combine Zillow clusters with CoC-to-tract crosswalk
+
+```{r}
+
+coc_tract_crosswalk %>%
+  left_join(
+    zillow_cluster %>% select(coc_code, zillow_cluster_num = cluster_number_zillow_2017)
+  )
+
+```
+
+

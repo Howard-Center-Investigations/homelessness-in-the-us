@@ -1,0 +1,384 @@
+coc_code,coc_name,perc_change_2014_2018,rank_perc_change_2014_2018,overall_homeless_2014,overall_homeless_2018
+ca-613,imperial county coc,4.010067114093959,1,298,1493
+ca-525,el dorado county coc,2.3076923076923075,2,195,645
+ma-502,lynn coc,1.7774869109947644,3,382,1061
+ny-514,"jamestown, dunkirk/chautauqua county coc",1.7358490566037736,4,53,145
+ok-504,norman/cleveland county coc,1.6,5,140,364
+ny-513,"wayne, ontario, seneca, yates counties coc",0.9782608695652174,6,92,182
+ny-510,ithaca/tompkins county coc,0.9361702127659575,7,47,91
+md-512,hagerstown/washington county coc,0.8598130841121495,8,107,199
+ca-516,"redding/shasta, siskiyou, lassen, plumas, del norte, modoc, sierra counties coc",0.8238095238095238,9,630,1149
+co-500,colorado balance of state coc,0.823126142595978,10,2188,3989
+fl-606,naples/collier county coc,0.8088642659279779,11,361,653
+ny-507,schenectady city & county coc,0.6172839506172839,12,243,393
+ca-519,"chico, paradise/butte county coc",0.6163793103448276,13,696,1125
+ca-507,marin county coc,0.6126656848306333,14,679,1095
+or-505,oregon balance of state coc,0.5507035419699176,15,4122,6392
+nv-501,"reno, sparks/washoe county coc",0.5500650195058517,16,769,1192
+ny-519,"columbia, greene counties coc",0.53125,17,128,196
+nj-504,newark/essex county coc,0.50236008091706,18,1483,2228
+ny-516,clinton county coc,0.48120300751879697,19,133,197
+ca-503,sacramento city & county coc,0.47856267864434465,20,2449,3621
+tx-611,amarillo coc,0.4745011086474501,21,451,665
+ca-600,los angeles city & county coc,0.45247579449306546,22,34393,49955
+ar-505,southeast arkansas coc,0.44285714285714284,23,70,101
+ny-607,sullivan county coc,0.44274809160305345,24,131,189
+ny-606,rockland county coc,0.44,25,125,180
+fl-604,monroe county coc,0.4351032448377581,26,678,973
+fl-515,"panama city/bay, jackson counties coc",0.4216417910447761,27,268,381
+nc-513,chapel hill/orange county coc,0.4074074074074074,28,108,152
+md-506,carroll county coc,0.3951612903225806,29,124,173
+fl-520,"citrus, hernando, lake, sumter counties coc",0.3913894324853229,30,511,711
+or-503,central oregon coc,0.3855633802816901,31,568,787
+ny-608,kingston/ulster county coc,0.36070381231671556,32,341,464
+wa-500,seattle/king county coc,0.35344731254888817,33,8949,12112
+md-505,baltimore county coc,0.3321616871704745,34,569,758
+ma-508,lowell coc,0.33163265306122447,35,588,783
+sd-500,south dakota statewide coc,0.3096045197740113,36,885,1159
+wi-502,racine city & county coc,0.30952380952380953,37,210,275
+ca-602,"santa ana, anaheim/orange county coc",0.29272110618314634,38,3833,4955
+ca-502,"oakland, berkeley/alameda county coc",0.28651685393258425,39,4272,5496
+ny-503,albany city & county coc,0.2846153846153846,40,650,835
+md-509,frederick city & county coc,0.2845528455284553,41,246,316
+co-504,colorado springs/el paso county coc,0.2723543888433142,42,1219,1551
+md-511,mid-shore regional coc,0.2702702702702703,43,111,141
+ca-513,"visalia/kings, tulare counties coc",0.2673656618610747,44,763,967
+la-507,alexandria/central louisiana coc,0.2553191489361702,45,141,177
+ma-504,springfield/hampden county coc,0.2520446096654275,46,2690,3368
+ca-515,"roseville, rocklin/placer, nevada counties coc",0.24671916010498687,47,762,950
+pa-603,beaver county coc,0.23157894736842105,48,95,117
+al-502,florence/northwest alabama coc,0.22488038277511962,49,209,256
+va-513,"harrisburg, winchester/western virginia coc",0.22088353413654618,50,249,304
+ak-501,alaska balance of state coc,0.21156373193166886,51,761,922
+nj-516,"warren, sussex, hunterdon counties coc",0.2114695340501792,52,279,338
+ny-603,"nassau, suffolk counties coc",0.20611163080760836,53,3207,3868
+de-500,delaware statewide coc,0.2008879023307436,54,901,1082
+ca-510,"turlock, modesto/stanislaus county coc",0.17301038062283736,55,1156,1356
+tx-600,"dallas city & county, irving coc",0.17273762094479225,56,3514,4121
+ma-505,new bedford coc,0.17191977077363896,57,349,409
+or-502,"medford, ashland/jackson county coc",0.1712,58,625,732
+ut-504,provo/mountainland coc,0.1610738255033557,59,149,173
+ny-600,new york city coc,0.16024185223418375,60,67810,78676
+va-501,"norfolk/chesapeake, suffolk, isle of wight, southampton counties coc",0.15718562874251496,61,668,773
+nj-511,paterson/passaic county coc,0.15425531914893617,62,376,434
+md-510,garrett county coc,0.15384615384615385,63,13,15
+ut-503,utah balance of state coc,0.149616368286445,64,782,899
+mn-508,moorhead/west central minnesota coc,0.14953271028037382,65,214,246
+wa-508,vancouver/clark county coc,0.14388489208633093,66,695,795
+ny-602,"newburgh, middletown/orange county coc",0.14014251781472684,67,421,480
+ca-517,napa city & county coc,0.12982456140350876,68,285,322
+mi-515,monroe city & county coc,0.12972972972972974,69,185,209
+fl-506,tallahassee/leon county coc,0.12919254658385093,70,805,909
+pa-501,harrisburg/dauphin county coc,0.12373737373737374,71,396,445
+oh-503,columbus/franklin county coc,0.11957868649318464,72,1614,1807
+ny-518,"utica, rome/oneida, madison counties coc",0.11949685534591195,73,159,178
+mo-500,st. louis county coc,0.11940298507462686,74,402,450
+ca-506,"salinas/monterey, san benito counties coc",0.1137744767049291,75,2962,3299
+wv-500,"wheeling, weirton area coc",0.1134020618556701,76,97,108
+wa-503,"tacoma, lakewood/pierce county coc",0.11202185792349727,77,1464,1628
+ca-505,richmond/contra costa county coc,0.11199601791936287,78,2009,2234
+il-506,"joliet, bolingbrook/will county coc",0.10355987055016182,79,309,341
+mi-510,saginaw city & county coc,0.09846153846153846,80,325,357
+tn-510,murfreesboro/rutherford county coc,0.09689922480620156,81,258,283
+va-521,virginia balance of state coc,0.08459214501510574,82,662,718
+wa-502,spokane city & county coc,0.0835509138381201,83,1149,1245
+wa-501,washington balance of state coc,0.08212375859434683,84,5236,5666
+tx-503,austin/travis county coc,0.0805234021137393,85,1987,2147
+il-500,mchenry county coc,0.0783132530120482,86,166,179
+nh-500,new hampshire balance of state coc,0.07692307692307693,87,689,742
+pa-512,york city & county coc,0.0728476821192053,88,302,324
+ok-501,tulsa city & county coc,0.07227722772277227,89,1010,1083
+ca-501,san francisco coc,0.07006866416978777,90,6408,6857
+ak-500,anchorage coc,0.06940371456500488,91,1023,1094
+nm-500,albuquerque coc,0.0685805422647528,92,1254,1340
+oh-500,cincinnati/hamilton county coc,0.06807286673058485,93,1043,1114
+ma-515,fall river coc,0.06497175141242938,94,354,377
+az-502,"phoenix, mesa/maricopa county coc",0.06421088205474823,95,5918,6298
+il-517,"aurora, elgin/kane county coc",0.06172839506172839,96,405,430
+ca-511,stockton/san joaquin county coc,0.06108312342569269,97,1588,1685
+tx-500,san antonio/bexar county coc,0.06016597510373444,98,2892,3066
+ca-524,yuba city & county/sutter county coc,0.05371900826446281,99,726,765
+nh-501,manchester coc,0.04914004914004914,100,407,427
+tx-701,"bryan, college station/brazos valley coc",0.047872340425531915,101,188,197
+nj-506,"jersey city, bayonne/hudson county coc",0.047503045066991476,102,821,860
+nc-501,asheville/buncombe county coc,0.045283018867924525,103,530,554
+ca-526,"amador, calaveras, mariposa, tuolumne counties coc",0.041884816753926704,104,382,398
+il-509,dekalb city & county coc,0.041666666666666664,105,96,100
+nc-506,"wilmington/brunswick, new hanover, pender counties coc",0.037383177570093455,106,321,333
+ma-500,boston coc,0.03357274093870052,107,5987,6188
+ma-506,worcester city & county coc,0.031180400890868598,108,1796,1852
+mn-502,rochester/southeast minnesota coc,0.03112033195020747,109,482,497
+fl-503,"lakeland, winterhaven/polk county coc",0.029850746268656716,110,536,552
+tn-504,nashville-davidson county coc,0.02864816472694718,111,2234,2298
+ok-505,northeast oklahoma coc,0.02349869451697128,112,383,392
+or-501,"portland, gresham/multnomah county coc",0.023427552839317547,113,3927,4019
+nj-509,morris county coc,0.02313624678663239,114,389,398
+mo-603,"st. joseph/andrew, buchanan, dekalb counties coc",0.02,115,200,204
+al-507,alabama balance of state coc,0.019553072625698324,116,716,730
+ma-509,cambridge coc,0.018148820326678767,117,551,561
+ca-607,pasadena coc,0.016516516516516516,118,666,677
+ca-521,"davis, woodland/yolo county coc",0.013574660633484163,119,442,448
+pa-500,philadelphia coc,0.00871383757406762,120,5738,5788
+ca-601,san diego city and county coc,0.008229485069362802,121,8506,8576
+il-513,springfield/sangamon county coc,0.007434944237918215,122,269,271
+ar-500,little rock/central arkansas coc,0.006517690875232775,123,1074,1081
+ks-505,"overland park, shawnee/johnson county coc",0.005988023952095809,124,167,168
+id-500,boise/ada county coc,0.00398406374501992,125,753,756
+nh-502,nashua/hillsborough county coc,0.0035714285714285713,126,280,281
+ny-504,cattaragus county coc,0,127,33,33
+ne-500,nebraska balance of state coc,-0.0017857142857142857,128,560,559
+ny-500,"rochester, irondequoit, greece/monroe county coc",-0.003579952267303103,129,838,835
+va-514,"fredericksburg/spotsylvania, stafford counties coc",-0.004975124378109453,130,201,200
+tn-500,chattanooga/southeast tennessee coc,-0.006379585326953748,131,627,623
+mn-509,duluth/st.louis county coc,-0.009324009324009324,132,429,425
+ny-601,poughkeepsie/dutchess county coc,-0.009925558312655087,133,403,399
+pa-509,eastern pennsylvania coc,-0.011380504700643246,134,2021,1998
+md-504,howard county coc,-0.011764705882352941,135,170,168
+il-507,"peoria, pekin/fulton, tazewell, peoria, woodford counties coc",-0.012345679012345678,136,405,400
+ny-523,"glens falls, saratoga springs/saratoga, washington, warren, hamilton counties co",-0.019083969465648856,137,262,257
+ks-503,topeka/shawnee county coc,-0.019230769230769232,138,416,408
+md-501,baltimore coc,-0.022984028048305415,139,2567,2508
+mi-508,"lansing, east lansing/ingham county coc",-0.023310023310023312,140,429,419
+or-506,"hillsboro, beaverton/washington county coc",-0.027932960893854747,141,537,522
+mi-523,eaton county coc,-0.031746031746031744,142,126,122
+mn-505,st. cloud/central minnesota coc,-0.03789126853377265,143,607,584
+ct-505,connecticut balance of state coc,-0.039204039204039205,144,3367,3235
+ca-500,san jose/santa clara city & county coc,-0.04136381657195718,145,7567,7254
+nj-501,bergen county coc,-0.04582210242587601,146,371,354
+hi-501,honolulu city and county coc,-0.046052631578947366,147,4712,4495
+md-503,annapolis/anne arundel county coc,-0.046875,148,384,366
+mn-501,saint paul/ramsey county coc,-0.050666666666666665,149,1500,1424
+md-601,montgomery county coc,-0.05723905723905724,150,891,840
+ma-503,cape cod islands coc,-0.06036745406824147,151,381,358
+tn-503,central tennessee coc,-0.06293706293706294,152,286,268
+ma-519,"attleboro, taunton/bristol county coc",-0.06306306306306306,153,222,208
+nc-503,north carolina balance of state coc,-0.06384976525821597,154,3195,2991
+mi-504,"pontiac, royal oak/oakland county coc",-0.06564551422319474,155,457,427
+ky-500,kentucky balance of state coc,-0.06819201435621355,156,2229,2077
+ca-603,santa maria/santa barbara county coc,-0.06877729257641921,157,1832,1706
+pa-506,reading/berks county coc,-0.0695364238410596,158,604,562
+id-501,idaho balance of state coc,-0.07031828275351591,159,1351,1256
+or-500,"eugene, springfield/lane county coc",-0.07130730050933787,160,1767,1641
+ri-500,rhode island statewide coc,-0.07478991596638655,161,1190,1101
+fl-501,tampa/hillsborough county coc,-0.07664609053497942,162,1944,1795
+me-500,maine statewide coc,-0.07703595011005136,163,2726,2516
+hi-500,hawaii balance of state coc,-0.07751586582048957,164,2206,2035
+al-501,mobile city & county/baldwin county coc,-0.07859531772575251,165,598,551
+il-503,"champaign, urbana, rantoul/champaign county coc",-0.08292682926829269,166,205,188
+mn-506,northwest minnesota coc,-0.08361204013377926,167,299,274
+ca-611,"oxnard, san buenaventura/ventura county coc",-0.08403361344537816,168,1428,1308
+ca-609,san bernardino city & county coc,-0.08509719222462203,169,2315,2118
+az-500,arizona balance of state coc,-0.08798999165971642,170,2398,2187
+mi-506,"grand rapids, wyoming/kent county coc",-0.08827238335435057,171,793,723
+fl-507,"orlando/orange, osceola, seminole counties coc",-0.08917480035492457,172,2254,2053
+il-518,"rock island, moline/northwestern illinois coc",-0.09174311926605505,173,218,198
+ks-502,wichita/sedgwick county coc,-0.0919175911251981,174,631,573
+vt-500,vermont balance of state coc,-0.09250243427458617,175,1027,932
+wa-504,everett/snohomish county coc,-0.0958904109589041,176,949,858
+ok-500,north central oklahoma coc,-0.09950248756218906,177,201,181
+va-504,charlottesville coc,-0.10294117647058823,178,204,183
+ca-604,bakersfield/kern county coc,-0.10786290322580645,179,992,885
+dc-500,district of columbia coc,-0.10893133711925658,180,7748,6904
+ca-612,glendale coc,-0.1095890410958904,181,292,260
+in-503,indianapolis coc,-0.11005291005291006,182,1890,1682
+ia-500,"sioux city/dakota, woodbury counties coc",-0.1111111111111111,183,297,264
+ia-501,iowa balance of state coc,-0.11242908715832904,184,1939,1721
+ga-505,columbus-muscogee/russell county coc,-0.11538461538461539,185,312,276
+wi-500,wisconsin balance of state coc,-0.11824040347436257,186,3569,3147
+wv-503,"charleston/kanawha, putnam, boone, clay counties coc",-0.11944444444444445,187,360,317
+mo-606,missouri balance of state coc,-0.11976439790575916,188,1528,1345
+ny-508,"buffalo, niagara falls/erie, niagara, orleans, genesee, wyoming counties coc",-0.12040441176470588,189,1088,957
+in-502,indiana balance of state coc,-0.12374418034795394,190,4081,3576
+fl-510,"jacksonville-duval, clay counties coc",-0.12445095168374817,191,2049,1794
+mi-513,"marquette, alger counties coc",-0.125,192,80,70
+sc-500,charleston/low country coc,-0.12596899224806202,193,516,451
+mo-602,"joplin/jasper, newton counties coc",-0.12698412698412698,194,315,275
+ca-518,vallejo/solano county coc,-0.12818532818532818,195,1295,1129
+wv-501,"huntington/cabell, wayne counties coc",-0.12844036697247707,196,218,190
+ma-517,somerville coc,-0.12987012987012986,197,154,134
+md-513,"wicomico, somerset, worcester counties coc",-0.13095238095238096,198,336,292
+il-520,southern illinois coc,-0.13230769230769232,199,325,282
+il-510,chicago coc,-0.13313185939239702,200,6287,5450
+fl-500,"sarasota, bradenton/manatee, sarasota counties coc",-0.13435003631082063,201,1377,1192
+ne-501,"omaha, council bluffs coc",-0.1343558282208589,202,1630,1411
+ma-507,"pittsfield/berkshire, franklin, hampshire counties coc",-0.13545816733067728,203,753,651
+tn-502,knoxville/knox county coc,-0.13704994192799072,204,861,743
+ia-502,des moines/polk county coc,-0.13769751693002258,205,886,764
+ar-501,fayetteville/northwest arkansas coc,-0.1397459165154265,206,551,474
+oh-502,cleveland/cuyahoga county coc,-0.1402757964812173,207,2103,1808
+oh-505,"dayton, kettering/montgomery county coc",-0.14032869785082175,208,791,680
+pa-503,"wilkes-barre, hazleton/luzerne county coc",-0.140625,209,192,165
+ga-503,athens-clarke county coc,-0.1417004048582996,210,247,212
+tn-512,"morristown/blount, sevier, campbell, cocke counties coc",-0.14469453376205788,211,933,798
+ny-604,"yonkers, mount vernon/westchester county coc",-0.14546304957904585,212,2138,1827
+nc-500,winston-salem/forsyth county coc,-0.14563106796116504,213,515,440
+pa-505,chester county coc,-0.14727540500736377,214,679,579
+md-502,harford county coc,-0.14798206278026907,215,223,190
+mn-503,"dakota, anoka, washington, scott, carver counties",-0.14965986394557823,216,735,625
+la-505,monroe/northeast louisiana coc,-0.15,217,220,187
+mi-511,lenawee county coc,-0.15217391304347827,218,138,117
+tx-624,"wichita falls/wise, palo pinto, wichita, archer counties coc",-0.15302491103202848,219,281,238
+va-603,alexandria coc,-0.15355805243445692,220,267,226
+fl-600,miami-dade county coc,-0.15399422521655437,221,4156,3516
+wy-500,wyoming statewide coc,-0.15587846763540292,222,757,639
+va-507,portsmouth coc,-0.15625,223,160,135
+va-604,prince william county coc,-0.15955056179775282,224,445,374
+nc-507,raleigh/wake county coc,-0.15982905982905982,225,1170,983
+ut-500,salt lake city & county coc,-0.16093023255813954,226,2150,1804
+fl-601,ft lauderdale/broward county coc,-0.16196673897324657,227,2766,2318
+va-505,"newport news, hampton/virginia peninsula coc",-0.16380952380952382,228,525,439
+fl-603,"ft myers, cape coral/lee county coc",-0.16417910447761194,229,871,728
+mi-507,"portage, kalamazoo city & county coc",-0.16740088105726872,230,681,567
+mi-514,battle creek/calhoun county coc,-0.16901408450704225,231,284,236
+tx-601,"fort worth, arlington/tarrant county coc",-0.16907216494845362,232,2425,2015
+sc-503,"myrtle beach, sumter city & county coc",-0.17084282460136674,233,1317,1092
+nc-505,charlotte/mecklenberg coc,-0.1717974180734856,234,2014,1668
+ca-514,fresno city & county/madera county coc,-0.1728395061728395,235,2592,2144
+ny-512,troy/rensselaer county coc,-0.17592592592592593,236,216,178
+nj-502,burlington county coc,-0.17647058823529413,237.5,1020,840
+pa-605,erie city & county coc,-0.17647058823529413,237.5,408,336
+oh-507,ohio balance of state coc,-0.1768260641093011,239,3806,3133
+fl-605,west palm beach/palm beach county coc,-0.17982456140350878,240,1596,1309
+mo-604,"kansas city, independence, lee’s summit/jackson, wyandotte counties, mo & ks",-0.1801185590515276,241,2193,1798
+oh-501,toledo/lucas county coc,-0.18170580964153277,242,809,662
+nv-500,las vegas/clark county coc,-0.18272202069058174,243,7443,6083
+pa-510,lancaster city & county coc,-0.18473895582329317,244,498,406
+pa-502,"upper darby, chester, haverford/delaware county coc",-0.18664047151277013,245,509,414
+ms-503,gulf port/gulf coast regional coc,-0.18779342723004694,246,426,346
+nm-501,new mexico balance of state coc,-0.18833780160857908,247,1492,1211
+mn-500,minneapolis/hennepin county coc,-0.19244170463682658,248,3731,3013
+pa-511,"bristol, bensalem/bucks county coc",-0.19308943089430894,249,492,397
+va-601,fairfax county coc,-0.19428571428571428,250,1225,987
+mt-500,montana statewide coc,-0.19484240687679083,251,1745,1405
+nj-500,atlantic city & county coc,-0.19669117647058823,252,544,437
+co-503,metropolitan denver coc,-0.19694910134420782,253,6621,5317
+ok-506,southwest oklahoma regional coc,-0.200836820083682,254,239,191
+ok-502,oklahoma city coc,-0.2012153950033761,255,1481,1183
+fl-519,pasco county coc,-0.20500595947556616,256,3356,2668
+al-503,huntsville/north alabama coc,-0.208955223880597,257,536,424
+wi-503,madison/dane county coc,-0.2097812097812098,258,777,614
+ok-503,oklahoma balance of state coc,-0.21016949152542372,259,295,233
+ny-511,"binghamton, union town/broome, otsego, chenango, delaware, cortland, tioga count",-0.21035598705501618,260,309,244
+mi-503,"st. clair shores, warren/macomb county coc",-0.21282798833819241,261,343,270
+ca-608,riverside city & county coc,-0.2135823429541596,262,2945,2316
+nc-509,"gastonia/cleveland, gaston, lincoln counties coc",-0.21749408983451538,263,423,331
+tx-700,"houston, pasadena, conroe/harris, ft. bend, montgomery, counties coc",-0.2194800301431801,264,5308,4143
+il-515,south central illinois coc,-0.22033898305084745,265,118,92
+la-500,lafayette/acadiana coc,-0.22929936305732485,266,471,363
+fl-502,"st. petersburg, clearwater, largo/pinellas county coc",-0.22972574461810674,267,3391,2612
+tx-607,texas balance of state coc,-0.23182138187669718,268,9943,7638
+ga-507,savannah/chatham county coc,-0.23269961977186313,269,1315,1009
+tx-604,waco/mclennan county coc,-0.23577235772357724,270,246,188
+va-600,arlington county coc,-0.24054982817869416,271,291,221
+sc-502,columbia/midlands coc,-0.241183879093199,272,1588,1205
+nj-514,trenton/mercer county coc,-0.24208860759493672,273,632,479
+va-602,loudoun county coc,-0.24293785310734464,274,177,134
+tn-506,upper cumberland coc,-0.24561403508771928,275,342,258
+ca-522,humboldt county coc,-0.24570815450643776,276,932,703
+al-504,montgomery city & county coc,-0.24693877551020407,277,490,369
+fl-511,"pensacola/escambia, santa rosa counties coc",-0.25029655990510086,278,843,632
+nj-507,new brunswick/middlesex county coc,-0.25561097256857856,279,802,597
+la-506,slidell/southeast louisiana coc,-0.2595419847328244,280,262,194
+il-511,cook county coc,-0.2614213197969543,281,1182,873
+il-508,"east st. louis, belleville/st. clair county coc",-0.26253687315634217,282,339,250
+ga-506,marietta/cobb county coc,-0.26577437858508607,283,523,384
+nc-504,"greensboro, high point coc",-0.26755852842809363,284,897,657
+tn-501,memphis/shelby county coc,-0.26805970149253733,285,1675,1226
+mo-600,"springfield/greene, christian, webster counties coc",-0.2698170731707317,286,656,479
+ar-503,arkansas  balance of state  coc,-0.2727272727272727,287,1056,768
+nv-502,nevada balance of state coc,-0.27297297297297296,288,370,269
+md-600,prince george's county coc,-0.2746585735963581,289,659,478
+sc-501,"greenville, anderson, spartanburg/upstate coc",-0.2756723716381418,290,1636,1185
+va-502,"roanoke city & county, salem coc",-0.27954545454545454,291,440,317
+va-500,"richmond/henrico, chesterfield, hanover counties coc",-0.2801418439716312,292,846,609
+tx-603,el paso city & county coc,-0.2920634920634921,293,1260,892
+ny-505,"syracuse, auburn/onondaga, oswego, cayuga counties coc",-0.294921875,294,1024,722
+ky-501,louisville-jefferson county coc,-0.29635258358662614,295,1316,926
+oh-504,youngstown/mahoning county coc,-0.296875,296,256,180
+ks-507,kansas balance of state coc,-0.297628156082632,297,1307,918
+ca-504,"santa rosa, petaluma/sonoma county coc",-0.2977027660571964,298,4266,2996
+mo-501,st.louis city coc,-0.29911373707533234,299,1354,949
+mi-505,flint/genesee county coc,-0.3102362204724409,300,635,438
+ct-503,"bridgeport, stamford, norwalk/fairfield county coc",-0.3157894736842105,301,1083,741
+ca-606,long beach coc,-0.31592403214024833,302,2738,1873
+pa-601,western pennsylvania coc,-0.3206176203451408,303,1101,748
+al-500,"birmingham/jefferson, st. clair, shelby counties coc",-0.3220466516177577,304,1329,901
+il-502,"waukegan, north chicago/lake county coc",-0.32273838630806845,305,409,277
+nj-513,somerset county coc,-0.32507739938080493,306,323,218
+vt-501,burlington/chittenden county coc,-0.325187969924812,307,532,359
+oh-506,"akron, barberton/summit county coc",-0.3252873563218391,308,870,587
+ca-520,merced city & county coc,-0.3307291666666667,309,768,514
+mi-518,livingston county coc,-0.3333333333333333,310,135,90
+pa-504,"lower merion, norristown, abington/montgomery county coc",-0.3356164383561644,311,438,291
+ma-511,"quincy, brockton, weymouth, plymouth city and county coc",-0.3365794278758369,312,1643,1090
+md-507,cecil county coc,-0.3384615384615385,313,195,129
+md-500,cumberland/allegany county coc,-0.3416666666666667,314,120,79
+ca-508,watsonville/santa cruz city & county coc,-0.3425899688296968,315,3529,2320
+la-509,louisiana balance of state coc,-0.3436073059360731,316,876,575
+ny-522,"jefferson, lewis, st. lawrence counties coc",-0.35570469798657717,317,149,96
+mi-501,detroit coc,-0.35789473684210527,318,2755,1769
+ga-500,atlanta coc,-0.3587658953512612,319,4797,3076
+tn-507,jackson/west tennessee coc,-0.3591505309181761,320,1601,1026
+az-501,tucson/pima county coc,-0.3666819642037632,321,2179,1380
+il-516,decatur/macon county coc,-0.37109375,322,256,161
+ca-509,mendocino county coc,-0.3732193732193732,323,1404,880
+il-501,"rockford/winnebago, boone counties coc",-0.375609756097561,324,410,256
+fl-514,ocala/marion county coc,-0.3769063180827887,325,918,572
+or-507,clackamas county coc,-0.3802588996763754,326,618,383
+ca-512,daly/san mateo county coc,-0.3883399209486166,327,2024,1238
+il-504,madison county coc,-0.39166666666666666,328,240,146
+tn-509,appalachian regional coc,-0.3979933110367893,329,598,360
+fl-508,"gainesville/alachua, putnam counties coc",-0.3980891719745223,330,1256,756
+la-503,new orleans/jefferson parish coc,-0.40030287733467945,331,1981,1188
+mi-500,michigan balance of state coc,-0.40390590324012426,332,2253,1343
+fl-509,"fort pierce/st. lucie, indian river, martin counties coc",-0.4048629872636048,333,2591,1542
+mo-503,"st. charles city & county, lincoln, warren counties coc",-0.40625,334,896,532
+mi-512,"grand traverse, antrim, leelanau counties coc",-0.4065656565656566,335,396,235
+nj-503,"camden city & county/gloucester, cape may, cumberland counties coc",-0.41061946902654867,336,1695,999
+ma-516,massachusetts balance of state coc,-0.4112820512820513,337,3900,2296
+ms-501,mississippi balance of state coc,-0.4129979035639413,338,954,560
+mi-519,holland/ottawa county coc,-0.4160206718346253,339,387,226
+wi-501,milwaukee city & county coc,-0.418945963975984,340,1499,871
+il-512,bloomington/central illinois coc,-0.42152466367713004,341,669,387
+la-502,"shreveport, bossier/northwest louisiana coc",-0.42748091603053434,342,655,375
+ga-504,augusta-richmond county coc,-0.4300847457627119,343,472,269
+nj-508,monmouth county coc,-0.4302721088435374,344,588,335
+nc-511,fayetteville/cumberland county coc,-0.43032159264931086,345,653,372
+nj-510,lakewood township/ocean county coc,-0.4354066985645933,346,627,354
+pa-508,scranton/lackawanna county coc,-0.445993031358885,347,287,159
+va-503,virginia beach coc,-0.44772727272727275,348,440,243
+ok-507,southeastern oklahoma regional coc,-0.4479638009049774,349,442,244
+ne-502,lincoln coc,-0.4605263157894737,350,836,451
+ny-520,"franklin, essex counties coc",-0.46153846153846156,351,78,42
+ms-500,"jackson/rankin, madison counties coc",-0.4728132387706856,352,846,446
+nc-516,northwest north carolina coc,-0.47423887587822017,353,854,449
+oh-508,"canton, massillon, alliance/stark county coc",-0.4764595103578154,354,531,278
+mi-509,washtenaw county coc,-0.48256880733944957,355,545,282
+va-508,lynchburg coc,-0.4909090909090909,356,220,112
+pa-600,"pittsburgh, mckeesport, penn hills/allegheny county coc",-0.5022250476795931,357,1573,783
+fl-513,"palm bay, melbourne/brevard county coc",-0.5030467163168585,358,1477,734
+ga-501,georgia balance of state coc,-0.5077207337996569,359,7577,3730
+ma-510,"gloucester, haverhill, salem/essex county coc",-0.50773369199731,360,1487,732
+ca-523,"colusa, glenn, trinity counties coc",-0.527336860670194,361,567,268
+wv-508,west virginia balance of state coc,-0.5306427503736921,362,1338,628
+ca-614,san luis obispo county coc,-0.5371935756551142,363,2366,1095
+mi-502,"dearborn, dearborn heights, westland/wayne county coc",-0.5372807017543859,364,456,211
+il-519,west central illinois coc,-0.5379310344827586,365,145,67
+fl-518,"columbia, hamilton, lafayette, suwannee counties coc",-0.5392523364485982,366,1070,493
+ny-501,"elmira/steuben, allegany, livingston, chemung, schuyler counties coc",-0.544921875,367,512,233
+il-514,dupage county coc,-0.5489296636085627,368,654,295
+mn-504,northeast minnesota coc,-0.55,369,200,90
+ky-502,lexington-fayette county coc,-0.5563471502590673,370,1544,685
+md-508,"charles, calvert, st.mary's counties coc",-0.5687992988606485,371,1141,492
+nd-500,north dakota statewide coc,-0.5691573926868044,372,1258,542
+fl-504,"daytona beach, daytona/volusia, flagler counties coc",-0.5817513778322106,373,1633,683
+nc-502,durham city & county coc,-0.5832305795314426,374,811,338
+mn-511,southwest minnesota coc,-0.6388888888888888,375,180,65
+mi-517,jackson city & county coc,-0.6625,376,240,81
+fl-517,"hendry, hardee, highlands counties coc",-0.663447251114413,377,1346,453
+fl-602,punta gorda/charlotte county coc,-0.6790606653620352,378,511,164
+fl-505,"fort walton beach/okaloosa, walton counties coc",-0.6861128725428028,379,1577,495
+nj-515,elizabeth/union county coc,-0.7153067301965456,380,1679,478
+mi-516,"norton shores, muskegon city & county coc",-0.7277397260273972,381,584,159
+fl-512,st. johns county coc,-0.7558886509635975,382,1401,342
+al-506,tuscaloosa city & county coc,-0.7673469387755102,383,245,57

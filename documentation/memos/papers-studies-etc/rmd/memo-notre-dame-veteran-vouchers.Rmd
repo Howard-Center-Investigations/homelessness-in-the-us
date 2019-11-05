@@ -1,0 +1,99 @@
+---
+title: "Memo - AJPH Vouchers Impact on Veteran Homelessness"
+author: "Theresa Diffendal"
+date: "9/18/2019"
+always_allow_html: yes
+output: 
+  html_document:
+    toc: false
+    df_print: paged
+  md_document:
+    variant: markdown_github
+---
+
+```{r setup, include=FALSE}
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render('documentation/memos/ajph-vouchers-veterans-memo.Rmd', output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE)
+
+# Set the Knitr root directory to the project directory, which is one up from where this document is stored
+# (Does not seem to affect links outside code blocks)
+knitr::opts_knit$set(root.dir = '../..')
+```
+
+# Memo - AJPH Vouchers Impact on Veteran Homelessness, 2007–2017
+
+* Paper name: "Housing and Urban Development–Veterans Affairs Supportive Housing Vouchers and Veterans’ Homelessness, 2007–2017", American Journal of Public Health, Vol 109, Issue 10
+* [Source](https://ajph.aphapublications.org/doi/10.2105/AJPH.2019.305231)
+* Organization: The Wilson Sheehan Lab for Economic Opportunities at the University of Notre Dame, Notre Dame, IN, and the National Bureau of Economic Research, Cambridge, MA
+* Authors: 
+  * William N. Evans, Department of Economics and the Wilson Sheehan Lab for Economic Opportunities at the University of Notre Dame, Notre Dame, IN, and the National Bureau of Economic Research, Cambridge, MA. 
+    *Contact: William N. Evans, 3111 Jenkins Nanovic Halls, Department of Economics, University of Notre Dame, Notre Dame, IN 46556 (e-mail: wevans1@nd.edu)
+  * Sarah Kroeger, Caroline Palmer, and Emily Pohl, the Wilson Sheehan Lab for Economic Opportunities, University of Notre Dame
+
+
+## Background
+
+* HUD-VASH [Housing and Urban Development–Veterans Affairs Supportive Housing] was started in 1992 for homeless veterans suffering from psychiatric and substance abuse disorders. It was expanded in 2008 as part of the Obama administration's fight to end veteran homelessness, which was a response to veterans returning from Iraq and Afghanistan. 
+  * From 2010 to 2017, veteran homelessness rates dropped 46%, or 33,000. In that same time, overall homelessness fell 15%, or 93,000
+* The program has funded 87,864 vouchers as of 2017
+  * However, the number of distributed vouchers only accounts for one-third of the total decline in homeless veterans. p. 1441
+  * Voucher expansion also coincided with recovery from the Great Recession. Veteran unemployment rates dropped almost 50% from 2010 to 2017, from 9.8% to 4.7% p. 1441
+  * There are also simply fewer veterans. However, post-9/11 veterans are using VA medical services and experience problems such as mental illness and PTSD at a far greater rate than their predecessors. 1441
+* In the voucher program, veterans are responsible for paying up to 30% of their income and the voucher covers the rest. In the event of limited vouchers, priority is given to chronically homeless veterans or those with dependant children. 
+* The vouchers are permanent and transferable.
+* "90% of vochers lead to housing. 80% of recipients are chronically homeless and 56% come from unsheltered arrangements" p. 1440
+
+
+## Objectives
+
+* "To determine what role the 88,000 Housing and Urban Development–Veterans Affairs Supportive Housing (HUD-VASH) vouchers for permanent supportive housing among US veterans distributed between 2008 and 2017 played in the significant fall in veterans’ homelessness over the same time period." p. 1440
+
+
+## Methodology
+
+* Using COC level data from 2007-2017, "correlated changes in vouchers with permanent supportive housing units and measures of homelessness." p. 1440
+* "For the cumulative vouchers received at the local level, we used the share of the nation’s homeless veterans from the local level in the year before the HUD-VASH program multiplied by the cumulative number of vouchers distributed at the national level up to that point." p. 1440
+* Used four sets of data:
+  * annual point-in-time estimates of the homeless population - at CoC level
+  * annual Housing Inventory Count Report of resources devoted to fighting homelessness - at CoC level
+  * counts of HUD-VASH grants distributed to public housing authorities
+  * control variables used in our regression models
+    * We created a crosswalk to match public housing authorities to Continuums of Care and Continuums of Care to counties
+* Due to when vouchers are distributed (starting in October) versus when the PIT counts occur (January), "we matched homelessness data for calendar year t to voucher data as of fiscal year t–1" p. 1442
+
+
+## Defining CoCs
+
+* "In 2007, there were 461 Continuums of Care in the US and its territories. By 2017, this number had fallen to 397."
+* To combat the issue of CoCs combining over time, the study joined the all the data for the merged CoCs from before they merged to the present
+  * "First, some Continuums of Care have merged over time. In these situations, we merge the pre-merger Continuums of Care together to obtain a consistent level of data for all years. For example, IN-500 (St. Joseph County) and IN-502 (Balance of State) merged in 2017. As a result, we merge the data for these two Continuums of Care for all previous years. The annual PIT estimates referenced above has a summary of all Continuum of Care mergers over time that assists this analysis."
+* If multiple CoCs are contained within a single county, the CoCs were combined into one:
+  * "For example, Los Angeles has four separate Continuums of Care: CA-600 (Los Angeles County), CA-606 (Long Beach), CA-607 (Pasadena) and CA-612 (Glendale). We pool this these four Continuums of Care into a new Continuum of Care that we label as CA-801. Likewise, GA-500 (Atlanta) and GA-507 (DeKalb County) both provide services inside DeKalb county and hence were pooled into a new Continuum of Care defined as GA-800."
+  * "As another example, we pool MD-501 (Baltimore City) and MD-505 (Baltimore County) into one Continuum of Care."
+* "Sometimes service areas for multiple Continuums of Care overlap requiring that we pool Continuums of Care together...Maps of service areas for each Continuum of Care by year serve as a guide for this exercise. These maps are available on the HUD Exchange web page, https://www.hudexchange.info/programs/coc/coc-dashboard-reports/."
+* "This exercise left us with 350 Continuums of Care defined consistently over the period 2007- 2017. These Continuums of Care represent 98 percent of the nation’s population homeless counts in 2017."
+  * "This exercise produced two mappings. The first is one that links current Continuum of Care ID numbers into a Continuum of Care number we use for pooling purposes. Next, we produced a mapping of county FIPS codes into the new Continuum of Care ID number. Both of these mapping are available from the authors on request."
+
+
+## Results
+
+* "For each additional voucher, permanent supportive housing units increased by 0.9 and the number of homeless veterans decreased by 1." p. 1440
+* "We employed an instrumental variables procedure and estimated that the addition of 1 HUD-VASH voucher increased permanent supportive housing beds within that area by 0.9, reduced veterans’ homeless by slightly more than 1, and reduced chronic homelessness by 0.7" p. 1441
+* "Ror each additional HUD-VASH voucher awarded to a local area, sheltered homeless counts fell by 0.49, the unsheltered fell by 0.59, and both estimates are statistically significant. These results indicate that 45% of the reduction in veterans’ homelessness was coming from the sheltered population (−0.486/−1.08) while 55% was coming from the unsheltered homeless (−0.594/−1.08)" p. 1443-1444
+* Conclusion: "Our results indicate the HUD-VASH program worked as intended and veterans’ homelessness would have risen substantially over the past decade without the program" p. 1440
+  * "We estimated that in the absence of HUD-VASH the homeless veteran population would have reached nearly 130,000 by 2017 instead of the observed 40,000" p. 1444
+
+
+## Implications
+
+* " In recent years, the program has been especially vulnerable to funding cuts. In 2017, the Secretary of the VA proposed to cut 460 million dollars from the program and the program. The White House proposed budget for fiscal year 2020 decreased the funding for all housing voucher contract renewals by $200 million and cut funding for new VASH vouchers from 44 million dollars in 2019 to zero.27,28 Congress eventually passed a budget that maintained 2019 funding at 2018 levels.29 In conjunction with ongoing research into the cost-effectiveness of permanent supportive housing, this study will provide evidence on the program’s efficacy that could directly inform both the US Congress and the Executive Branch" p. 1445-1446
+
+
+## Further Research
+
+* "Permanent supportive housing has been cited as a way to reduce the increased costs on the health care and criminal justice system caused by high rates of chronic homelessness. However, the evidence that permanent supportive housing improves health outcomes or reduces medical costs is inconclusive" p. 1445
+* "APHA and the housing provider community have recommended the Housing First approach to combat the wide-ranging health issues of homeless individuals. This is because of the fact that the public health problems faced by individuals who experience chronic homelessness cannot be effectively treated until their housing stability is secured: **housing is understood to be a prerequisite to recovery**" p. 1445
+  * Other questions remain about permanent supportive housing-type interventions p. 1445 

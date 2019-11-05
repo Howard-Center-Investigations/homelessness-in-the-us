@@ -1,0 +1,399 @@
+---
+title: "Preliminary Analysis"
+author: "Theresa Diffendal, Sean Mussenden, Roxanne Ready"
+date: "8/27/2019"
+always_allow_html: yes
+output: 
+  md_document:
+    variant: markdown_github
+  html_document:
+    toc: false
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render('documentation/memos/initial-analysis-memo.Rmd', output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE)
+
+# Set the Knitr root directory to the project directory, which is one up from where this document is stored
+# (Does not seem to affect links outside code blocks)
+knitr::opts_knit$set(root.dir = '../..')
+```
+
+```{r include=FALSE}
+#######################
+#### Load Packages ####
+#######################
+
+library(tidyverse)
+library(janitor)
+library(readxl)
+library(knitr)
+library(kableExtra)
+
+##############################
+##### VARIABLES ##############
+##############################
+
+load_path <- paste0(here::here(), "/data/input-data/")
+
+save_path <- paste0(here::here(), "/documentation/memos/output-csvs/")
+
+##############################
+##### LOAD DATA ##############
+##############################
+
+# Load and join Point in Time (PIT) homeless counts from HUD 2007-2018
+hud_pit_14_18 <- read_xlsx(paste0(load_path, "2007-2018-PIT-Counts-by-CoC.xlsx"), sheet = 1, col_names=TRUE) %>% # 2018
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 2, col_names=TRUE), by="CoC Number") %>% # 2017
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 3, col_names=TRUE), by="CoC Number") %>% # 2016
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 4, col_names=TRUE), by="CoC Number") %>% # 2015
+  left_join(read_xlsx(paste0(load_path, "2007-2018-PIT-Counts-by-CoC.xlsx"), sheet = 5, col_names=TRUE), by=c("CoC Number", "CoC Name")) %>% # 2014
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 6, col_names=TRUE), by="CoC Number") %>% # 2013
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 7, col_names=TRUE), by="CoC Number") %>% # 2012
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 8, col_names=TRUE), by="CoC Number") %>% # 2011
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 9, col_names=TRUE), by="CoC Number") %>% # 2010
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 10, col_names=TRUE), by="CoC Number") %>% # 2009
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 11, col_names=TRUE), by="CoC Number") %>% # 2008
+  # left_join(read_xlsx("./data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 12, col_names=TRUE), by="CoC Number") %>% # 2007
+  # Clean up column names
+  janitor::clean_names() %>%
+  rename_all(~stringr::str_replace_all(., "co_c", "coc")) %>%
+  rename(coc_code = coc_number) %>%
+  # Clean up stray "."s
+  naniar::replace_with_na_all(condition = ~.x == ".") %>%
+  # Convert all numeric cols to numeric
+  mutate_at(vars(4:125), as.numeric) %>%
+  # Standardize all characters to lowercase
+  mutate_if(is.character, tolower) %>%
+  # Add col to designate state
+  separate(coc_code, sep = "-", into = c("state_code", "coc_number"), remove = F) 
+
+# Load Zillow's cluster analysis file from 2017
+zillow_cluster <- read_csv("./data/input-data/CoC_Cluster.csv") %>%
+  # Clean up column names
+  janitor::clean_names() %>%
+  rename_all(~stringr::str_replace_all(., "co_c", "coc")) %>%
+  rename(coc_code = coc_number) %>%
+  # Clean up stray "."s
+  naniar::replace_with_na_all(condition = ~.x == ".") %>%
+  # Convert all numeric cols to numeric
+  mutate_at(vars(3:8), as.numeric) %>%
+  # Standardize all characters to lowercase
+  mutate_if(is.character, tolower) %>%
+  # Append year to numeric cols for clarity
+  dplyr::rename_if(is.numeric, function(x) paste0(x, "_cluster_2017")) %>%
+  # Add col to designate state
+  separate(coc_code, sep = "-", into = c("state_code", "coc_number"), remove = F) 
+
+# Join cluster analyses of 2017 with HUD PIT data for rate estimates
+hud_pit_zillow_cluster <- hud_pit_14_18 %>%
+  full_join(zillow_cluster, by= c("coc_code", "state_code", "coc_number")) %>%
+  select(state_code, coc_code, coc_name = coc_name.x, overall_homeless_2014, overall_homeless_2018, coc_total_population_cluster_2017, estimated_homeless_rate_percent_cluster_2017) %>%
+  mutate(# Change in overall homelessness 
+         overall_change_2014_2018 = overall_homeless_2018 -  overall_homeless_2014,
+         overall_pct_change_2014_2018 = (overall_homeless_2018 -  overall_homeless_2014)/overall_homeless_2014,
+         # Rates of homelessness for 2014 and 2018 based on available 2017 population numbers
+         homeless_rate_2014 = overall_homeless_2014/coc_total_population_zillow_2017*100,
+         homeless_rate_2018 = overall_homeless_2018/coc_total_population_zillow_2017*100,
+         # Change in homelessness rates
+         overall_pct_pt_change_2014_2018 = homeless_rate_2018 - homeless_rate_2014
+         )
+
+```
+
+## Introduction
+
+### Purpose of this memo
+
+This memo includes code and results from a preliminary exploration of the data for use by field reporters in narrowing their initial reporting. Accompanying this memo are four .csv files for use by the reporters. They can be found [here](https://github.com/shardsofblue/homelessness-project-fall2019/tree/master/documentation/memos/output-csvs) (Click the file, right-click "Raw", choose "Save Link As", and change the file extention from ".txt" to ".csv").
+
+### Definitions
+
+* **Continuum of Care**: "A Continuum of Care (CoC) is a regional or local planning body that coordinates housing and services funding for homeless families and individuals," (The 2018 Annual Homeless Assessment Report to Congress p. 2). CoCs are not consistent in size, shape or population.
+
+### Important caveats
+
+**Findings herein are preliminary estimates and should not be published.** Please bear the following caveats in mind when reviewing this memo:
+
+1. Methods of counting the population of people experiencing homelessness may have changed over the years, which may have caused flucutations in counts that do not reflect actual changes.
+2. Because we do not have estimates for the total population of CoCs for 2014 and 2018 yet, we used an available 2017 population estimate to calculate rates of change in the homeless population at 2014 and 2018. These rates are therefore only rough estimations, to be perfected when we have more accurate overall population data.
+3. D.C. is a consistent outlier in statewide groupings because, unlike most other state groups, it includes only one city, and cities generally have higher rates of homelessness that rural areas.
+4. Some Continuums of Care have changed over the years, merging together or into new CoCs. The following CoCs have known issues during the period covered here, having merged with other CoCs: CT-502, CT-506, CT-503, CT-508, CT-512, CT-505, FL-516, FL-503, MA-513, MA-516, MA-520, MA-511, NJ-518, NJ-503, NY-509, NY-502, NY-505, NY-517, 	NY-508, PA-507, PA-509, PA-602, PA-601, TX-703, TX-607, IN-500, IN-502, LA-504, LA-509, MA-518, MA-516, ME-502, ME-500, AR-512, AR-503, LA-508, LA-509, WA-507, WA-501.
+
+## Findings
+
+### Fact: Highest rates of homelessness by Continuum of Care 2017
+
+To find the rate of homelessness for an area, we divided the count of people experiencing homelessness for a given year by the total population in 2017 (the only year for which we have this data at the CoC level). 
+
+In 2017, Mendocino County's CoC had the nation's highest rate of homelessness, at 2 percent, followed by Washington, D.C. (1.2 percent).  
+
+Five of the top 10 were in California (Mendocino County, Santa Cruz area, San Francisco, Monterey area, Imperial County).  Other areas with high rates: Boston, New York City, Atlanta and the Florida Keys (Monroe County).
+
+#### Supporting code and output
+
+**Rates of Homelessness by CoC, Highest to Lowest**
+```{r, rows.print=20}
+
+# CoCs by estimated homeless percent 2017, highest to lowest
+zillow_cluster %>%
+  select(state_code, coc_code, estimated_homeless_rate_percent_cluster_2017, coc_total_population_cluster_2017, coc_name) %>%
+  arrange(desc(estimated_homeless_rate_percent_cluster_2017)) %>%
+  mutate(rank_rate = rank(desc(estimated_homeless_rate_percent_cluster_2017), ties.method= "first")) %>%
+  write_csv(paste0(save_path, "rates-of-homelessness-by-coc.csv")) %>%
+  kable(caption = "Rates of Homelessness by CoC, Highest to Lowest") %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+
+**Rates of Homelessness by CoC, Lowest to Highest**
+```{r, rows.print=20}
+
+# CoCs by estimated homeless percent 2017, lowest to highest
+zillow_cluster %>%
+  select(state_code, coc_code, estimated_homeless_rate_percent_cluster_2017, coc_total_population_cluster_2017, coc_name) %>%
+  arrange(estimated_homeless_rate_percent_cluster_2017) %>%
+  mutate(rank_rate = rank(desc(estimated_homeless_rate_percent_cluster_2017), ties.method= "first")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+**Counts of CoCs in the Top 10**
+```{r}
+# How many of the top 10 were from each state?
+zillow_cluster %>%
+  select(state_code, coc_code, est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017) %>%
+  arrange(desc(est_rate_perc_2017)) %>%
+  top_n(10) %>%
+  select(state_code) %>%
+  group_by(state_code) %>%
+  summarize(count_coc = n()) %>%
+  arrange(desc(count_coc)) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "350px")
+
+```
+
+### Fact: Highest rates of homelessness by state
+
+To generate an overview by state, we averaged homelessness rates in all CoCs within a state together. _See Caveat #2 above._
+
+Washington, D.C., followed by Hawaii, California and Oregon had highest average rates of homelessness. Illinois, Louisiana and Mississippi had the lowest. 
+
+#### Supporting code and output
+
+**Rates of Homelessness by State, Highest to Lowest**
+```{r, rows.print=20}
+
+# Homelessness rates by state 2017, highest to lowest
+zillow_cluster %>%
+  select(state_code, coc_name, coc_total_population_cluster_2017, est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017) %>%
+  na.omit() %>%
+  group_by(state_code) %>%
+  summarise(mean_homeless_rate = mean(est_rate_perc_2017),
+            total_pop_2017 = sum(coc_total_population_cluster_2017)) %>%
+  arrange(desc(mean_homeless_rate)) %>%
+  mutate(rank_rate = rank(desc(mean_homeless_rate), ties.method= "first")) %>%
+  select(rank_rate, everything()) %>%
+  write_csv(paste0(save_path, "rates-of-homelessness-by-state.csv")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+**Rates of Homelessness by State, Lowest to Highest**
+```{r, rows.print=20}
+
+# Homelessness rates by state 2017, highest to lowest
+zillow_cluster %>%
+  select(state_code, coc_name, coc_total_population_cluster_2017, est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017, coc_total_population_cluster_2017) %>%
+  na.omit() %>%
+  group_by(state_code) %>%
+  summarise(mean_homeless_rate = mean(est_rate_perc_2017),
+            total_pop_2017 = sum(coc_total_population_cluster_2017)) %>%
+  arrange(mean_homeless_rate) %>%
+  mutate(rank_rate = rank(desc(mean_homeless_rate), ties.method= "first")) %>%
+  select(rank_rate, everything()) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+### Fact: Percent increases/decreases per CoC ROUGH ESTIMATE
+
+_See Caveat #2 above._
+
+We calculated the rates of homelessness in 2014 and 2018 for CoCs compared to total population estimates from 2017. This rough calculation shows that by percentage, Imperial County, CA; El Dorado County, CA; Lynn, Massachusetts and Norman/Cleveland County, Oklahoma had the highest overall increases, while tuscaloosa city & county, AL; elizabeth/union county, NJ; Fort Walton Beach/Okaloosa, Walton Counties, FL and Punta Gorda/Charlotte County, FL had the greatest decreases. _These are only rough estimates for use in preliminary reporting and should not be used in final stories._
+
+
+#### Supporting code and output
+
+**Percent Homeless Increase by CoC, Highest to Lowest**
+```{r, rows.print = 20}
+# Calculate ROUGH percent change by CoC
+hud_pit_14_18 %>%
+  left_join(zillow_cluster, by= c("coc_code", "state_code", "coc_number", "coc_name")) %>%
+  select(state_code, coc_code, coc_name, overall_homeless_2014, overall_homeless_2018, coc_total_population_cluster_2017, est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017) %>%
+  mutate(homeless_rate_2014 = overall_homeless_2014/coc_total_population_cluster_2017*100,
+         homeless_rate_2018 = overall_homeless_2018/coc_total_population_cluster_2017*100,
+         overall_pct_change_2014_2018 = (overall_homeless_2018 -  overall_homeless_2014)/overall_homeless_2014
+         ) %>%
+  na.omit() %>%
+  arrange(desc(overall_pct_change_2014_2018)) %>%
+  select(state_code, coc_code, coc_name, overall_pct_change_2014_2018, homeless_rate_2014, homeless_rate_2018, coc_total_population_cluster_2017) %>%
+  write_csv(paste0(save_path, "homelessness-increases-by-coc.csv")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+```
+
+**Percent Homeless Increase by CoC, Lowest to Highest**
+```{r, rows.print = 20}
+# Calculate ROUGH percent change by CoC
+hud_pit_14_18 %>%
+  left_join(zillow_cluster, by= c("coc_code", "state_code", "coc_number", "coc_name")) %>%
+  select(state_code, coc_code, coc_name, overall_homeless_2014, overall_homeless_2018, coc_total_population_cluster_2017, est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017, coc_total_population_cluster_2017) %>%
+  mutate(homeless_rate_2014 = overall_homeless_2014/coc_total_population_cluster_2017*100,
+         homeless_rate_2018 = overall_homeless_2018/coc_total_population_cluster_2017*100,
+         overall_pct_change_2014_2018 = (overall_homeless_2018 -  overall_homeless_2014)/overall_homeless_2014,
+         ) %>%
+  na.omit() %>%
+  arrange(overall_pct_change_2014_2018) %>%
+  select(state_code, coc_code, coc_name, overall_pct_change_2014_2018, homeless_rate_2014, homeless_rate_2018, coc_total_population_cluster_2017) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+```
+
+**Counts of CoCs in the Top 10 Greatest Increases**
+```{r, rows.print = 20}
+# How many were from each state?
+hud_pit_14_18 %>%
+  # Top 10
+  left_join(zillow_cluster, by= c("coc_code", "state_code", "coc_number", "coc_name")) %>%
+  select(state_code, coc_name, overall_homeless_2014, overall_homeless_2018, coc_total_population_cluster_2017, est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017) %>%
+  # Compare homeless counts at given years to total population in 2017
+  mutate(homeless_rate_2014 = overall_homeless_2014/coc_total_population_cluster_2017*100,
+         homeless_rate_2018 = overall_homeless_2018/coc_total_population_cluster_2017*100,
+          # Change in overall homelessness
+         overall_pct_change_2014_2018 = (overall_homeless_2018 - overall_homeless_2014)/overall_homeless_2014
+         ) %>%
+  na.omit() %>%
+  arrange(desc(overall_pct_change_2014_2018)) %>%
+  mutate(rank = rank(desc(overall_pct_change_2014_2018))) %>%
+  filter(between(rank, 1, 10)) %>%
+  group_by(state_code) %>%
+  summarize(count_coc_top = n()) %>%
+  select(state_code, count_coc_top) %>%
+  # Bottom 10
+  full_join(
+    hud_pit_14_18 %>%
+    left_join(zillow_cluster, by= c("coc_code", "state_code", "coc_number", "coc_name")) %>%
+    select(state_code, coc_name, overall_homeless_2014, overall_homeless_2018, coc_total_population_cluster_2017, est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017) %>%
+    mutate(homeless_rate_2014 = overall_homeless_2014/coc_total_population_cluster_2017*100,
+           homeless_rate_2018 = overall_homeless_2018/coc_total_population_cluster_2017*100,
+           overall_pct_change_2014_2018 = (overall_homeless_2018 - overall_homeless_2014)/overall_homeless_2014
+           ) %>%
+    na.omit() %>%
+    arrange(desc(overall_pct_change_2014_2018)) %>%
+    mutate(rank = rank(overall_pct_change_2014_2018)) %>%
+    filter(between(rank, 1, 10)) %>%
+    group_by(state_code) %>%
+    summarize(count_coc_bottom = n()) %>%
+    select(state_code, count_coc_bottom) 
+  ) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+### Fact: Percent increases/decreases per state ROUGH ESTIMATE
+
+_See Caveat #2 above._
+
+We calculated the rates of homelessness in 2014 and 2018 compared to total population estimates from 2017. This rough calculation shows that by percentage, South Dakota, Colorado and Delaware had the highest overall increases, while North Dakota, Mississippi and Kentucky had the greatest decreases. _These are only rough estimates for use in preliminary reporting and should not be used in final stories._
+
+#### Supporting code and output
+
+**Percent Homeless Increase by State, Highest to Lowest**
+```{r, rows.print=20}
+
+# Calculate ROUGH percent change by state
+hud_pit_zillow_cluster %>%
+  select(state_code, coc_name, 
+         overall_homeless_2014, overall_homeless_2018, 
+         coc_total_population_cluster_2017, 
+         overall_pct_change_2014_2018, 
+         est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017) %>%
+  na.omit() %>%
+  # Group by states
+  group_by(state_code) %>%
+  # Average the changes for statewide average change
+  summarize(
+    mean_overall_homeless_2014 = mean(overall_homeless_2014),
+    mean_overall_homeless_2018 = mean(overall_homeless_2018),
+    mean_overall_pct_change_2014_2018 = mean(overall_pct_change_2014_2018),
+    total_pop_2017 = sum(coc_total_population_cluster_2017)
+  ) %>%
+  #mutate(test = (mean_homeless_rate_2018 - mean_homeless_rate_2014) / mean_homeless_rate_2014) %>%
+  arrange(desc(mean_overall_pct_change_2014_2018)) %>%
+  mutate(rank = rank(desc(mean_overall_pct_change_2014_2018), ties.method= "first")) %>%
+  select(rank, state_code, mean_overall_pct_change_2014_2018, mean_overall_homeless_2014, mean_overall_homeless_2018, total_pop_2017) %>%
+  write_csv(paste0(save_path, "homelessness-increases-by-state.csv")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+**Percent Homeless Increase by State, Lowest to Highest**
+```{r, rows.print=20}
+
+# Calculate ROUGH percent change by state
+hud_pit_zillow_cluster %>%
+  select(state_code, coc_name, 
+         overall_homeless_2014, overall_homeless_2018, 
+         coc_total_population_cluster_2017, 
+         overall_pct_change_2014_2018, 
+         est_rate_perc_2017 = estimated_homeless_rate_percent_cluster_2017) %>%
+  na.omit() %>%
+  # Group by states
+  group_by(state_code) %>%
+  # Average the changes for statewide average change
+  summarize(
+    mean_overall_homeless_2014 = mean(overall_homeless_2014),
+    mean_overall_homeless_2018 = mean(overall_homeless_2018),
+    mean_overall_pct_change_2014_2018 = mean(overall_pct_change_2014_2018),
+    total_pop_2017 = sum(coc_total_population_cluster_2017)
+  ) %>%
+  #mutate(test = (mean_homeless_rate_2018 - mean_homeless_rate_2014) / mean_homeless_rate_2014) %>%
+  arrange(mean_overall_pct_change_2014_2018) %>%
+  mutate(rank = rank(desc(mean_overall_pct_change_2014_2018), ties.method= "first")) %>%
+  select(rank, state_code, mean_overall_pct_change_2014_2018, mean_overall_homeless_2014, mean_overall_homeless_2018, total_pop_2017) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+
+
+
+
+
+
+
+
+

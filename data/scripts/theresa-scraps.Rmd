@@ -1,0 +1,584 @@
+---
+title: "theresa-scraps"
+author: "Theresa Diffendal"
+date: "10/2/2019"
+always_allow_html: yes
+output: 
+  html_document:
+    toc: false
+    df_print: paged
+  md_document:
+    variant: markdown_github
+---
+
+```{r setup, include=FALSE}
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render('data/cleaning.Rmd', output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE)
+
+```
+
+```{r}
+
+#######################
+#### Load Packages ####
+#######################
+
+library(tidyverse)
+library(readxl)
+library(knitr)
+
+```
+
+
+```{r}
+
+#######################
+#### Load Data ########
+#######################
+
+load_path <- paste0(here::here(), "/data/input-data/clean/")
+  
+save_path <- paste0(here::here(), "/data/input-data/clean/")
+
+hud_pit_all <- read_csv(paste0(load_path, "hud-pit-all.csv"))
+zillow_cluster <- read_csv(paste0(load_path, "zillow-cluster.csv"))
+hud_zillow_joined <- read_csv(paste0(load_path, "hud-zillow-joined.csv"))
+
+```
+
+## Load Data
+
+Load HUD Point in Time Counts from 2007 to 2018
+
+```{r}
+
+#Point in Time Homeless Counts from HUD 2007-2018
+
+Seven_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 12, col_names=TRUE)
+Eight_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 11, col_names=TRUE)
+Nine_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 10, col_names=TRUE)
+Ten_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 9, col_names=TRUE)
+Eleven_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 8, col_names=TRUE)
+Twelve_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 7, col_names=TRUE)
+Thirteen_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 6, col_names=TRUE)
+Fourteen_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 5, col_names=TRUE)
+Fifteen_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 4, col_names=TRUE)
+Sixteen_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 3, col_names=TRUE)
+Seventeen_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 2, col_names=TRUE)
+Eighteen_PIT_Counts <- read_xlsx("./input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 1, col_names=TRUE)
+
+```
+
+## Joining PIT Counts
+
+```{r}
+# List of CoCs that have merged over the years, according to 2007-2018-PIT-Counts-by-CoC.xlsx "CoC Mergers" sheet
+problematic_cocs <- c("CT-502", "CT-506", "CT-503", "CT-508", "CT-512", "CT-505", "FL-516", "FL-503", "MA-513", "MA-516", "MA-520", "MA-511", "NJ-518", "NJ-503", "NY-509", "NY-502", "NY-505", "NY-517", "NY-508", "PA-507", "PA-509", "PA-602", "PA-601", "TX-703", "TX-607", "IN-500", "IN-502", "LA-504", "LA-509", "MA-518", "MA-516", "ME-502", "ME-500", "AR-512", "AR-503", "LA-508", "LA-509", "WA-507", "WA-501") %>%
+  lapply(tolower)
+
+#Join all years together into one data table
+
+eighteen_to_seventeen_pit <- left_join(x=Eighteen_PIT_Counts, y=Seventeen_PIT_Counts, by="CoC Name")
+eighteen_to_sixteen_pit <- left_join(x=eighteen_to_seventeen_pit, y=Sixteen_PIT_Counts, by="CoC Name")
+eighteen_to_fifteen_pit <- left_join(x=eighteen_to_sixteen_pit, y=Fifteen_PIT_Counts, by="CoC Name")
+eighteen_to_fourteen_pit <- left_join(x=eighteen_to_fifteen_pit, y=Fourteen_PIT_Counts, by="CoC Name")
+eighteen_to_thirteen_pit <- left_join(x=eighteen_to_fourteen_pit, y=Thirteen_PIT_Counts, by="CoC Name")
+eighteen_to_twelve_pit <- left_join(x=eighteen_to_thirteen_pit, y=Twelve_PIT_Counts, by="CoC Name")
+eighteen_to_eleven_pit <- left_join(x=eighteen_to_twelve_pit, y=Eleven_PIT_Counts, by="CoC Name")
+eighteen_to_ten_pit <- left_join(x=eighteen_to_eleven_pit, y=Ten_PIT_Counts, by="CoC Name")
+eighteen_to_nine_pit <- left_join(x=eighteen_to_ten_pit, y=Nine_PIT_Counts, by="CoC Name")
+eighteen_to_eight_pit <- left_join(x=eighteen_to_nine_pit, y=Eight_PIT_Counts, by="CoC Name")
+eighteen_to_seven_pit <- left_join(x=eighteen_to_eight_pit, y=Seven_PIT_Counts, by="CoC Name")
+
+#Create and save dataframe with all PIT Counts
+PIT_counts_all_coc <- eighteen_to_seven_pit %>% 
+  # Clean up column names
+  janitor::clean_names() %>%
+  rename_all(~stringr::str_replace_all(., "co_c", "coc")) %>%
+  dplyr::rename(coc_code = coc_number_x) %>%
+  # Replace stray "." values with NA
+  naniar::replace_with_na_all(condition = ~.x == ".") %>%
+  # Get rid of coc_codes that are NA (checked, see below)
+  filter(!is.na(coc_code)) %>%
+  # Convert all numeric cols to numeric
+  mutate_at(vars(4:586), as.numeric) %>%
+  # Standardize all characters to lowercase
+  mutate_if(is.character, tolower) %>%
+  # Remove any leading/trailing spaces
+  mutate_if(is.character, str_trim) %>%
+  # Delete non-records where coc_code > 7 (checked, see below)
+  filter(nchar(coc_code) <= 7) %>%
+  # Add col to designate state
+  separate(coc_code, sep = "-", into = c("state_code", "coc_number"), remove = F) %>%
+  # Add col to flag problematic CoCs that have merged over the years
+  mutate(is_problematic_coc = case_when(
+    coc_code %in% problematic_cocs ~ T,
+    T ~ F
+  ))
+
+#PIT_counts_all_coc %>%
+  #write_csv("./input-data/clean/PIT-counts-all-coc.csv")
+
+rm(list=ls())
+
+PIT_counts_all_coc <- read_csv("./input-data/clean/PIT-counts-all-coc.csv")
+```
+
+### Finding Trends in Homeless Populations
+
+## 2007-2018 Overall Homeless
+
+```{r}
+
+#Load and rename the large joined document
+#Rows 400-495 deleted as they contain no data
+PIT_counts_most_coc <- PIT_counts_all_coc %>% 
+  #select just COCs and overall homeless columns
+  select(coc_code, state_code, matches("overall_homeless")) %>%
+  #These three states have COCs with changes in overall homeless much greater than rest of states;        separated so not to skew the axes on the graphs
+  filter(state_code != "ca",
+         state_code != "ma",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(seven_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2007`)/`overall_homeless_2007`))
+
+#Create a GGPlot mapping overall homeless % changes from 2007-2018 of all but 3 excluded states
+ggplot(data = PIT_counts_most_coc, aes(x=coc_code, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2007 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "seven_eighteen_most_overall_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+
+#Create dataframe with just the three states with large/outlying % change values
+PIT_counts_big_coc <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("overall_homeless")) %>%
+  filter(state_code == "ca" | state_code == "ma" | state_code == "ny") %>%
+  mutate(seven_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2007`)/`overall_homeless_2007`))
+
+#Create GGPlot for three states (CA, MA, NY) with outlying change values
+ggplot(data = PIT_counts_big_coc, aes(x=coc_code, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "NY MA & CA 2007 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 1, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "seven_eighteen_big_overall_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 30, units = "in")
+```
+
+## 2011-2018 Overall Homeless
+
+```{r}
+
+eleven_eighteen_most_change <- PIT_counts_all_coc %>% 
+  #select just COCs and overall homeless columns
+  select(coc_code, state_code, matches("overall_homeless")) %>%
+  #These three states have COCs with changes in overall homeless much greater than rest of states;        separated so not to skew the axes on the graphs
+  filter(state_code != "ca",
+         state_code != "ma",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(eleven_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2011`)/`overall_homeless_2011`)) %>%
+  arrange(desc(eleven_to_eighteen_change))
+
+#Create a GGPlot mapping overall homeless % changes from 2011-2018 of all but 3 excluded states
+ggplot(data = eleven_eighteen_most_change, aes(x=coc_code, y=eleven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2011 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "eleven_eighteen_most_overall_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+
+eleven_eighteen_big_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("overall_homeless")) %>%
+  filter(state_code == "ca" | state_code == "ma" | state_code == "ny") %>%
+  mutate(eleven_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2011`)/`overall_homeless_2011`))
+
+#Create a GGPlot mapping overall homeless % changes from 2011-2018 of 3 excluded states
+ggplot(data = eleven_eighteen_big_change, aes(x=coc_code, y=eleven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2011 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "eleven_eighteen_big_overall_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+
+```
+
+## 2014-2018 Overall Homeless
+
+```{r}
+fourteen_eighteen_most_change <- PIT_counts_all_coc %>% 
+  #select just COCs and overall homeless columns
+  select(coc_code, state_code, matches("overall_homeless")) %>%
+  #These three states have COCs with changes in overall homeless much greater than rest of states;        separated so not to skew the axes on the graphs
+  filter(state_code != "ca",
+         state_code != "ma",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(fourteen_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2014`)/`overall_homeless_2014`)) %>%
+  arrange(desc(fourteen_to_eighteen_change))
+
+#Create a GGPlot mapping overall homeless % changes from 2014-2018 of all but 3 excluded states
+ggplot(data = fourteen_eighteen_most_change, aes(x=coc_code, y=fourteen_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2014 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "fourteen_eighteen_most_overall_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+
+fourteen_eighteen_big_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("overall_homeless")) %>%
+  filter(state_code == "ca" | state_code == "ma" | state_code == "ny") %>%
+  mutate(fourteen_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2014`)/`overall_homeless_2014`))
+
+#Create a GGPlot mapping overall homeless % changes from 2014-2018 of 3 excluded states
+ggplot(data = fourteen_eighteen_big_change, aes(x=coc_code, y=fourteen_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2014 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "eleven_eighteen_big_overall_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+```
+
+## 2007-2018 Sheltered Homeless
+
+```{r}
+seven_eighteen_most_sheltered_change <- PIT_counts_all_coc %>% 
+  #select just COCs and sheltered homeless columns
+  select(coc_code, state_code, matches("sheltered_total_homeless")) %>%
+  #These three states have COCs with changes in sheltered homeless much greater than rest of states; separated so not to skew the axes on the graphs
+  filter(state_code != "ca",
+         state_code != "ma",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(seven_to_eighteen_change = 100*((`sheltered_total_homeless_2018` - `sheltered_total_homeless_2007`)/`sheltered_total_homeless_2007`)) %>%
+  arrange(desc(seven_to_eighteen_change))
+
+#Create a GGPlot mapping sheltered homeless % changes from 2007-2018 of all but 3 excluded states
+ggplot(data = seven_eighteen_most_sheltered_change, 
+       aes(x=coc_code, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2007 to 2018 Percent Change in Sheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "seven_eighteen_most_sheltered_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+
+seven_eighteen_big_sheltered_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("sheltered_total_homeless")) %>%
+  filter(state_code == "ca" | state_code == "ma" | state_code == "ny") %>%
+  mutate(seven_to_eighteen_change = 100*((`sheltered_total_homeless_2018` - `sheltered_total_homeless_2007`)/`sheltered_total_homeless_2007`)) %>%
+  arrange(desc(seven_to_eighteen_change))
+
+#Create a GGPlot mapping sheltered homeless % changes from 2007-2018 of 3 excluded states
+ggplot(data = seven_eighteen_big_sheltered_change, 
+       aes(x=coc_code, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2007 to 2018 Percent Change in Sheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "seven_eighteen_big_sheltered_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+
+```
+
+## 2011-2018 Sheltered Homeless 
+
+```{r}
+eleven_eighteen_most_sheltered_change <- PIT_counts_all_coc %>% 
+  #select just COCs and sheltered homeless columns
+  select(coc_code, state_code, matches("sheltered_total_homeless")) %>%
+  #These two states have COCs with changes in sheltered homeless much greater than rest of states; separated so not to skew the axes on the graphs
+  filter(state_code != "ma",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(eleven_to_eighteen_change = 100*((`sheltered_total_homeless_2018` - `sheltered_total_homeless_2011`)/`sheltered_total_homeless_2011`)) %>%
+  arrange(desc(eleven_to_eighteen_change))
+
+#Create a GGPlot mapping sheltered homeless % changes from 2011-2018 of all but 2 excluded states
+ggplot(data = eleven_eighteen_most_sheltered_change, 
+       aes(x=coc_code, y=eleven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2011 to 2018 Percent Change in Sheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "eleven_eighteen_most_sheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+
+eleven_eighteen_big_sheltered_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("sheltered_total_homeless")) %>%
+  filter(state_code == "ma" | state_code == "ny") %>%
+  mutate(eleven_to_eighteen_change = 100*((`sheltered_total_homeless_2018` - `sheltered_total_homeless_2011`)/`sheltered_total_homeless_2011`)) %>%
+  arrange(desc(eleven_to_eighteen_change))
+
+#Create a GGPlot mapping sheltered homeless % changes from 2011-2018 of 2 excluded states
+ggplot(data = eleven_eighteen_big_sheltered_change, 
+       aes(x=coc_code, y=eleven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2011 to 2018 Percent Change in Sheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "eleven_eighteen_big_sheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+```
+
+## 2014-2018 Sheltered Homeless 
+
+```{r}
+fourteen_eighteen_most_sheltered_change <- PIT_counts_all_coc %>% 
+  #select just COCs and sheltered homeless columns
+  select(coc_code, state_code, matches("sheltered_total_homeless")) %>%
+  #These three states have COCs with changes in sheltered homeless much greater than rest of states; separated so not to skew the axes on the graphs
+  filter(state_code != "ca",
+         state_code != "ma",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(fourteen_to_eighteen_change = 100*((`sheltered_total_homeless_2018` - `sheltered_total_homeless_2014`)/`sheltered_total_homeless_2014`)) %>%
+  arrange(desc(fourteen_to_eighteen_change))
+
+#Create a GGPlot mapping sheltered homeless % changes from 2014-2018 of all but 3 excluded states
+ggplot(data = fourteen_eighteen_most_sheltered_change, 
+       aes(x=coc_code, y=fourteen_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2014 to 2018 Percent Change in Sheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "fourteen_eighteen_most_sheltered_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+
+fourteen_eighteen_big_sheltered_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("sheltered_total_homeless")) %>%
+  filter(state_code == "ca" | state_code == "ma" | state_code == "ny") %>%
+  mutate(fourteen_to_eighteen_change = 100*((`sheltered_total_homeless_2018` - `sheltered_total_homeless_2014`)/`sheltered_total_homeless_2014`)) %>%
+  arrange(desc(fourteen_to_eighteen_change))
+
+#Create a GGPlot mapping sheltered homeless % changes from 2014-2018 of 3 excluded states
+ggplot(data = fourteen_eighteen_big_sheltered_change, 
+       aes(x=coc_code, y=fourteen_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2014 to 2018 Percent Change in Sheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+ggsave(filename = "fourteen_eighteen_big_sheltered_change.png", 
+       device = "png", path = "../graphs",
+       width = 20, height = 45, units = "in")
+```
+
+## 2007-2018 Unsheltered Homeless 
+
+```{r}
+seven_eighteen_most_unsheltered_change <- PIT_counts_all_coc %>% 
+  #select just COCs and unsheltered homeless columns
+  select(coc_code, state_code, matches("unsheltered_homeless")) %>%
+  #These five states have COCs with changes in unsheltered homeless much greater than rest of states; separated so not to skew the axes on the graphs
+  filter(state_code != "ca",
+         state_code != "mo",
+         state_code != "mi",
+         state_code != "ks",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(seven_to_eighteen_change = 100*((`unsheltered_homeless_2018` - `unsheltered_homeless_2007`)/`unsheltered_homeless_2007`)) %>%
+  arrange(desc(seven_to_eighteen_change))
+
+#Create a GGPlot mapping unsheltered homeless % changes from 2007-2018 of all but 5 excluded states
+ggplot(data = seven_eighteen_most_unsheltered_change, 
+       aes(x=coc_code, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2007 to 2018 Percent Change in Unsheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "seven_eighteen_most_unsheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+
+seven_eighteen_big_unsheltered_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("unsheltered_homeless")) %>%
+  filter(state_code == "ca" | state_code == "ny" | 
+           state_code == "mo" | state_code == "mi" | state_code == "ks") %>%
+  mutate(seven_to_eighteen_change = 100*((`unsheltered_homeless_2018` - `unsheltered_homeless_2007`)/`unsheltered_homeless_2007`)) %>%
+  arrange(desc(seven_to_eighteen_change))
+
+#Create a GGPlot mapping unsheltered homeless % changes from 2007-2018 of 5 excluded states
+ggplot(data = seven_eighteen_big_unsheltered_change, 
+       aes(x=coc_code, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2007 to 2018 Percent Change in Unsheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "seven_eighteen_big_unsheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+
+```
+
+## 2011-2018 Unsheltered Homeless 
+
+```{r}
+eleven_eighteen_most_unsheltered_change <- PIT_counts_all_coc %>% 
+  #select just COCs and unsheltered homeless columns
+  select(coc_code, state_code, matches("unsheltered_homeless")) %>%
+  #These five states have COCs with changes in unsheltered homeless much greater than rest of states; separated so not to skew the axes on the graphs
+  filter(state_code != "ca",
+         state_code != "mn",
+         state_code != "ar",
+         state_code != "il",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(eleven_to_eighteen_change = 100*((`unsheltered_homeless_2018` - `unsheltered_homeless_2011`)/`unsheltered_homeless_2011`)) %>%
+  arrange(desc(eleven_to_eighteen_change))
+
+#Create a GGPlot mapping unsheltered homeless % changes from 2011-2018 of all but 5 excluded states
+ggplot(data = eleven_eighteen_most_unsheltered_change, 
+       aes(x=coc_code, y=eleven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2011 to 2018 Percent Change in Unsheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "eleven_eighteen_most_unsheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+
+eleven_eighteen_big_unsheltered_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("unsheltered_homeless")) %>%
+  filter(state_code == "ca" | state_code == "mn" | 
+           state_code == "ny" | state_code == "ar" | state_code == "il") %>%
+  mutate(eleven_to_eighteen_change = 100*((`unsheltered_homeless_2018` - `unsheltered_homeless_2011`)/`unsheltered_homeless_2011`)) %>%
+  arrange(desc(eleven_to_eighteen_change))
+
+#Create a GGPlot mapping unsheltered homeless % changes from 2011-2018 of 5 excluded states
+ggplot(data = eleven_eighteen_big_unsheltered_change, 
+       aes(x=coc_code, y=eleven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2011 to 2018 Percent Change in Unsheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "eleven_eighteen_big_unsheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+```
+
+## 2014-2018 Unsheltered Homeless 
+
+```{r}
+fourteen_eighteen_most_unsheltered_change <- PIT_counts_all_coc %>% 
+  #select just COCs and overall homeless columns
+  select(coc_code, state_code, matches("unsheltered_homeless")) %>%
+  #These five states have COCs with changes in overall homeless much greater than rest of states;        separated so not to skew the axes on the graphs
+  filter(state_code != "tx",
+         state_code != "ar",
+         state_code != "nj",
+         state_code != "il",
+         state_code != "ny") %>%
+  #Create the change in homelessness column
+  mutate(fourteen_to_eighteen_change = 100*((`unsheltered_homeless_2018` - `unsheltered_homeless_2014`)/`unsheltered_homeless_2014`)) %>%
+  arrange(desc(fourteen_to_eighteen_change))
+
+#Create a GGPlot mapping overall homeless % changes from 2014-2018 of all but 5 excluded states
+ggplot(data = fourteen_eighteen_most_unsheltered_change, 
+       aes(x=coc_code, y=fourteen_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2014 to 2018 Percent Change in Unsheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "fourteen_eighteen_most_unsheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+
+fourteen_eighteen_big_unsheltered_change <- PIT_counts_all_coc %>% 
+  select(coc_code, state_code, matches("unsheltered_homeless")) %>%
+  filter(state_code == "tx" | state_code == "ny" | 
+           state_code == "ar" | state_code == "nj" | state_code == "il") %>%
+  mutate(fourteen_to_eighteen_change = 100*((`unsheltered_homeless_2018` - `unsheltered_homeless_2014`)/`unsheltered_homeless_2014`)) %>%
+  arrange(desc(fourteen_to_eighteen_change))
+
+#Create a GGPlot mapping sheltered homeless % changes from 2014-2018 of 5 excluded states
+ggplot(data = fourteen_eighteen_big_unsheltered_change, 
+       aes(x=coc_code, y=fourteen_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2014 to 2018 Percent Change in Unsheltered Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_code, ncol = 3, scales = "free_x")
+
+#Save the plot
+#ggsave(filename = "fourteen_eighteen_big_unsheltered_change.png", 
+       #device = "png", path = "../graphs",
+       #width = 20, height = 45, units = "in")
+```
+
+
+
+
+```
+
+

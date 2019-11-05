@@ -1,0 +1,270 @@
+---
+title: "Analysis Sept. 24"
+author: "Roxanne Ready"
+always_allow_html: yes
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: kable
+  md_document:
+    variant: markdown_github
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render('documentation/memos/analysis-sept24.Rmd', output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE)
+
+# Set the Knitr root directory to the project directory, which is one up from where this document is stored
+# (Does not seem to affect links outside code blocks)
+#knitr::opts_knit$set(root.dir = '../..')
+```
+
+```{r, include=FALSE}
+# Display styling
+# Use when running calculations, but not when storing a table for future calcs b/c it turns the df into a kable object
+# Only for HTML; does not render properly in .md files. "always_allow_html" in header prevents compile failure but does not fix display issues.
+# df %>%
+#   kable() %>%
+#   kable_styling("striped", fixed_thead = T) %>%
+#   scroll_box(width = "100%", height = "500px")
+```
+
+
+```{r, include=FALSE}
+
+#######################
+#### Load Packages ####
+#######################
+
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(kableExtra)
+library(data.table)
+
+options(scipen = 999)
+
+```
+
+
+```{r, include=FALSE}
+
+#######################
+#### Load Data ########
+#######################
+
+load_path <- paste0(here::here(), "/data/input-data/clean/")
+save_path <- paste0(here::here(), "/documentation/memos/output-csvs/")
+
+hud_pit_all <- read_csv(paste0(load_path, "hud-pit-all.csv"))
+
+zillow_cluster <- read_csv(paste0(load_path, "zillow-cluster.csv")) %>%
+  mutate_at("coc_number", as.character)
+
+hud_zillow_joined <- read_csv(paste0(load_path, "hud-zillow-joined.csv"))
+
+```
+
+## Introduction
+
+### Purpose of this memo
+
+This memo is a slightly updated version of a previous preliminary analysis memo. It uses data which has been processed more thoroughly than the original and therefore updates the results. This data should be used by field reporters to narrow their initial reporting, but findings are still preliminary and therefore **should not be included in final articles**.
+
+Data outputs can be found [here](https://github.com/shardsofblue/homelessness-project-fall2019/tree/master/documentation/memos/output-csvs). (Click the file, right-click "Raw", choose "Save Link As", and change the file extention from ".txt" to ".csv").
+
+
+### Important caveats
+
+**Findings herein are preliminary estimates and should not be published.** Please bear the following caveats in mind when reviewing this memo:
+
+1. **Counting methodology changes:** Methods of counting the population of people experiencing homelessness may have changed over the years, which may have caused flucutations in counts that do not reflect actual changes.
+2. **2014/18 rate calculations:** Because we do not have estimates for the total population of CoCs for 2014 and 2018 yet, we used an available 2017 population estimate to calculate rates of change in the homeless population at 2014 and 2018. These rates are therefore only rough estimations, to be perfected when we have more accurate overall population data. 2014-18 rates should only be used as a general comparison over time.
+3. **2017 rate calculation:** For 2017, we used rates calculted by real estate firm Zillow, which attempted to compensate for the difference between homeless peple counted versus actual homeless. We consider the 2017 data the most reliable and correct in terms of rates and therefore are most comfortable ranking CoCs along this rate.
+4. **Problematic CoCs:** Some Continuums of Care have changed over the years, merging together or into new CoCs, or presented incomplete information in the PIT database. The following CoCs have known issues during the period covered here, and have therefore been removed from the analysis: "AR-502",	"AR-506",	"AR-507",	"AR-509",	"AR-510",	"AR-511",	"AR-512",	"CA-605",	"CA-610",	"CT-500",	"CT-501",	"CT-502",	"CT-504",	"CT-506",	"CT-507",	"CT-508",	"CT-509",	"CT-510",	"CT-511",	"CT-512",	"FL-516",	"IL-505",	"IN-500",	"IN-501",	"KS-500",	"LA-504",	"LA-508",	"MA-512",	"MA-513",	"MA-518",	"MA-520",	"ME-501",	"ME-502",	"MI-520",	"MI-521",	"MI-522",	"MI-524",	"MN-507",	"MN-510",	"MN-512",	"MO-601",	"MO-605",	"NC-508",	"NC-512",	"NC-514",	"NC-515",	"NC-517",	"NC-518",	"NC-519",	"NC-520",	"NC-521",	"NC-522",	"NC-523",	"NC-524",	"NC-525",	"NC-526",	"NE-503",	"NE-504",	"NE-505",	"NE-506",	"NJ-505",	"NJ-517",	"NJ-518",	"NJ-519",	"NJ-520",	"NY-502",	"NY-509",	"NY-515",	"NY-517",	"NY-521",	"NY-524",	"NY-605",	"OR-504",	"PA-507",	"PA-602",	"PR-501",	"PR-504",	"PR-510",	"SC-504",	"TN-505",	"TX-501",	"TX-504",	"TX-602",	"TX-608",	"TX-610",	"TX-612",	"TX-613",	"TX-616",	"TX-623",	"TX-702",	"TX-703",	"TX-704",	"VA-509",	"VA-510",	"VA-512",	"VA-517",	"VA-518",	"VA-519",	"WA-506",	"WA-507", "ar-504", "ar-508", "ca-527", "ca-528", "ca-529", "ca-530", "ga-502", "ga-508", "ma-501", "nj-512", "ny-506".
+
+## Calculations
+
+The code below calculates approximate rates for homelessness in 2014 and 2017 in order to compare changes over time.
+
+```{r}
+
+######################
+## Calculate Rates ###
+######################
+
+# Calculate rates and changes over time data 14-18
+homeless_rates_14_18 <- hud_zillow_joined %>%
+  rename(total_pop_2017 = coc_total_population_zillow_2017, 
+         est_rate_perc_2017 = estimated_homeless_rate_percent_zillow_2017,
+         cluster_num = cluster_number_zillow_2017) %>%
+  ### RATES of homelessness for 2014 and 2018 based on available 2017 population numbers, as a percent
+  # Note: Usual study methodology on homelessness uses per 10,000 people rather than as a percentage of 100
+  mutate(homeless_rate_perc_2014 = (overall_homeless_2014/total_pop_2017)*100,
+         OURhomeless_rate_perc_2017 = (overall_homeless_2017/total_pop_2017)*100,
+         homeless_rate_perc_2018 = (overall_homeless_2018/total_pop_2017)*100) %>%
+  ### CHANGES over time between 2014-2018
+  # Change in OVERALL homelessness
+  mutate(overall_change_2014_2018 = overall_homeless_2018 -  overall_homeless_2014,
+         perc_change_2014_2018 = (overall_homeless_2018 - overall_homeless_2014)/overall_homeless_2014) %>%
+  # Change in homelessness RATES
+  mutate(rate_percpt_change_2014_2018 = homeless_rate_perc_2018 - homeless_rate_perc_2014) %>%
+  # Rank the various factors
+  mutate(rank_homeless_rate_perc_2018 = rank(desc(homeless_rate_perc_2018)),
+         rank_overall_change_2014_2018 = rank(desc(overall_change_2014_2018)),
+         rank_perc_change_2014_2018 = rank(desc(perc_change_2014_2018)),
+         rank_rate_percpt_change_2014_2018 = rank(desc(rate_percpt_change_2014_2018)),
+         rank_est_rate_perc_2017 = rank(desc(est_rate_perc_2017))) %>%
+  mutate(diff_2017 = OURhomeless_rate_perc_2017 - est_rate_perc_2017)
+
+# Save to file
+# homeless_rates_14_18 %>%
+#   write_csv(paste0(save_path, "homeless-rate-14-18.csv"))
+
+```
+
+```{r}
+###########################
+### Arrange and Display ###
+###########################
+
+# Store slice of the data in temp working table
+wk <- homeless_rates_14_18 %>%
+  select(coc_code, coc_name,
+         homeless_rate_perc_2014,
+         est_rate_perc_2017, rank_est_rate_perc_2017, total_pop_2017,
+         overall_homeless_2014, overall_homeless_2018, 
+         homeless_rate_perc_2018, rank_homeless_rate_perc_2018, 
+         overall_change_2014_2018, rank_overall_change_2014_2018,
+         perc_change_2014_2018, rank_perc_change_2014_2018, 
+         rate_percpt_change_2014_2018, rank_rate_percpt_change_2014_2018 
+         )
+```
+
+## Findings
+
+### Fact: Homelessness Rates by Continuum of Care 2017
+
+In 2017, Mendocino County's CoC had the nation's highest rate of homelessness, at 2 percent, followed by Washington, D.C. (1.2 percent).
+
+Five of the top 10 were in California (Mendocino County, Santa Cruz area, San Francisco, Monterey area, Imperial County).  Other areas with high rates: Boston, New York City, Atlanta and the Florida Keys (Monroe County).
+
+```{r}
+# Order by rate in 2017
+wk %>% 
+  arrange(desc(est_rate_perc_2017), coc_code) %>%
+  select(coc_code, coc_name, est_rate_perc_2017, rank_est_rate_perc_2017, total_pop_2017) %>%
+  # Write to CSV
+  write_csv(paste0(save_path, "rates-of-homelessness-by-coc.csv")) %>%
+  # Styling
+  kable(caption = "Ordered by the homeless rate in 2017") %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+```
+
+### Fact: Change in rates over time, 2014-2018
+
+_See caveat #2 above._
+
+The CoC with the greatest increase between 2014 and 2018 was the Lynn CoC in Massachusetts, followed by Imperial County in California and Monroe County in Florida.
+
+The CoC with the greatest decrease between 2014 and 2018 was Mendocino County in California, followed by the Colusa, Glenn and Trinity County CoC in California and the St. John's County CoC in Florida.
+
+```{r}
+# Order by change in rate
+wk %>%
+  arrange(rank_rate_percpt_change_2014_2018, coc_code) %>%
+  select(coc_code, coc_name, 
+         rate_percpt_change_2014_2018, rank_rate_percpt_change_2014_2018, 
+         homeless_rate_perc_2014, homeless_rate_perc_2018,
+         total_pop_2017) %>%
+  # Write to CSV
+  write_csv(paste0(save_path, "change-rates-of-homelessness-by-coc.csv")) %>%
+  # Styling
+  kable(caption = "Ordered by the change in the homeless rate from 2014 to 2018") %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+```
+
+### Fact: Percent change in overall homeless count
+
+The CoC with the greatest percent increase in homeless count is the Imperial County CoC in California, followed by El Dorado County in California, the Lynn CoC in Massachusetts, and the Jamestown, Dunkirk/Chautauqua County CoC in New York. 
+
+The CoC with the greatest percent decrease in homeless count is the Tuscaloosa City & County CoC in Alabama, followed by St. Johns County in FL, and the Norton Shores, Muskegon City & Count CoC in Michigan.
+
+```{r}
+# Order by percent change in overall counts
+wk %>%
+  arrange(rank_perc_change_2014_2018, coc_code) %>%
+  select(coc_code, coc_name, 
+         perc_change_2014_2018, rank_perc_change_2014_2018, 
+         overall_homeless_2014, overall_homeless_2018) %>%
+  # Write to CSV
+  write_csv(paste0(save_path, "perc-change-counts-of-homelessness-by-coc.csv")) %>%
+  # Styling
+  kable(caption = "Ordered by the percent change in homeless count from 2014 to 2018") %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+```
+
+### Fact: Change in real homeless count
+
+_Note that this does not consider factors such as total population and is therefore of limited use._
+
+The CoC with the greatest increase in overall homelessness count was the Los Angeles City and County CoC, followed by New York City and Seattle/King County in Washington State.
+
+The CoC with the greatest decresse in overall homelessness count, not including aggregate "balance of states," was Atlanta, Georgia, followed by the Las Vegas/Clark County CoC the and Metropolitan Denver CoC in Colorado.
+
+```{r}
+# Order by overall (real) change
+wk %>%
+  arrange(rank_overall_change_2014_2018, coc_code) %>%
+  select(coc_code, coc_name, 
+         overall_change_2014_2018, rank_overall_change_2014_2018,
+         overall_homeless_2014, overall_homeless_2018) %>%
+  # Write to CSV
+  write_csv(paste0(save_path, "counts-of-homelessness-by-coc.csv")) %>%
+  # Styling
+  kable(caption = "Ordered by the real overall change in homeless count from 2014 to 2018") %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

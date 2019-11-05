@@ -1,0 +1,43 @@
+---
+title: "grant-data-factfinding-memo"
+author: "Ryan Little"
+date: "9/5/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Following the Money
+
+## Purpose of This Memo
+
+1. To set definitions for the grant data available from HUD Exchange.
+2. Understand the limitations of the grant data.
+3. Consider infromation that expands the insighfulness of the data.
+
+## Summary
+
+### Dataset
+
+### Existing Reports
+
+
+#### Definitions
+
+| Acronym | Full Term | Definition | Source |
+| --- | :---: | --- | ---: |
+| CDBG    | Community Development Block Grant Program | The Community Development Block Grant (CDBG) Program provides annual grants on a formula basis to states, cities, and counties to develop viable urban communities by providing decent housing and a suitable living environment, and by expanding economic opportunities, principally for low- and moderate-income persons. The program is authorized under Title 1 of the Housing and Community Development Act of 1974, Public Law 93-383, as amended 42 U.S.C.-530.1 et seq | [source](www.noidea.com) |
+| COC | Continuum of Care Program | The Continuum of Care (CoC) Program is designed to promote communitywide commitment to the goal of ending homelessness; provide funding for efforts by nonprofit providers, and State and local governments to quickly rehouse homeless individuals and families while minimizing the trauma and dislocation caused to homeless individuals, families, and communities by homelessness; promote access to and effect utilization of mainstream programs by homeless individuals and families; and optimize self-sufficiency among individuals and families experiencing homelessness. | [source](www.noidea.com) |
+| ---- | Emergency Shelter Grants Program | The HEARTH Act revised the Emergency Shelter Grants Program to create the Emergency Solutions Grants (ESG) Program. The Emergency Shelter Grants provided funds under the first allocation of FY 2011 funds and earlier fiscal years. ESG recipients and subrecipients use Emergency Shelter Grants Program funds to rehabilitate and operate emergency shelters and transitional shelters, provide essential social services, and prevent homelessness.
+| ESG | Emergency Solutions Grant Program | definition | [source](www.noidea.com) |
+| HOME | Home Investment Partnerships Program | definition | [source](www.noidea.com) |
+| HOPWA | Housing Opportunites for Persons with AIDS Program
+| HTF | Housing Trust Fund |definition | [source](www.noidea.com) |
+| NSP | Neighborhood Stabilization Program | definition | [source](www.noidea.com) |
+
+##### Explaining Program Changes
+
+The Emergency Shelter Grants Program became the Emergency Solutions Grant Program in 2012.
+The HEARTH Act revised the Emergency Shelter Grants Program to create the Emergency Solutions Grants (ESG) Program. The Emergency Shelter Grants provided funds under the first allocation of FY 2011 funds and earlier fiscal years. ESG recipients and subrecipients use Emergency Shelter Grants Program funds to rehabilitate and operate emergency shelters and transitional shelters, provide essential social services, and prevent homelessness. [source](https://www.hudexchange.info/programs/esg/)

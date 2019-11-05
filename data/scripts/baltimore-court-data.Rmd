@@ -1,0 +1,583 @@
+---
+title: "Baltimore Criminal Case Addresses"
+author: "Roxanne Ready"
+output: 
+  html_document:
+    df_print: paged
+    toc: TRUE
+    toc_float: TRUE
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE, warning = FALSE, rows.print=10)
+```
+
+## Libraries
+
+```{r results = 'hide'}
+
+library(tidyverse) # For tidy data
+library(dplyr)
+library(rlang) # To simplify enqo() to {{}} when building functions
+library(here) # For consistent file pathing
+library(odbc) # For connecting to the database
+library(RMySQL) # For connecting to the database
+library(stringdist) # Dependancy for refinr; do not install from binary
+library(refinr) # For address standardization
+library(devtools)
+
+# Presentation
+library(knitr)
+library(kableExtra)
+
+```
+
+## Database Connection and Downloading
+
+```{r include=FALSE, results='hide'}
+
+# Database connection information should be obfuscated for final output
+# Establish connection with database
+con <- dbConnect(MySQL(),
+              user="smussenden",
+              password="dUM1L0FTqnCdsbpJ",
+              dbname='criminal_circuit_baltimore_city',
+              host='clue.ctdfdskvfoc5.us-east-1.rds.amazonaws.com')
+
+con2 <- dbConnect(MySQL(),
+              user="smussenden",
+              password="dUM1L0FTqnCdsbpJ",
+              dbname='civil_circuit_regular',
+              host='clue.ctdfdskvfoc5.us-east-1.rds.amazonaws.com')
+
+```
+
+```{r results = 'hide'}
+
+# Explore tables and variables available
+dbListTables(con)
+dbListFields(con, "charge_and_disposition_information")
+dbListTables(con2)
+dbListFields(con2, "support_order_information")
+
+## Store Criminal Tables
+
+# Cases
+crim_case_info <- dbReadTable(con, "case_information")
+
+# Defendants
+crim_defendant_info<- dbReadTable(con, "defendant_information")
+
+# Charges
+crim_charge_and_disposition_info <- dbReadTable(con, "charge_and_disposition_information") %>%
+  # Split out years
+  separate(PleaDate, into = c("plea_year", "plea_month", "plea_day"), sep = "-", remove = F) %>%
+  separate(DispositionDate, into = c("disposition_year", "disposition_month", "disposition_day"), sep = "-", remove = F) %>%
+  # Filter for past 5 years
+  filter(disposition_year >= 2014 | plea_year >= 2014)
+## Store Civil Tables
+
+# Cases
+civil_case_info <- dbReadTable(con2, "case_information") %>%
+  filter(str_detect(County, "Baltimore City")) %>%
+  # Split & filter by years
+  separate(FilingDate, into = c("filing_year", "filing_month", "filing_day"), sep = "-", remove = F) %>%
+  filter(filing_year >= 2014)
+
+# Defendants
+civil_defendant_info <- dbReadTable(con2, "related_person") %>%
+  filter(City == "Baltimore")
+
+
+```
+
+```{r results='hide'}
+# Disconnect from the database
+dbDisconnect(con)
+dbDisconnect(con2)
+rm(con, con2)
+```
+
+## Create Functions for Clean Up Process
+
+### Store List of Homelessness Resource Facilities
+
+Required for `understand_institutions()`.
+
+List acquired from [here](https://human-services.baltimorecity.gov/sites/default/files/Baltimore%20Street%20Outreach%20Card%20-%20english.pdf).
+
+```{r results='hide'}
+
+# Store addresses and info for Baltimore City homelessness resources
+homeless_resources <- tribble(
+  ~Institution, ~Address, ~Institution_Type,
+  "American Rescue Workers", "11 West Clement St", "Emergency Shelter",
+  "Baltimore Rescue Mission", "4 North Central Ave", "Emergency Shelter",
+  "Baltimore Outreach Services", "701 South Charles St", "Emergency Shelter",
+  "Helping Up Mission", "1029 East Baltimore St", "Emergency Shelter",
+  "Karis Home", "1228 East Baltimore St", "Emergency Shelter",
+  "Loving Arms", "3313 Oakfield Ave", "Emergency Shelter",
+  "MCVET-Veterans", "301 North High St", "Emergency Shelter",
+  "Project PLASE - Men", " 201 East North Ave", "Emergency Shelter",
+  "Project PLASE - Women", "139 East North Ave", "Emergency Shelter",
+  "Salvation Army/Booth House", "1114 North Calvert St", "Emergency Shelter",
+  "Sarah’s Hope Shelter", "1114 Mount St", "Emergency Shelter",
+  "Weinberg Housing and Resource Center", "620 Fallsway", "Emergency Shelter",
+  "Baltimore Medical System", "900 South Caton Ave", "Health Care", 
+  "Baltimore Medical System", "3120 Erdman Ave", "Health Care", 
+  "Baltimore Medical System", "3700 Fleet St", "Health Care", 
+  "Chase Brexton Health Services", "1111 North Charles St", "Health Care", 
+  "Druid Dental, Family Planning, and STD Clinic", "1515 West North Ave", "Health Care", 
+  "Eastern Dental, Family Planning, STD, and Tuberculosis Clinic", "620 North Caroline St", "Health Care", 
+  "Health Care for the Homeless", "421 Fallsway", "Health Care", 
+  "Park West Health System", "4120 Patterson Ave", "Health Care", 
+  "Park West Health System", "4151 Park Heights Ave", "Health Care", 
+  "Park West Health System", "3319 West Belvedere Ave", "Health Care", 
+  "Park West Health System", "4601 Liberty Heights Ave", "Health Care", 
+  "Total Health Care Men’s Health Center", "1515 West North Ave", "Health Care", 
+  "MCVET-Veterans", "301 North High St", "Food Bank",
+  "Rose Street Basic Center", "2525 East Madison St", "Food Bank",
+  "St. Vincent de Paul of Baltimore Career Center", "3445 Park Heights Ave", "Food Bank",
+  "HealthCare Access Maryland", "201 East Baltimore St", "Food Bank",
+  "Beans and Bread", "402 South Bond St", "Food Bank",
+  "Franciscan Center", "101 West 23rd St", "Food Bank",
+  "H.O.P.E.", "2828 Loch Raven Rd", "Food Bank",
+  "Manna House", "435 East 25th St", "Food Bank",
+  "My Sister’s Place Women’s Center", "17 West Franklin St", "Food Bank",
+  "Our Daily Bread Employment Center", "725 Fallsway", "Food Bank",
+  "Paul’s Place", "1118 Ward St", "Food Bank",
+  "People Encouraging People", "4201 Primrose Ave", "Food Bank",
+  "Power Inside", "325 East 25th St", "Food Bank",
+  "Bon Secours Women’s Resource Center", "10 North Pulaski St", "Food Bank",
+  "YES Drop-in Center for 14-25yr olds & their children", "2315 North Charles St", "Food Bank",
+  "Homeless Persons Representation Project", "201 North Charles St", "Food Bank",
+  "The Baltimore Station - Veterans", "140 West West St", "Food Bank",
+  "Feedmore", "421 Fallsway", "Food Bank"
+) %>%
+  # Standardize to lowercase
+  mutate_if(is.character, tolower) %>%
+  arrange(Address)
+
+```
+
+### Build Address Cleaning Functions
+
+```{r results='hide'}
+
+# Standardize addresses
+clean_addresses <- function(.data, col_name) {
+  .data %>% 
+      mutate_if(is.character, tolower) %>%
+      # Remove any leading/trailing white space in the initial data
+      mutate({{col_name}} := str_trim({{col_name}})) %>%
+      # Standardize cardinal directions
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)e(\\s|\\.)", " east ")) %>% # "e" or "e." becomes "east"
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)w(\\s|\\.)", " west ")) %>%
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)n(\\s|\\.)", " north ")) %>%
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)s(\\s|\\.)", " south ")) %>%
+      # Standardize street type suffixes
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)(street|st(\\.|\\s|$))", " st")) %>% # "street" or "st." becomes "st"
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)(avenue|(ave(\\.|\\s|$)))", " ave ")) %>%
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)(road|rd(\\.|\\s|$))", " rd ")) %>%
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)(highway|hwy(\\.|\\s|$))", " hwy ")) %>%
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)(boulevard|blvd(\\.|\\s|$))", " blvd ")) %>%
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s)(crt|ct(\\.|\\s|$))", " court ")) %>%
+      # Standardize PO boxes. 
+      mutate({{col_name}} := str_replace_all({{col_name}}, "(\\s|^|/)((po)|(p\\so)|(p\\.o)|(po\\.))((\\s(box))|(\\s(bx)))", " p.o. box")) %>% # "po | p o | p.o | po." followed by "box" or "bx" become "p.o. box"
+      mutate({{col_name}} := str_replace_all({{col_name}}, "\\s(box)-", " box ")) %>% # Removes hyphens from PO boxes, e.g. "box-xxxx" becomes "box xxxx"
+      mutate({{col_name}} := str_replace_all({{col_name}}, "id#\\s\\d+", " ")) %>% # Remove ID#s from addresses, such as from prison P.O. boxes
+      # Remove any white space inadvertantly added
+      mutate({{col_name}} := str_trim({{col_name}})) %>%
+      # Replace case-by-case
+      mutate({{col_name}} := str_replace_all(Address, "po boc 549 mci-j", "p.o. box 549 mci-j"))
+}
+
+# Test the function
+# crim_defendant_info %>%
+#   clean_addresses(Address) %>%
+#   group_by(Address) %>%
+#   summarize(n = n()) %>%
+#   arrange(desc(n))
+
+# Add information about institutions
+understand_institutions <- function(.data, col_name) {
+  .data %>%
+    # Add column to designate institution based on addresses with highest counts
+    mutate(Institution = case_when(
+        # Each case below was manually checked and adjusted for variations in source data
+        str_detect({{col_name}}, "(box)\\s((549)|(534))") ~ "jessup correctional institution",
+        str_detect({{col_name}}, "(401 east eager)|(baltimore city detention center)") ~ "baltimore city detention center",
+        str_detect({{col_name}}, "620 fallsway") ~ "weinberg housing and resource center",
+        str_detect({{col_name}}, "(1029 east baltimore)|((?<!p)((help)|(helping) (us|up|out) mission))") ~ "helping up mission", # not preceded by "p" to avoid falsely matching "phelps"
+        str_detect({{col_name}}, "(3643 woodland)|(gaudenzia inc)|(c/o gaudenzia)") ~ "gaudenzia inc weinberg center",
+        str_detect({{col_name}}, "^4 north central") ~ "baltimore rescue mission",
+        str_detect({{col_name}}, "210 guilford") ~ "baltimore city health department",
+        str_detect({{col_name}}, "954 fo(r|rr)est") ~ "metropolitan transition center",
+        str_detect({{col_name}}, "((18\\d+ (ro(x|xs)bu(r|rr)(y|g)))|(roxbur(y|g) corr))|(roxbur$)|(roxburury)") ~ "roxbury correctional institution",
+        str_detect({{col_name}}, "(300 east madison)|(central booking intake)") ~ "baltimore central booking and intake center",
+        str_detect({{col_name}}, "(725 fallsway)|(bread)") ~ "our daily bread employment center",
+        str_detect({{col_name}}, "^140 west west") ~ "the baltimore station veterans rehab",
+        str_detect({{col_name}}, "(wci)|(13800 mcmullen)|(western correctional)") ~ "western correctional institution",
+        str_detect({{col_name}}, "(^111 park)|(healthcare)") ~ "health care for the homeless",
+        str_detect({{col_name}}, "(?<!((for )|(the )))(homeless)") ~ "marked \"homeless\"", # not preceded by "for" or "the" to avoid labeling "health care (for / for the) homeless"
+        T ~ NA_character_
+    )) %>%
+    # Add column to designate type of institution
+    mutate(Institution_Type = case_when(
+      str_detect(Institution, "(detention)|(correction)|(booking)") ~ "corrections",
+      !is.na(Institution) ~ "homeless resource (unspecified)",
+      T ~ NA_character_
+    )) %>%
+    # Merge addresses from the list of homelessness resources compiled above
+    left_join(homeless_resources %>% 
+                # Keep only unique addresses to prevent muliple match duplication in the join
+                distinct(Address, .keep_all = TRUE), 
+              by = c("Address")
+              ) %>%
+    # Transpose Institution_Type values from homeless resources list
+    mutate(Institution = ifelse(!is.na(Institution.y), Institution.y, Institution.x)) %>%
+    mutate(Institution_Type = ifelse(!is.na(Institution_Type.y), Institution_Type.y, Institution_Type.x)) %>%
+    # Drop redundant col and rename remaining
+    select(-matches("\\.x$|\\.y$")) %>%
+    mutate(Is_Homeless = ifelse((!is.na(Institution_Type) & Institution_Type != "corrections"), T, F))
+}
+
+# Test the function
+# crim_defendant_info %>%
+#   clean_addresses(Address) %>%
+#   understand_institutions(Address) %>%
+#   group_by(Address, Institution, Institution_Type) %>%
+#   summarize(n = n()) %>%
+#   arrange(desc(n))
+
+```
+
+## Clean Up Both Criminal and Civil Case Info
+
+### Clean/Categorize Criminal Defendant Address Information
+
+```{r results='hide'}
+
+crim_defendant_info_clean <- crim_defendant_info %>%
+  clean_addresses(Address) %>%
+  understand_institutions(Address)
+
+# Remove un-cleaned version
+# rm(crim_defendant_info)
+
+```
+
+```{r results='hide'}
+
+# Make a vector of all casenums that appear in the crim_defendant_info as homeless
+crim_homeless_casenums <- 
+  crim_defendant_info_clean %>%
+  filter(Is_Homeless == T) %>%
+  distinct(CaseNumber) %>%
+  pull
+
+```
+
+### Filter and Clean Up Criminal Charge Information
+
+```{r results='hide'}
+
+crim_charge_and_disposition_info_clean <- crim_charge_and_disposition_info %>%
+  # Pull only useful vars
+  select(CaseNumber, Description, ChargeDescription, Disposition, plea_year, PleaDate, disposition_year, DispositionDate) %>%
+  mutate_if(is.character, tolower) %>%
+  # Filter charge info to those who are homeless
+  filter(CaseNumber %in% crim_homeless_casenums) %>%
+  # Clean up description of the charges
+  mutate(Description_Clean = case_when(
+    str_detect(Description, "(ass)(?=(.+(first)|(1st)))") ~ "assault, 1st degree",
+    str_detect(Description, "(ass)(?=(.+(sec)|(2nd)))") ~ "assault, 2nd degree",
+    str_detect(Description, "(1st)(?=(.+(murder)))") ~ "attempted murder, 1st degree",
+    str_detect(Description, "(burglary)(?=(.+((4)|(four))))") ~ "burglary, 4th degree",
+    str_detect(Description, "(burglary)(?=(.+((3)|(third))))") ~ "burglary, 3rd degree",
+    str_detect(Description, "(burglary)(?=(.+((2)|(sec))))") ~ "burglary, 2nd degree",
+    str_detect(Description, "(burglary)(?=(.+((1)|(fir))))") ~ "burglary, 1st degree",
+    str_detect(Description, "(cds)(?=(.+(dis)))") ~ "cds, (intent to) distribute",
+    str_detect(Description, "(cds)(?=(.+(poss)))") ~ "cds, posession",
+    str_detect(Description, "(theft)(?=(.+)((25((,000)|(k)))(.+)(100((,000)|(k)))))") ~ "theft, $25,000-$99,999",
+    str_detect(Description, "(theft)(?=(.+)((1,500)(.+)(25((,000)|(k)))))") ~ "theft, $1,500-$24,999",
+    str_detect(Description, "(theft)(?=(.+)((10((,000)|(k)))(.+)(100((,000)|(k)))))") ~ "theft, $10,000-$99,999",
+    str_detect(Description, "(theft)(?=(.+)((1((,000)|(k)))(.+)(10((,000)|(k)))))") ~ "theft, $1,000-$9,999",
+    str_detect(Description, "(theft)(?=(.+)((1((,000)|(k)))))") ~ "theft, less than $1,000",
+    str_detect(Description, "(theft)(?=(.+)((100)(.+)(1,500)))") ~ "theft, $100-$1,499",
+    str_detect(Description, "(theft)(?=(.+)((100(?!k))))") ~ "theft, less than $100",
+    str_detect(Description, "(theft)") ~ "theft, other",
+    str_detect(Description, "((deadly)|(dangerous))(?=(.*weapon))") ~ "dangerous weapon, conceal or possess",
+    str_detect(Description, "(switch)") ~ "dangerous weapon, conceal or possess",
+    str_detect(Description, "(handgun)") ~ "handgun, concceal or carry",
+    str_detect(Description, "(reg)(?=(.+)(offender)) ") ~ "failure to register as offender",
+    str_detect(Description, "(mal(.+)dest)(?!((.+)(less|under|below|<)))(?=(.+)(1,000))") ~ "destruction of property, malicious, at least $1,000",
+    str_detect(Description, "(mal(.+)dest)(?=((.+)(less|under|below|<)))(?=(.+)(1,000))") ~ "destruction of property, malicious, less than $1,000",
+    str_detect(Description, "(mal(.+)dest)(?=((.+)(prop)))") ~ "destruction of property, malicious, other",
+    str_detect(Description, "(firearm)(?=((.+)poss))") ~ "firearm, illegal possession",
+    str_detect(Description, "(poss)(?=((.+)firearm))") ~ "firearm, illegal possession",
+    str_detect(Description, "(firearm)") ~ "firearm use",
+    str_detect(Description, "(armed robbery)") ~ "robbery, armed",
+    str_detect(Description, "(robbery)") ~ "robbery",
+    str_detect(Description, "(traffic)") ~ "traffic violation",
+    str_detect(Description, "(sex)(?=((.+)(4|(four))))") ~ "sex offense, 4th degree",
+    str_detect(Description, "(sex)(?=((.+)(3|(thir))))") ~ "sex offense, 3rd degree",
+    str_detect(Description, "((sex)|(rape))(?=((.+)(2|(sec))))") ~ "rape, 2nd degree",
+    str_detect(Description, "((sex)|(rape))(?=((.+)(1|(firs))))") ~ "rape, 1st degree",
+    str_detect(Description, "(sex)") ~ "sex offense, other",
+    str_detect(Description, "(prob)") ~ "probation violation",
+    str_detect(Description, "(tres)") ~ "trespassing, any",
+    str_detect(Description, "(traff)") ~ "traffic violation",
+    str_detect(Description, "(intox)(?=(.+)(endang))") ~ "reckless endangerment, intoxicated",
+    str_detect(Description, "(endang)") ~ "reckless endangerment",
+    T ~ Description
+  )) %>%
+  # Add relevant Md. Law section number, derived by hand
+  mutate(Crim_Code_Derived = case_when(
+    Description_Clean == "assault, 1st degree" ~ "Section 3-202",
+    Description_Clean == "assault, 2nd degree" ~ "Section 3-203",
+    Description_Clean == "attempted murder, 1st degree" ~ "Section 2-205",
+    Description_Clean == "burglary, 4th degree" ~ "Section 6-205",
+    Description_Clean == "burglary, 3rd degree" ~ "Section 6-204",
+    Description_Clean == "burglary, 2nd degree" ~ "Section 6-203",
+    Description_Clean == "burglary, 1st degree" ~ "Section 6-202",
+    Description_Clean == "cds, (intent to) distribute" ~ "Section 5-600",
+    Description_Clean == "cds, posession" ~ "Section 5-600",
+    str_detect(Description_Clean, "(theft)") ~ "Section 7-104",
+    Description_Clean == "dangerous weapon, conceal or possess" ~ "Section 4-401",
+    Description_Clean == "handgun, concceal or carry" ~ "Section 4-201",
+    str_detect(Description_Clean, "(destruction of property)") ~ "Section 6-301",
+    str_detect(Description_Clean, "(firearm)") ~ "Section 4-101",
+    Description_Clean == "robbery" ~ "Section 3-402",
+    Description_Clean == "robbery, armed" ~ "Section 3-403",
+    Description_Clean == "sex offense, 4th degree" ~ "Section 3-308",
+    str_detect(Description, "(sex)|(rape)") ~ "Section 3-301",
+    str_detect(Description, "(prob)") ~ "Section 6-220",
+    str_detect(Description, "(tress)") ~ "Section 6-401",
+    T ~ NA_character_
+  )) %>%
+  # Include notes on the charge where of interest, especially as relating to homelessness
+  mutate(Notes = case_when(
+    Description_Clean == "assault, 1st degree" ~ "\"cause or attempt to cause serious physical injury\"",
+    Description_Clean == "assault, 2nd degree" ~ "assault against police or first responders",
+    Description_Clean == "attempted murder, 1st degree" ~ "\"attempted\" is distinct from successful",
+    Description_Clean == "burglary, 4th degree" ~ "\"being in or on dwelling, storehouse, or environs ... with intent to commit theft\"",
+    Description_Clean == "burglary, 3rd degree" ~ "\"break and enter the dwelling of another with the intent to commit a crime\"",
+    Description_Clean == "burglary, 2nd degree" ~ "\"Breaking and entering with intent to commit theft, violence, or arson.\"",
+    Description_Clean == "burglary, 1st degree" ~ "\"break and enter the dwelling of another with the intent to commit theft\"",
+    Description_Clean == "dangerous weapon, conceal or possess" ~ "deadly / dangerous weapons are synonymous and include pepper spray and some knives but do not include handguns",
+    Description_Clean == "handgun, concceal or carry" ~ "pistol, revolver, short-barreled shotgun, short-barreled rifle, \"or other firearm capable of being concealed on the person\"",
+    str_detect(Description_Clean, "(robbery)") ~ "includes attempted and successful",
+    Description_Clean == "sex offense, 4th degree" ~ "rape from a position of authority (e.g. teacher, coach, etc.), attempted or successful",
+    Description_Clean == "sex offense, 3rd degree" ~ "rape, may include weapon, burglary, or kidnapping; attempted or successful",
+    Description_Clean == "rape, 2nd degree" ~ "rape, attempted or successful",
+    Description_Clean == "rape, 1st degree" ~ "rape forced with a weapon, attempted or successful",
+    T ~ NA_character_
+  ))
+
+# Remove un-cleaned version
+# rm(crim_charge_and_disposition_info)
+  
+```
+
+### Clean/Categorize Civil Defendant Address Information
+
+```{r}
+
+# Clean up addresses
+civil_defendant_info_clean <- civil_defendant_info %>%
+  clean_addresses(Address) %>%
+  understand_institutions(Address)
+
+# Remove un-cleaned version
+# rm(civil_defendant_info)
+
+```
+
+## Analysis
+
+### Criminal Cases
+
+#### Breakdown of facility frequency
+
+There are 2,658 total certainly homeless addresses. This is not intended to capture all homeless people in the database, only those we can say with reasonable certainty are. For example, addresses marked "unknown" may or may not indicate a homeless person, and it's possible a currently homeless person used a correctional facility address after being recently released.
+
+Counts at each institution are in the table below. The **Weinberg Housing and Resource Center** is the most common, at n=372.
+
+This information could be used by reporters to find homeless or shelter volunteer interview subjects with experience dealing with the criminal justice system.
+
+```{r collapse=TRUE}
+
+# View counts at each institution
+crim_defendant_info_clean %>%
+  filter(Is_Homeless == T ) %>%
+  distinct(CaseNumber, .keep_all = TRUE) %>%
+  group_by(Institution) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+
+# View total count of homeless
+crim_defendant_info_clean %>%
+  filter(Is_Homeless == T ) %>%
+  distinct(CaseNumber, .keep_all = TRUE) %>%
+  group_by(Institution) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n)) %>%
+  summarize(sum(n)) # confirm count
+
+```
+
+#### Frequency of charges
+
+The most common charge listed is **second-degree assault**, which is assault on an officer or emergency worker, at n=242. **Probation violation** is second at n=217, with various **controled dangerous substance (CDS)** charges following at 3rd and 4th. 
+
+However, it should be noted that when possession and distribution or intent to distribute CDS are combined, **CDS combined charges** become the most common at n=281.
+
+**Fourth-degree burglary** is notable as the 5th-most common, because of the apparent vagueness of the charge. The supporting Md. criminal code entry reads in part: _"being in or on dwelling, storehouse, or environs ... with intent to commit theft."_
+
+Interestingly, I have been unable to find charges in the data that look like **fare dodging** (which was a criminal charge in Md. until 2018) to support the assertion that such a charge is frequently leveled against the homeless.
+
+```{r}
+
+crim_charge_and_disposition_info_clean %>%
+  group_by(Description_Clean) %>%
+  summarize(n = n()) %>%
+  #filter(n > 10) %>%
+  arrange(desc(n))
+
+```
+
+#### Unknown addresses
+
+It's valuable to take a moment to consider the number of `Address == UNKNOWN`s in the dataset, n=863.
+
+Of those, 165 cases have an address attached to the case besides (some variation of) Unknown or Def(endant). Only two of those addresses match up to a recognized homeless resource institution.
+
+We don't and cannot know how many of these addresses were marked Unknown because the defendant was homeless.
+
+```{r}
+
+# How many cases are unknowns?
+crim_defendant_info_clean %>%
+  filter(str_detect(Address, "unk")) %>%
+  filter(!str_detect(Address, "dun|bun|airy")) %>%
+  group_by(Address) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n)) %>%
+  summarize(sum(n))
+
+# Pull a vector of unknown cases
+unk_cases <- crim_defendant_info_clean %>%
+  filter(str_detect(Address, "unk")) %>%
+  filter(!str_detect(Address, "dun|bun|airy")) %>%
+  distinct(CaseNumber) %>%
+  pull
+
+crim_defendant_info_clean %>%
+  # Look at only cases with at least one Address value set to unknown
+  filter(CaseNumber %in% unk_cases) %>%
+  arrange(CaseNumber) %>%
+  # Find real addresses in the list
+  filter(!str_detect(Address, "unk") & !str_detect(Address, "def")) %>%
+  # Look at only distinct cases (for count)
+  distinct(CaseNumber, .keep_all = T)
+  # Count each address
+  # group_by(Address) %>%
+  # summarize(n = n()) %>%
+  # arrange(desc(n))
+  # How many are homeless?
+  # filter(Is_Homeless)
+
+```
+
+### Civil Cases
+
+#### Breakdown of facility frequency
+
+There are 3,405 total certainly homeless addresses, with the following breakdown at each institution. **The Homeless Persons Representation Project** is by far the most common, at n=1450, followed by the **Metropolitan Transition Center**, at n=656. All others are below n=200.
+
+This information could be used by reporters to find homeless or shelter volunteer interview subjects with experience dealing with the civil justice system.
+
+```{r collapse=TRUE}
+
+# View counts at each institution
+civil_defendant_info_clean %>%
+  filter(Is_Homeless == T ) %>%
+  distinct(CaseNumber, .keep_all = TRUE) %>%
+  group_by(Institution) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+
+# View counts at each institution
+civil_defendant_info_clean %>%
+  filter(Is_Homeless == T ) %>%
+  distinct(CaseNumber, .keep_all = TRUE) %>%
+  group_by(Institution) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n)) %>%
+  summarize(sum(n)) # confirm count
+
+```
+
+#### Frequency of case types
+
+The data we have for civil cases is structured somewhat differently from the criminal cases. Rather than having a charge description, the data has a case type. This field is much "cleaner," perhaps entered from a list or drop-down menu to prevent accidental variation, but is also less detailed than the cirminal charge descriptions.
+
+The highest frequency of cases are **habeas corpus** cases, at n=189. (The same charge is only the 11th-most common charge when not filtering for homeless cases.) Based on my internet research, habeas corpus writs are generally filed when a person is being held _without being charged with a specific crime_, when _a motion to recondsider a denied bail has also been denied_, or when _a case has stalled in the legal system_ — we should discuss this interpretation with a legal expert to confirm.
+
+**Divorce**-related cases are next, at n=59. (Divorce is 21st across all cases.) **Lead paint** follows at n=50, but it's probable this is a case leveled against a homelessness resource organization, not someone who is homeless.
+
+More research is needed to interpret the meaning behind this data.
+
+```{r results='hide'}
+
+# Pull list of cases related to homeless people
+civil_homeless_casenums <- civil_defendant_info_clean %>%
+  filter(Is_Homeless == T) %>%
+  distinct(CaseNumber) %>%
+  pull
+
+```
+
+```{r collapse=TRUE}
+# Count case types for the homeless
+civil_case_info %>%
+  mutate_if(is.character, tolower) %>%
+  filter(CaseNumber %in% civil_homeless_casenums) %>%
+  group_by(CaseType) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+
+# Count case types for all
+civil_case_info %>%
+  mutate_if(is.character, tolower) %>%
+  group_by(CaseType) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+
+```
+
+##### Lead paint
+
+The building housing the Homeless Persons Representation Project was completed in 1967, so it's not surprising it has had a number of lead paint complaints.
+
+```{r}
+
+lead_paint_cases <- civil_case_info %>%
+  mutate_if(is.character, tolower) %>%
+  filter((CaseNumber %in% civil_homeless_casenums) & (CaseType == "lead paint")) %>%
+  select(CaseNumber, CourtSystem, Title, filing_year, CaseDisposition) %>%
+  select(CaseNumber) %>%
+  pull
+
+civil_defendant_info_clean %>%
+  filter((CaseNumber %in% lead_paint_cases) & (PartyType == "defendant")) %>%
+  distinct(CaseNumber, .keep_all = T) %>%
+  group_by(Address, Institution) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+
+```
+

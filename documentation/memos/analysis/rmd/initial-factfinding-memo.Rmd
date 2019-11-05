@@ -1,0 +1,159 @@
+---
+title: "initial-factfinding-memo"
+author: "Roxanne Ready, Ryan Little"
+date: "8/27/2019"
+output: 
+  md_document:
+    variant: markdown_github
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+---
+
+# Initial Factfinding Memo
+
+```{r setup, include=FALSE}
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render('documentation/memos/initial-factfinding-memo.Rmd', output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, message=FALSE)
+
+# Set the Knitr root directory to the project directory, which is one up from where this document is stored
+# (Does not seem to affect links outside code blocks)
+knitr::opts_knit$set(root.dir = '../..')
+```
+
+## Purpose of This Memo
+To understand:
+
+1. What datasets are available to us for this project
+2. The limitations of the datasets
+3. The meaning of the fields in the available data sets
+
+## Summary
+
+We have available databases of homeless beds grouped by project and regional oversight body, as well as PDF reports grouped at the state and national level. The HMIS program collects data about individuals (race, ethnicity, gender, SSN, etc.), but that may not be available online due to privacy issues (needs confirmation). 
+
+I still have a number of basic questions about the data that need to be answered, listed below. Noteably, I am still uncertain which data accounts for beds in use, beds available and individual people experiencing homelessness.
+
+The data and associated reports make use of a large number of acronyms. I have collected some of the more commonly-used from various sources at the end of this document.
+
+### Limitations of the data:
+
+* Any census of people without homes will have a margin of error due to the difficulty of counting people without permenant residences. [UNCONFIRMED]
+* While there are overarching systems and rules in place to standardize data collection, data is collected by local agencies which may differ in their thoroughness and reliability. [UNCONFIRMED]
+* While data about people using shelters is collected every year, data about people living without shelter is only collected every two years.
+* _INCOMPLETE_ What are the other limitations?
+
+### Need to find out:
+
+_Please mark [DONE] and incorporate into the above summary as each item is understood._
+
+* Which data accounts for "beds in use", "beds available" and people experiencing homelessness?
+* What is the margin of error / expected number of people not counted for data collected about people without addresses?
+* How much does data collection (thoroughness or reliability) vary by local agency / CoC?
+* Is the un-aggregated, person-by-person data available (with personally-identifying information redacted)?
+* Is there a data dictionary specific to _2007-2018-HIC-Counts-by-CoC.xlsx_?
+* What is a "hard to serve individual" as mentioned in AHAR (see Available Data Dictionaries and Reports [below](https://github.com/shardsofblue/homelessness-project-fall2019/blob/master/documentation/memos/initial-factfinding-memo.md#existing-reports)) in reference to Safe Havens (see Bed/Housing unit types [below](https://github.com/shardsofblue/homelessness-project-fall2019/blob/master/documentation/memos/initial-factfinding-memo.md#bedhousing-unit-types))?
+* Permanent Housing is split between Permanent Supportive Housing (requires disability) and Other Permanent Housing (does not require disability). In the data sets, is PH inclusive of both, or representative of one or the other?
+* _Please add to this list as more is discovered that we need to find out._
+
+## Available Data and Sources
+
+### Datasets
+
+* **2007-2018-HIC-Counts-by-CoC.xlsx**
+  * a spreadsheet of homeless bed counts aggregated by region, split into sheets by year
+  * [local copy](../data/input-data/2007-2018-HIC-Counts-by-CoC.xlsx)
+  * [data source](https://www.hudexchange.info/resource/3031/pit-and-hic-data-since-2007/)
+* **2018-Housing-Inventory-Count-Raw-File.xlsx**
+  * a spreadsheet of homeless bed counts less aggregated than the above. Appears to be aggregated by project, but with one other splitting factor I do not yet understand (see Anchorage CoC: Project ID: 101127, which has two entries, one each tagged Invetory Type C and N)
+  * [local copy](../data/input-data/2018-Housing-Inventory-Count-Raw-File.xlsx)
+  * [data source](https://www.hudexchange.info/resource/3031/pit-and-hic-data-since-2007/)
+  
+
+### Other useful websites and organizations:
+
+* [National Alliance to End Homelessness, an NGO](https://endhomelessness.org/)
+
+## Available Data Dictionaries and Reports
+
+### Data Dictionaries
+
+* **HDX Reporting main page**, (HDX MP)
+  * [local copy](../hdx-reporting-main-page.pdf)
+  * [source](https://www.hudexchange.info/programs/hdx/hdx-reporting/)
+* **Sheltered PIT Count and HMIS Data Element Crosswalk**
+  * [local copy](../PIT-Count-Methodology-Guide.pdf)
+  * [source](https://files.hudexchange.info/resources/documents/Sheltered-PIT-Count-and-HMIS-Data-Element-Crosswalk.pdf)
+* **HMIS Data Standards Data Dictionary**, (HMIS DSD), March 2018, v 1.3
+  * [local copy](../HMIS-Data-Dictionary-2018.pdf)
+  * [source](https://files.hudexchange.info/resources/documents/HMIS-Data-Dictionary-2018.pdf)
+* Names and numbers of **state CoC groupings**
+  * [local copy](../fy-2018-continuums-of-care-names-and-numbers.pdf)
+  * [source](https://files.hudexchange.info/resources/documents/fy-2018-continuums-of-care-names-and-numbers.pdf)
+
+### Existing Reports
+
+* **Aggregate counts of homelessness prepared by HMIS**
+  * PDF tables showing homelessness counts at the state and national level
+  * [source](https://www.hudexchange.info/programs/coc/coc-housing-inventory-count-reports/)
+* **The 2018 Annual Homeless Assessment Report (AHAR) to Congress**, Part 1, Dec. 2018
+  * Includes definitions and overviews of the state of homelessness across the U.S., organized by category of person (individuals, families, youth, veterans, chronically homeless), each one further grouped at the national, state and CoC level.
+  * [local copy](../2018-AHAR-Part-1.pdf)
+  * [source](https://files.hudexchange.info/resources/documents/2018-AHAR-Part-1.pdf)
+
+### Glossary
+
+All definitions are pulled from the above sources (acronyms defined above) to serve as quick references for reporters working on this project. This list is not exhaustive; for further definitions, see the sources listed above.
+
+* **McKinney–Vento**: refers to the [Stewart B. McKinney Homeless Assistance Act](https://www.govtrack.us/congress/bills/100/hr558/text), a U.S. federal law enacted in 1987 that provides federal money for homeless shelter programs.
+
+#### System-wide acronyms
+
+| Acronym | Full Term                                   | Definition
+--------- | ------------------------------------------- | ---
+| CoC     | Continuum of Care                           | "A Continuum of Care (CoC) is a regional or local planning body that coordinates housing and services funding for homeless families and individuals," AHAR p. 2**
+| ESG     | Emergency Solution Grant                    |
+| HDX     | Homelessness Data Exchange                  |
+| HIC     | Housing Inventory Count                     |
+| HMIS    | Homeless Management Information System      | "the information system designated by a local Continuum of Care (CoC) to comply with the requirements of CoC Program interim rule 24 CFR 578. [It] is a locally-administered data system used to record and analyze client, service, and housing data for individuals and families who are homeless or at risk of homelessness. It is administered by the U.S. Department of Housing and Urban Development (HUD) through the Office of Special Needs Assistance Programs (SNAPS) as its comprehensive data response to its congressional mandate to report to Congress on national homelessness. It is also used by the other federal partners from the U.S. Department of Health and Human Services (HHS) and the U.S. Department of Veterans Affairs and their respective programs to measure project performance, report to congress, and participate in benchmarking of the national effort to end homelessness," HDX MP.
+| PATH    | Projects for Assistance in Transition from Homelessness | 
+| PIT     | Point-in-Time                               | count of homeless persons; _sheltered_ is taken yearly, _unsheltered_ is taken every other year
+| RHY     | Runaway Homeless Youth                      |
+
+#### Bed/Housing unit types
+
+| Acronym | Full Term                                   | Definition
+--------- | ------------------------------------------- | ---
+| ES      | Emegency Shelter                            | "a facility with the primary purpose of providing temporary shelter for homeless people," AHAR p. 2.
+| PH      | Permanent Housing                           | Housing for formerly homeless people, split between Permanent Supportive Housing (requires disability) and Other Permanent Housing (does not require disability)
+| PSH     | Permanent Supportive Housing                | "a housing model designed to provide housing assistance (project- and tenant-based) and supportive services on a long-term basis to formerly homeless people. HUD’s Continuum of Care program, authorized by the McKinney-Vento Act, funds PSH and requires that the client have a disability for eligibility," AHAR p. 2
+|         | Other Permanent Housing                     | "is housing with or without services that is specifically for formerly homeless people but that does not require people to have a disability." AHAR p. 2
+| SH      | Safe Havens                                 | "provide temporary shelter and services to hard-to-serve individuals," AHAR p. 2. , "beds and units that satisfy HUD’s standards, as identified in the 2009 NOFA," HMIS DSD.
+|         | Rapid Re-Housing                            | "a housing model designed to provide temporary housing assistance to people experiencing homelessness, moving them quickly out of homelessness and into permanent housing," AHAR p. 2
+| TH      | Transitional Housing                        | "provide people experiencing homelessness a place to stay combined with supportive services for up to 24 months," AHAR p. 2.
+
+&ast;&ast;The definition HMIS provides is: "[A _state or region grouping_] organized to carry out the responsibilities required under the CoC Program Interim Rule (24 CFR Part 578) and comprises representatives of organizations, including nonprofit homeless providers, victim service providers, faith-based organizations, governments, businesses, advocates, public housing agencies, school districts, social service providers, mental health agencies, hospitals, universities, affordable housing developers, and law enforcement, and organizations that serve homeless and formerly homeless persons to the extent that these groups are represented within the geographic area and are available to participate. ... CoC _Program_ refers to the federal funding source which provides housing and/or service grant dollars."
+
+
+
+```{r include=FALSE}
+
+### This code block not intended for final deployment ###
+# A place to explore the data while researching it
+
+# Load Packages
+#install.packages("tidyverse", dependencies = T )
+library(tidyverse) # For data science goodness
+
+# Turn off scientific notation in RStudio 
+# (prevents accidental coersion to character type on export)
+options(scipen = 999)
+
+hic_counts_coc <- read_csv("data/input-data/2018-HIC-Counts-by-CoC.csv")
+str(hic_counts_coc)
+
+```

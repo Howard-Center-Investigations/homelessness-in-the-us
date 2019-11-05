@@ -1,0 +1,1113 @@
+---
+title: "theresa-code-markdown"
+author: "Theresa Diffendal"
+date: "9/16/2019"
+always_allow_html: yes
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    df_print: paged
+    collapse: TRUE
+  md_document:
+    variant: markdown_github
+---
+
+# Homelessness Project 2019
+
+This is a project conducted by the Howard Center for Investigative Reporting at Philip Merrill College of Journalism at the University of Maryland studying trends in homelessness. This markdown file analyzes data from the Vulnerability Index - Service Prioritization Decision Assistance Tool (VI-SPDAT) which can be found [here](https://d3n8a8pro7vhmx.cloudfront.net/orgcode/pages/313/attachments/original/1479851108/VI-SPDAT-v2.01-Single-US-Fillable.pdf?1479851108)
+
+Data provided via email to Sean Mussenden, Data Editor for the Howard Center for Investigative Journalism, by Iain De Jong (idejong@orgcode.com) with OrgCode, the main individual who researched, designed and conducted the development testing for the VI-SPDAT. 
+
+```{r setup, include=FALSE}
+
+# Save this file and run the following line from the R console to output both HTML and .md formats:
+# rmarkdown::render(paste0(here::here(), '/data/scripts/theresa-markdown.Rmd'), output_format = 'all')
+
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE)
+
+# Set the Knitr root directory to the project directory, which is one up from where this document is stored
+# (Does not seem to affect links outside code blocks)
+#knitr::opts_knit$set(root.dir = '../..')
+```
+
+## Load packages
+
+```{r cars}
+##for debugging
+rm(list=ls())
+
+# install.packages("tidyverse")
+# install.packages("stringr")
+# install.packages("lubridate")
+# install.packages("readxl")
+# install.packages("janitor")
+# install.packages("weathermetrics")
+# install.packages("ggplot2")
+# install.packages("reshape")
+# install.packages("writexl")
+# install.packages("purrr")
+# install.packages("dplyr")
+# install.packages("naniar")
+
+library(tidyverse)
+library(stringr)
+library(lubridate)
+library(readxl)
+library(janitor)
+library(weathermetrics)
+library(ggplot2)
+library(reshape)
+library(writexl)
+library(dplyr)
+library(naniar)
+
+rm(list=ls())
+```
+
+## Load and Clean Vulnerability Survey Data
+
+The SPDAT (Service Prioritization Decision Assistance Tool) was created by OrgCode Consulting, Inc. The survey is intended to be administered by a trained indidivual to assess a homeless individuals along four categories: Wellness, Risks, Socialization & Daily Functions, and History of Housing. 
+
+```{r, warning=FALSE}
+
+#here looks for where the project is located
+#would need to install.packages("here")
+load_path <- paste0(here::here(), "/data/input-data/")
+
+#The data includes two sheets, one with data for unsheltered individuals and the other with data for sheltered individuals. These were kept separate in the analysis to study differences between respondents who reported mainly sleeping "unsheltered" compared to "sheltered" 
+unsheltered_raw <- read_xlsx(paste0(load_path, "vulnerability-survey.xlsx"))
+sheltered_raw <- read_xlsx(paste0(load_path, "vulnerability-survey.xlsx"), sheet=2)
+
+#clean the names of each column, words are now separated by _
+#Separate date column into year, month and day columns
+unsheltered_survey <- clean_names(unsheltered_raw) %>%
+  separate(date_of_assessment, sep = "-", into = c("year", "month", "day"), remove = F)
+sheltered_survey <- clean_names(sheltered_raw) %>%
+  separate(date_of_assessment, sep = "-", into = c("year", "month", "day"), remove = F)
+
+```
+
+For year-over-year analysis, create a subset of the data for each year
+```{r}
+unsheltered_2018 <- subset(unsheltered_survey, year==2018)
+unsheltered_2017 <- subset(unsheltered_survey, year==2017)
+unsheltered_2016 <- subset(unsheltered_survey, year==2016)
+unsheltered_2015 <- subset(unsheltered_survey, year==2015)
+
+sheltered_2018 <- subset(sheltered_survey, year==2018)
+sheltered_2017 <- subset(sheltered_survey, year==2017)
+sheltered_2016 <- subset(sheltered_survey, year==2016)
+sheltered_2015 <- subset(sheltered_survey, year==2015)
+```
+
+CAVEAT: 2018 data is only complete through April 13 for sheltered and March 31 for unsheltered, while 2015 data doesn't start until February 1 for unsheltered and April 1 for sheltered, so any analysis of those years will have lower-than-expected values
+
+## VI-SPDAT Data
+
+### Basic Information
+
+* Age
+  
+  + The mean age of a sheltered respondent is 46
+  + The mean age of an unsheltered respondent is 47
+```{r}
+#What is the average age of sheltered individuals who took this survey?
+mean(sheltered_survey$age)
+
+ggplot(sheltered_survey, aes(x=age)) +
+  geom_bar() +
+  labs(title = "Sheltered Age Distribution")
+
+#Unsheltered
+mean(unsheltered_survey$age)
+
+ggplot(unsheltered_survey, aes(x=age)) +
+  geom_bar() +
+  labs(title = "Unsheltered Age Distribution")
+
+```
+
+* Other information in this section is personally identifiable and thus unavailable
+
+
+
+### Hisotry of Housing and Homelessness Section 
+
+Questions include:
+
+* How long has it been since you lived in permanent stable housing?
+  + Average sheltered response: 410.4 days, maximum is 14600, while minimum is 1
+  + Average unsheltered response: 2633 days, maximum was 15000 days, minimum was 6 days
+```{r}
+#How many days (min, max and average) since an individual had permanent stable housing?
+#Sheltered
+mean(sheltered_survey$how_long_has_it_been_since_you_lived_in_permanent_stable_housing_at_time_of_vi_spdat, na.rm=TRUE)
+max(sheltered_survey$how_long_has_it_been_since_you_lived_in_permanent_stable_housing_at_time_of_vi_spdat, na.rm=TRUE)
+min(sheltered_survey$how_long_has_it_been_since_you_lived_in_permanent_stable_housing_at_time_of_vi_spdat, na.rm=TRUE)
+
+#Unsheltered
+mean(unsheltered_survey$how_long_has_it_been_since_you_lived_in_permanent_stable_housing_at_time_of_vi_spdat)
+max(unsheltered_survey$how_long_has_it_been_since_you_lived_in_permanent_stable_housing_at_time_of_vi_spdat, na.rm=TRUE)
+min(unsheltered_survey$how_long_has_it_been_since_you_lived_in_permanent_stable_housing_at_time_of_vi_spdat, na.rm=TRUE)
+```
+
+
+* In the last three years, how many times have you been homeless?
+  + Average unsheltered response: 1.91, maximum was 14
+  + Average sheltered: 1.097, maximum: 44
+```{r}
+#Create a histogram to show frequency of responses; most respondents have been homeless once or twice in the past three years
+mean(unsheltered_survey$in_the_last_three_years_how_many_times_have_you_been_homeless)
+max(unsheltered_survey$in_the_last_three_years_how_many_times_have_you_been_homeless)
+hist(unsheltered_survey$in_the_last_three_years_how_many_times_have_you_been_homeless)
+
+#Create a histogram to show frequency of responses; most respondents have been homeless once or twice in the past three years
+mean(sheltered_survey$in_the_last_three_years_how_many_times_have_you_been_homeless, na.rm=TRUE)
+max(sheltered_survey$in_the_last_three_years_how_many_times_have_you_been_homeless, na.rm=TRUE)
+hist(sheltered_survey$in_the_last_three_years_how_many_times_have_you_been_homeless)
+```
+
+
+
+### Risks Section
+
+Questions include:
+
+In the past six months, how many times have you...
+
+* Received health care at an emergency department/room?
+  + Average sheltered response: 4.122844
+  + Average unsheltered response: 7.73973
+```{r}
+#Created a histogram for each question to show frequency in addition to calculating the average
+
+#Emergency Room
+mean(sheltered_survey$er)
+hist(sheltered_survey$er)
+
+mean(unsheltered_survey$er)
+hist(unsheltered_survey$er)
+```
+
+
+* Taken an ambulance to the hospital?
+  + Average sheltered response: 1.315142
+  + Average unsheltered response: 2.73583
+```{r}
+#Ambulance
+mean(sheltered_survey$ambulance)
+hist(sheltered_survey$ambulance)
+
+mean(unsheltered_survey$ambulance)
+hist(unsheltered_survey$ambulance)
+```
+
+
+* Used a crisis service, including sexual assault crisis, mental health crisis, family/intimate violence, distress centers and suicide prevention hotlines?
+  + Average response: 0.5685013
+  + Average response: 0.9651737
+```{r}
+#Crisis Service
+mean(sheltered_survey$crisis)
+
+#Crisis Service
+mean(unsheltered_survey$crisis)
+hist(unsheltered_survey$crisis)
+```
+
+
+* Talked to police because you witnessed a crime, were the victim of a crime, or the alleged perpetrator of a crime or because the police told you that you must move along?
+  + Average sheltered response: 2.077975
+  + Average unsheltered response: 20.6056
+```{r}
+#Police Interaction
+mean(sheltered_survey$police)
+hist(sheltered_survey$police)
+
+mean(unsheltered_survey$police)
+hist(unsheltered_survey$police)
+```
+
+
+* Stayed one or more nights in a holding cell, jail or prison, whether that was a short-term stay like the drunk tank, a longer stay for a more serious offence, or anything in between?
+  + Average sheltered response: 0.416568
+  + Average unsheltered response: 6.799266
+```{r}
+#Jail or Prison
+mean(sheltered_survey$jail_or_prison)
+hist(sheltered_survey$jail_or_prison)
+
+mean(unsheltered_survey$jail_or_prison)
+hist(unsheltered_survey$jail_or_prison)
+```
+
+
+* Have you been attacked or beaten up since you’ve become homeless?
+  + Sheltered:
+    + No = 27031,    Yes = 11815,    %Yes = 30% 
+  + Unsheltered:  
+    + No = 23627,    Yes = 2273,     %Yes = 8.8%
+```{r}
+#Attacked or Beaten
+count(sheltered_survey, have_you_been_attacked_or_beaten_up_since_you_ve_become_homeless)
+
+count(unsheltered_survey, have_you_been_attacked_or_beaten_up_since_you_ve_become_homeless)
+```
+
+
+* Have you threatened to or tried to harm yourself or anyone else in the last year?
+  + Sheltered:
+    + No = 35871,		Yes =	2975,	  %Yes = 7.66%
+  + Unsheltered:
+    + No = 22626,   Yes = 3274,   %Yes = 12.64%
+```{r}
+#Threateneded or tried to harm self/someone else
+count(sheltered_survey, have_you_threatened_to_or_tried_to_harm_yourself_or_anyone_else_in_the_last_year)
+
+count(unsheltered_survey, have_you_threatened_to_or_tried_to_harm_yourself_or_anyone_else_in_the_last_year)
+```
+
+
+* Do you have any legal stuff going on right now that may result in you being locked up, having to pay fines, or that make it more difficult to rent a place to live?
+  + Sheltered:
+    + No = 36524,   Yes = 2322,   %Yes = 5.98%
+  + Unsheltered:
+    + No = 20445,   Yes = 5455,   %Yes = 21.05%
+```{r}
+#Legal Obstacles?
+#There is one "yy" value which is an assumed typo and is included with the "y" count
+count(sheltered_survey, do_you_have_any_legal_stuff_going_on_right_now_that_may_result_in_you_being_locked_up_having_to_pay_nes_or_that_make_it_more_dif_cult_to_rent_a_place_to_live)
+
+count(unsheltered_survey, do_you_have_any_legal_stuff_going_on_right_now_that_may_result_in_you_being_locked_up_having_to_pay_nes_or_that_make_it_more_dif_cult_to_rent_a_place_to_live)
+```
+
+
+* Does anybody force or trick you to do things that you do not want to do?
+  + Sheltered:
+    + No = 35282,		Yes =	3564,	  %Yes = 9.18%
+  + Unsheltered:
+    + No = 22829,		Yes =	3071,		%Yes = 15.05% 
+```{r}
+#Forced or Tricked?
+count(sheltered_survey, does_anybody_force_or_trick_you_to_do_things_that_you_do_not_want_to_do)
+
+count(unsheltered_survey, does_anybody_force_or_trick_you_to_do_things_that_you_do_not_want_to_do)
+```
+
+
+* Do you ever do things that may be considered to be risky like exchange sex for money, run drugs for someone, have unprotected sex with someone you don’t know, share a needle, or anything like that?
+  + Sheltered:
+    + No = 33332,		Yes =	5514,	  %Yes = 14.2%
+  + Unsheltered:
+    + No = 22001,		Yes = 3899,	  %Yes = 15.05%
+```{r}
+#Risky Behavior
+count(sheltered_survey, do_you_ever_do_things_that_may_be_considered_to_be_risky_like_exchange_sex_for_money_food_drugs_or_a_place_to_stay_run_drugs_for_someone_have_unprotected_sex_with_someone_you_don_t_know_share_a_needle_or_anything_like_that)
+
+count(unsheltered_survey, do_you_ever_do_things_that_may_be_considered_to_be_risky_like_exchange_sex_for_money_food_drugs_or_a_place_to_stay_run_drugs_for_someone_have_unprotected_sex_with_someone_you_don_t_know_share_a_needle_or_anything_like_that)
+```
+
+* Been hospitalized as an inpatient?
+  + Average sheltered response: n/a
+  + Average unsheltered response: n/a
+  
+
+
+
+### Socialization and Daily Functioning
+
+Questions:
+
+
+* Is there any person, past landlord, business, bookie, dealer, or government group like the IRS that thinks you owe them money?
+  + Sheltered:   No = 28477,   Yes = 10369,  %Yes = 26.69%
+  + Unsheltered: No = 21097,   Yes = 4803,   %Yes = 18.5% 
+```{r}
+#Owe Money to Someone?
+#There is one "yy" value which is an assumed typo and is included with the "y" count
+count(sheltered_survey, is_there_any_person_past_landlord_business_bookie_dealer_or_government_group_like_the_irs_that_thinks_you_owe_them_money)
+
+count(unsheltered_survey, is_there_any_person_past_landlord_business_bookie_dealer_or_government_group_like_the_irs_that_thinks_you_owe_them_money)
+```
+
+
+* Do you get any money from the government, a pension, an inheritance, working under the table, a regular job, or anything like that?
+  + Sheltered:   No = 13446,   Yes = 25400,  %Yes = 65.39%
+  + Unsheltered: No = 18156,   Yes = 7744,   %Yes = 29.9%
+```{r}
+#Any income?
+count(sheltered_survey, do_you_get_any_money_from_the_government_a_pension_an_inheritance_working_under_the_table_a_regular_job_or_anything_like_that)
+
+count(unsheltered_survey, do_you_get_any_money_from_the_government_a_pension_an_inheritance_working_under_the_table_a_regular_job_or_anything_like_that)
+```
+
+
+* Do you have planned activities, other than just surviving, that make you feel happy and fulfilled?
+  + Sheltered:   No = 24855,   Yes = 13991,  %Yes = 36.02%
+  + Unsheltered: No = 12995,   Yes = 12905,  %Yes = 49.8%
+```{r}
+#Any happy planned activities?
+count(sheltered_survey, do_you_have_planned_activities_other_than_just_surviving_that_make_you_feel_happy_and_ful_lled)
+
+count(unsheltered_survey, do_you_have_planned_activities_other_than_just_surviving_that_make_you_feel_happy_and_ful_lled)
+```
+
+
+* Are you currently able to take care of basic needs like bathing, changing clothes, using a restroom, getting food and clean water and other things like that?
+  + Sheltered:   No = 1156,    Yes = 37690,  %Yes = 97.02%
+  + Unsheltered: No = 12965,   Yes = 12935,  %Yes = 49.9%
+```{r}
+#Can you afford basic needs?
+count(sheltered_survey, are_you_currently_able_to_take_care_of_basic_needs_like_bathing_changing_clothes_using_a_restroom_getting_food_and_clean_water_and_other_things_like_that)
+
+count(unsheltered_survey, are_you_currently_able_to_take_care_of_basic_needs_like_bathing_changing_clothes_using_a_restroom_getting_food_and_clean_water_and_other_things_like_that)
+```
+
+
+* Is your current homelessness in any way caused by a relationship that broke down, an unhealthy or abusive relationship, or because family or friends caused you to become evicted?
+  + Sheltered:   No = 31951,   Yes = 6895,   %Yes = 17.75%
+  + Unsheltered: No = 13044,   Yes = 12856,  %Yes = 49.64%
+```{r}
+#Current homelessness related to relationship issues?
+count(sheltered_survey, is_your_current_homelessness_in_any_way_caused_by_a_relationship_that_broke_down_an_unhealthy_or_abusive_relationship_or_because_family_or_friends_caused_you_to_become_evicted)
+
+count(unsheltered_survey, is_your_current_homelessness_in_any_way_caused_by_a_relationship_that_broke_down_an_unhealthy_or_abusive_relationship_or_because_family_or_friends_caused_you_to_become_evicted)
+```
+
+
+
+
+### Wellness
+
+Questions:
+
+* Have you ever had to leave an apartment, shelter program, or other place you were staying because of your physical health?
+  + Sheltered:   No = 34504,    Yes = 4342,     %Yes = 11.18%
+  + Unsheltered: No = 13875,    Yes = 12025,    %Yes = 46.43%
+```{r}
+#Physical Health Led to Leaving Housing?
+count(sheltered_survey, have_you_ever_had_to_leave_an_apartment_shelter_program_or_other_place_you_were_staying_because_of_your_physical_health)
+
+count(unsheltered_survey, have_you_ever_had_to_leave_an_apartment_shelter_program_or_other_place_you_were_staying_because_of_your_physical_health)
+```
+
+
+* Do you have any chronic health issues with your liver, kidneys, stomach, lungs or heart?
+  + Sheltered:   No = 37166,    Yes = 1680,    %Yes = 4.33%
+  + Unsheltered: No = 13930,    Yes =	11970,   %Yes = 46.2%
+```{r}
+#Chronic Issues?
+count(sheltered_survey, do_you_have_any_chronic_health_issues_with_your_liver_kidneys_stomach_lungs_or_heart)
+
+count(unsheltered_survey, do_you_have_any_chronic_health_issues_with_your_liver_kidneys_stomach_lungs_or_heart)
+```
+
+
+* If there was space available in a program that specifically assists people that live with HIV or AIDS, would that be of interest to you?
+  + Sheltered:   No = 38754,    Yes = 92,       %Yes = .24%
+  + Unsheltered: No = 25554,    Yes = 346,      %Yes = 1.34%
+```{r}
+#Interested in program assisting those with HIV or AIDS?
+count(sheltered_survey, if_there_was_space_available_in_a_program_that_speci_cally_assists_people_that_live_with_hiv_or_aids_would_that_be_of_interest_to_you)
+
+count(unsheltered_survey, if_there_was_space_available_in_a_program_that_speci_cally_assists_people_that_live_with_hiv_or_aids_would_that_be_of_interest_to_you)
+```
+
+
+* Do you have any physical disabilities that would limit the type of housing you could access, or would make it hard to live independently because you’d need help?
+  + Sheltered:   No = 37457,    Yes = 1389,     %Yes = 3.58%
+  + Unsheltered: No = 23641,    Yes = 2259,     %Yes = 8.72%
+```{r}
+#Physical Disabilities limiting housing?
+count(sheltered_survey, do_you_have_any_physical_disabilities_that_would_limit_the_type_of_housing_you_could_access_or_would_make_it_hard_to_live_independently_because_you_d_need_help)
+
+count(unsheltered_survey, do_you_have_any_physical_disabilities_that_would_limit_the_type_of_housing_you_could_access_or_would_make_it_hard_to_live_independently_because_you_d_need_help)
+```
+
+
+* When you are sick or not feeling well, do you avoid getting help?
+  + Sheltered:   No = 37832,		 Yes =	1014,	   %Yes = 2.61%
+  + Unsheltered: No = 13631,		 Yes	= 12269,   %Yes = 47.37%
+```{r}
+#Avoid medical help?
+count(sheltered_survey, when_you_are_sick_or_not_feeling_well_do_you_avoid_getting_medical_help)
+
+count(unsheltered_survey, when_you_are_sick_or_not_feeling_well_do_you_avoid_getting_medical_help)
+```
+
+
+
+* FOR FEMALE RESPONDENTS ONLY: Are you currently pregnant?
+  + Sheltered:   NA = 38661,    Yes = 185,                %Yes = .48%
+  + Unsheltered: NA = 20906,    Yes = 111,   No = 4883,	  %Yes = .43%,    %NA = 80.72%
+```{r}
+#Pregnant?
+count(sheltered_survey, are_you_currently_pregnant)
+
+count(unsheltered_survey, are_you_currently_pregnant)
+```
+
+
+
+* Has your drinking or drug use led you to being kicked out of an apartment or program where you were staying in the past?
+  + Sheltered:   No = 36417,    Yes = 2429,     %Yes = 6.25%
+  + Unsheltered: No = 12755,    Yes = 13145,    %Yes = 50.75%
+```{r}
+#Kicked out due to drinking/drug use?
+count(sheltered_survey, has_your_drinking_or_drug_use_led_you_to_being_kicked_out_of_an_apartment_or_program_where_you_were_staying_in_the_past)
+
+#There are three N values, which is an assumed typo for n, and as such the Ns are included in the n totals
+count(unsheltered_survey, has_your_drinking_or_drug_use_led_you_to_being_kicked_out_of_an_apartment_or_program_where_you_were_staying_in_the_past)
+```
+
+
+* Will drinking or drug use make it difficult for you to stay housed or afford your housing?
+  + Sheltered:   No = 34949,    Yes = 3897,     %Yes = 10.03%
+  + Unsheltered: No = 12862,    Yes = 13038,    %Yes = 50.34%
+```{r}
+#Will drinking or drug issues make it difficult to afford/keep housing?
+count(sheltered_survey, will_drinking_or_drug_use_make_it_dif_cult_for_you_to_stay_housed_or_afford_your_housing)
+
+#There are four N values, which is an assumed typo for n, and as such the Ns are included in the n totals
+count(unsheltered_survey, will_drinking_or_drug_use_make_it_dif_cult_for_you_to_stay_housed_or_afford_your_housing)
+```
+
+
+
+* Have you ever had trouble maintaining your housing, or been kicked out of an apartment, shelter program or other place you were staying, because of:
+
+  + A mental health issue or concern? 
+    + Sheltered:   No = 32119,			Yes =	6727,			%Yes = 17.32%
+    + Unsheltered: No = 13068,			Yes =	12832,	  %Yes = 49.5%
+```{r}
+#Mental health issue?
+count(sheltered_survey, a_mental_health_issue_or_concern)
+
+count(unsheltered_survey, a_mental_health_issue_or_concern)
+```
+
+
+  + A past head injury? 
+    + Sheltered:   No = 32414,      Yes = 6432,     %Yes = 16.56%
+    + Unsheltered: No = 12793,      Yes = 13107,    %Yes = 50.61%
+```{r}
+#Past Head Injury?
+count(sheltered_survey, a_past_head_injury)
+
+count(unsheltered_survey, a_past_head_injury)
+```
+
+
+  + A learning disability, developmental disability, or other impairment?
+    + Sheltered:   No = 32409,      Yes = 6437,         %Yes = 16.57%
+    + Unsheltered: No = 23307,      Yes = 2593,         %Yes = 10.01%
+```{r}
+#Learning Disability
+count(sheltered_survey, a_learning_disability_developmental_disability_or_other_impairment)
+
+count(unsheltered_survey, a_learning_disability_developmental_disability_or_other_impairment)
+```
+
+
+* Do you have any mental health or brain issues that would make it hard for you to live independently because you’d need help?
+  + Sheltered:   No = 32374,    Yes = 6472,     %Yes = 16.66%
+  + Unsheltered: No = 23561,    Yes = 2339,     %Yes = 9.03%
+```{r}
+#Difficulty living independently due to mental health or brain issues?
+count(sheltered_survey, do_you_have_any_mental_health_or_brain_issues_that_would_make_it_hard_for_you_to_live_independently_because_you_d_need_help)
+
+count(unsheltered_survey, do_you_have_any_mental_health_or_brain_issues_that_would_make_it_hard_for_you_to_live_independently_because_you_d_need_help )
+```
+
+
+* Are there any medications that a doctor said you should be taking that, for whatever reason, you are not taking?
+  + Sheltered:   No = 32241,    Yes = 6605,     %Yes = 17%
+  + Unsheltered: No = 12972,    Yes = 12928,    %Yes = 49.92%
+```{r}
+#Not taking medications?
+count(sheltered_survey, are_there_any_medications_that_a_doctor_said_you_should_be_taking_that_for_whatever_reason_you_are_not_taking)
+
+count(unsheltered_survey, are_there_any_medications_that_a_doctor_said_you_should_be_taking_that_for_whatever_reason_you_are_not_taking)
+```
+
+
+* Are there any medications like painkillers that you don’t take the way the doctor prescribed or where you sell the medication?
+  + Sheltered:   No = 32172,    Yes = 6674,     %Yes = 17.18%
+  + Unsheltered: No = 13105,    Yes = 12795,    %Yes = 49.4%
+```{r}
+#Misuse of medications?
+count(sheltered_survey, are_there_any_medications_like_painkillers_that_you_don_t_take_the_way_the_doctor_prescribed_or_where_you_sell_the_medication)
+
+count(unsheltered_survey, are_there_any_medications_like_painkillers_that_you_don_t_take_the_way_the_doctor_prescribed_or_where_you_sell_the_medication)
+```
+
+
+* Has your current period of homelessness been caused by an experience of emotional, physical, psychological, sexual, or other type of abuse, or by any other trauma you have experienced?
+  + Sheltered:   No = 25652,    Yes = 13194,    %Yes = 33.97%
+  + Unsheltered: No = 13981,    Yes = 11919,    %Yes = 46.02%
+```{r}
+#Homelessness caused by trauma?
+count(sheltered_survey, yes_no_trauma_or_abuse) 
+
+count(unsheltered_survey, yes_no_trauma_or_abuse) 
+```
+
+
+## Nights Spent in Shelter in Last Two Years
+
+These questions and responses are incldued in the data set but not in the survey. The data team belives this question provides important additional metrics and so was analysized. The data related to nights spent in shelters in the last two years is only available for unsheltered individuals as sheltered individuals, by definition, spend the majority of their time in shelters.
+
+* Nights spent in shelter in last two years:
+  + Average: 37 nights
+  + Maximum: 526 nights
+  + 6,172 respondents said they spent 0 nights in a shelter over the last two years. This was the most respondents for any number of nights
+  + Large dropoff after six days: 1064 to 662
+```{r}
+mean(unsheltered_survey$nights_registered_in_shelter_in_last_24_months)
+max(unsheltered_survey$nights_registered_in_shelter_in_last_24_months)
+count(unsheltered_survey, nights_registered_in_shelter_in_last_24_months)
+```
+
+
+## Trimorbidity Data
+
+Depending on an individual's responses, the surveyor assessed whether the individual possibly suffered from tri-morbidity (problems with physical health, mental health, and substance abuse).
+
+Questions:
+
+* Of the three issues that make up tri-morbidity, how many did respondents have?
+  + Sheltered:   0 = 13984		1 =	18734	(48.23%)		2 =	5499 (14.16%)			3 =	629	(1.62%)
+  + Unsheltered: 0 = 286			1 =	2880 (11.12%)			2 =	9794 (37.82%)			3 =	12940	(49.96%)
+```{r}
+#How many of the three issues that make up tri-morbidity?
+count(sheltered_survey, sub_score_trimorbidity)
+
+count(unsheltered_survey, sub_score_trimorbidity)
+```
+
+
+* How many respondents were marked as tri-morbid?
+  + Sheltered:   No = 38217,     Yes = 629,        %Yes = 1.62%
+  + Unsheltered: No = 12960,     Yes = 12940,      %Yes = 49.96%
+```{r}
+#How many respondents were marked as tri-morbid?
+count(sheltered_survey, trimorbidity)
+
+count(unsheltered_survey, trimorbidity)
+```
+
+
+## LGBTQ+
+
+* What percentage of unsheltered individuals identified as LGBTQQI?
+
+* What percentage of respondents are LGBTQ+?
+  + Sheltered:   No = 35375,     Yes = 3471,      %Yes = 8.9%
+  + Unsheltered: NA = 23691,     Yes = 2209,      %Yes = 8.5% reported being LGBTQ
+  + Compare this to a [2017 Gallup poll](https://news.gallup.com/poll/234863/estimate-lgbt-population-rises.aspx) that found 4.5% of adult Americans are LGBT 
+```{r}
+#Identify as LGBT+
+count(sheltered_survey, identifies_as_lgbtqqi2)
+
+count(unsheltered_survey, identifies_as_lgbtqqi2)
+```
+
+
+
+## Race/Ethnicity
+
+* Sheltered response racial breakdown: 
+  + asian:	          871,  2.24%			
+  + black:	          23427, 60.31%			
+  + hispanic:	        4310, 11.1% 			
+  + native american:	374, .96%			
+  + pacific islander:	315, .81%			
+  + white:	          9549, 24.58%	
+
+* Unsheltered response racial breakdown:
+  + asian:	          603,  2.33%			
+  + black:	          9618, 37.14%			
+  + hispanic:	        625, 2.41% 			
+  + native american:	276, 1.07%			
+  + pacific islander:	20, .08%			
+  + white:	          14758, 56.98%	
+  
+* According to [census.gov](https://www.census.gov/quickfacts/fact/table/US/PST045218#PST045218), makeup of the US population by race:
+  + Asian: 5.9%
+  + Black or African American: 13.4%
+  + Hispanic or Latino: 8.3%
+  + American Indian and Alaska Native: 1.3%
+  + Native Hawaiian and Other Pacific Islander: 0.2%
+  + White: 76.5%
+  + Two or More Races: 2.7%
+  
+```{r}
+#Change all answers to lowercase to eliminate duplicates
+sheltered_survey$race_ethnicity <- tolower(sheltered_survey$race_ethnicity)
+
+#Count the number of responses
+count(sheltered_survey, race_ethnicity)
+
+#Change all answers to lowercase to eliminate duplicates
+unsheltered_survey$race_ethnicity <- tolower(unsheltered_survey$race_ethnicity)
+
+#Count the number of responses
+count(unsheltered_survey, race_ethnicity)
+```
+
+Find race/ethnicity per geographic area
+
+```{r}
+sheltered_survey %>%
+  group_by(geographic_area, race_ethnicity) %>%
+  count(race_ethnicity)
+
+unsheltered_survey %>%
+  group_by(geographic_area, race_ethnicity) %>%
+  count(race_ethnicity)
+```
+
+Race/Ethinicity Per Geographic Area Chart
+
+```{r}
+ggplot(sheltered_survey, aes(x=race_ethnicity)) + 
+  geom_bar() + 
+  coord_flip() +
+  facet_wrap(~geographic_area) +
+  ggtitle("Sheltered Count of Race/Ethnicity by Geographic Area")
+
+ggplot(unsheltered_survey, aes(x=race_ethnicity)) + 
+  geom_bar() + 
+  coord_flip() +
+  facet_wrap(~geographic_area) +
+  ggtitle("Unsheltered Count of Race/Ethnicity by Geographic Area")
+```
+
+
+## Time from Survey to Exit from Homelessness
+
+Create a table of days from assessment to exit for sheltered:
+```{r}
+#30 values are negatives. Unsure if these negatives are due to error or if surveys were given retroactively, so they are excluded. To view them, eliminate the line filter(date_diff_integer > 0)
+
+sheltered_difference <- sheltered_survey %>%
+  select(date_of_assessment, date_of_exit_from_homelessness) %>%
+  mutate(date_diff = as.Date(date_of_exit_from_homelessness, format="%Y/%m/%d")-
+                  as.Date(date_of_assessment, format="%Y/%m/%d")) %>%
+  mutate(date_diff_integer = as.integer(date_diff)) %>%
+  filter(date_diff_integer > 0)
+
+sheltered_difference
+```
+
+
+Create a table of days from assessment to exit for unsheltered:
+```{r}
+#150 values are negatives. Unsure if these negatives are due to error or if surveys were given retroactively, so they are excluded. To view them, eliminate the line filter(date_diff_integer > 0)
+
+unsheltered_difference <- unsheltered_survey %>%
+  select(date_of_assessment, date_of_exit_from_homelessness) %>%
+  mutate(date_diff = as.Date(date_of_exit_from_homelessness, format="%Y/%m/%d")-
+                  as.Date(date_of_assessment, format="%Y/%m/%d")) %>%
+  mutate(date_diff_integer = as.integer(date_diff)) %>%
+  filter(date_diff_integer > 0)
+
+unsheltered_difference
+```
+
+
+* Sheltered:
+  + Average number of days from assessment to exit from homelessness: 119.47
+  + Maximum number of days from assessment to exit from homelessness: 437
+* Unsheltered
+  + Average number of days from assessment to exit from homelessness: 161.8
+  + Maximum number of days from assessment to exit from homelessness: 400
+```{r}
+mean(sheltered_difference$date_diff_integer, na.rm=TRUE)
+max(sheltered_difference$date_diff_integer, na.rm=TRUE)
+
+mean(unsheltered_difference$date_diff_integer, na.rm=TRUE)
+max(unsheltered_difference$date_diff_integer, na.rm=TRUE)
+```
+
+
+Did those who were rehoused stay in their first house upon exit from homelessness? 
+* Sheltered 
+  + No: 6626,         17.06%
+  + Yes: 21562,       55.51%
+  + NA/Blank: 10658,  27.44%
+* Unsheltered 
+  + No: 6011,         23.21%
+  + Yes: 12562,       48.5%
+  + NA/Blank: 7327,   28.29%
+  
+```{r}
+#NA values appear for type_of_housing_exit values: deceased, incarcerated, pending and unknown
+#Changed to lowercase to eliminate one "Y" value which is assumedly an error for "y" and thus included in the "y" count
+sheltered_survey$still_housed_in_first_housing_exit <- tolower(sheltered_survey$still_housed_in_first_housing_exit)
+count(sheltered_survey, still_housed_in_first_housing_exit)
+
+count(unsheltered_survey, still_housed_in_first_housing_exit)
+```
+
+Did whether someone stayed in their first house depend on the type of rehousing?
+* Unsheltered
+  * Deceased
+    + NA = 868,   3.35%		
+  * Family	
+    + No = 84, 	  .32%	
+    + Yes =	165,  .64%		
+  * HUD-VASH	
+    + No = 418,   1.61%		
+    + Yes =	561,  2.17%		
+  * Incarcerated	
+    + Yes =	4,    .02%	
+    + NA = 876,   3.38%		
+  * Pending	
+    + NA = 4096,  15.82%		
+  * Permanent Supportive Housing (PSH)	
+    + No =	3351, 12.94%		
+    + Yes =	8170, 31.54%	
+  * Rapid Re-Housing (RRH)
+    + No =	1166, 4.5%		
+    +	Yes =	2595, 10.02%		
+  * Self-resolve	
+    + No = 297,   1.15%		
+    + Yes =	493,  1.9%		
+  * Supportive Service for Veteran Families (SSVF)
+    + No = 695,   2.68%
+    + Yes =	573,  2.21%		
+  * Unknown	
+    + Yes =	1,    .004%		
+    + NA = 1487,  5.74%	
+
+```{r, results='asis'}
+unsheltered_still_housed <- unsheltered_survey %>%
+  group_by(type_of_housing_exit) %>%
+  count(still_housed_in_first_housing_exit)
+
+unsheltered_still_housed
+
+sheltered_still_housed <- sheltered_survey %>%
+  group_by(type_of_housing_exit) %>%
+  count(still_housed_in_first_housing_exit)
+
+sheltered_still_housed
+```
+
+
+## Criminalization over Time
+
+Have homeless indidivudals experienced higher rates of incarceration/interactions with the law in a certain year? Do any correspond with increases in homeless criminilization policies?
+
+Unsheltered respondents on average spent almost a week incarcerated prior to filling out the survey. Sheltered respondents, however, reported an average of less than half a day of incarceration. That said, the greatest number of days incarcerated reported by a sheltered individual, 100, and even the second-greatest amount, 60, are much higher than unsheltered's maximum of 40 days (there were 10 responses of 40 days). The overall total of days spent incarcerated each year is about 10 times greater each year for unsheltered respondents than sheltered.
+
+Basic incarceration statistics:
+
+* Unsheltered: 
+  + Maximum days incarcerated: 40
+    + There were 10 responses of 40 days
+* Sheltered:
+  + Maximum days incarcerated: 100
+  + Second greatest: 60 days
+```{r}
+#Sheltered
+max(sheltered_survey$jail_or_prison)
+
+#Unsheltered
+max(unsheltered_survey$jail_or_prison)
+```
+
+
+* Sheltered average days incarcerated: .416568
+* Unsheltered average days incarcerated: 6.799266
+```{r}
+#Sheltered
+mean(sheltered_survey$jail_or_prison)
+
+#Unsheltered
+mean(unsheltered_survey$jail_or_prison)
+```
+
+
+Next two coding sections show cumulative number of days respondents spent incarcerated each year
+
+Unsheltered incarcerated days:
+* 2015:	50821			
+* 2016:	57097			
+* 2017:	58121			
+* 2018:	10062
+
+Sheltered incarcerated days:
+* 2015:	3938			
+* 2016:	5705			
+* 2017:	4976			
+* 2018:	1563	
+```{r}
+#Unsheltered respondents
+unsheltered_survey %>%
+  group_by(year) %>%
+  summarise(sum(jail_or_prison))
+
+#Sheltered respondents
+sheltered_survey %>%
+  group_by(year) %>%
+  summarise(sum(jail_or_prison))
+```
+
+
+The code below creates a histogram showing the number of responses each year for a certain value (the value being #days incarcerated). While many respondents - both sheltered and unsheltered - have spent time in jail or prison, unsheltered respondents on average spent significantly longer periods of time incarcerated, as shown by greater counts at jail_or_prison values greater than 1.
+```{r}
+#Unsheltered Criminalization
+ggplot(unsheltered_survey, aes(x=jail_or_prison)) + 
+  geom_histogram() + 
+  facet_wrap(~year) +
+  ggtitle("Frequency of #Days Unsheltered Spent Incarcerated Per Year")
+
+#ggsave(filename = "unsheltered-jail-prison-time.png", 
+#       device = "png", path = paste0(here::here(), "/graphs/unsheltered"))
+
+
+#Sheltered Criminalization
+ggplot(sheltered_survey, aes(x=jail_or_prison)) + 
+  geom_histogram() + 
+  facet_wrap(~year) +
+  ggtitle("Frequency of #Days Sheltered Spent Incarcerated Per Year")
+
+#ggsave(filename = "sheltered-jail-prison-time.png", 
+#       device = "png", path = paste0(here::here(), "/graphs/sheltered"))
+
+```
+
+
+## Count of overall acuity score over time
+
+* There were increases in the number of 9+ acuity scores from 2015 to 2016 and then again from 2016 to 2017 for unsheltered respondents
+* An acuity score of 10 is the most frequently reported score across all years for unsheltered respondents 
+```{r}
+#Create a historgram showing frequency of acuity scores by year
+ggplot(unsheltered_survey, aes(x=unsheltered_survey$final_acuity_score)) +
+  geom_histogram() +
+  facet_wrap(~year) +
+  ggtitle("Frequency of Unsheltered Acuity Scores Per Year")
+```
+
+
+* The most frequent acuity score for sheltered respondents is much lower than for unsheltered respondents. The most frequent acuity score is 5 compared to 10 for unsheltered.
+* There seem to be more sheltered respondents overall (supported by the sheltered dataframe having 38846 observations compared to unsheltered's 25900), but very few received a score over 10, in great contrast to the unsheltered graphs above.
+* There does not seem to be a spike in overall numbers or a particular score across years. Again, the 2015 and 2018 data are incomplete (2015 starts April 1 and 2018 ends April 13)
+```{r}
+#Create a historgram showing frequency of acuity scores by year
+ggplot(sheltered_survey, aes(x=sheltered_survey$final_acuity_score)) +
+  geom_histogram() +
+  facet_wrap(~year) +
+  ggtitle("Frequency of Sheltered Acuity Scores Per Year")
+```
+
+
+* Mean unsheltered acuity score: 
+  + 2015-2018: 9.865521
+  + 2015: 9.782
+  + 2016: 9.896118
+  + 2017: 9.914346
+  + 2018: 9.837
+```{r}
+#Overall mean acuity score
+mean(unsheltered_survey$final_acuity_score)
+
+#Average acuity score by year
+unsheltered_survey %>%
+  group_by(year) %>%
+  summarise(mean(final_acuity_score))
+```
+
+
+* Mean sheltered acuity score
+  + 2015-2018: 4.677676
+  + 2015: 4.73722
+  + 2016: 4.667367
+  + 2017: 4.655146
+  + 2018: 4.636895
+```{r}
+#Overall mean acuity score
+mean(sheltered_survey$final_acuity_score)
+
+#Average acuity score by year
+sheltered_survey %>%
+  group_by(year) %>%
+  summarise(mean(final_acuity_score))
+```
+
+
+## Geographic Areas
+
+The geographic spread of unsheltered respondents across all years:
+* Midwest:	  1683
+* Northeast:	1072	
+* Southeast:	4389	
+* Southwest:	5633	
+* West:       13123	
+```{r}
+unsheltered_survey %>%
+  group_by(geographic_area) %>%
+  summarise("count" = n())
+```
+
+
+Count of unheltered respondents from each geographic region per year:
+```{r}
+unsheltered_survey %>%
+  group_by(geographic_area, year) %>%
+  summarise("count" = n())
+```
+
+
+Count of sheltered respondents from each geographic region per year:
+```{r}
+sheltered_survey %>%
+  group_by(geographic_area, year) %>%
+  summarise("count" = n())
+```
+
+Histogram showing change in geographic origin of unsheltered respondents over time:
+* Unsheltered respondents overwhelmingly originate in the West
+* The fewest unsheltered respondents come from the Northeast
+* Data for 2016 and 2017, the two complete years, show little change in count values for each region
+```{r}
+ggplot(unsheltered_survey, aes(x=geographic_area)) +
+  geom_bar() +
+  facet_wrap(~year) +
+  ggtitle("Number of Unsheltered Respondents By Geographic Area Per Year")
+```
+
+
+Histogram showing change in geographic origin of sheltered respondents over time:
+* The fewest sheltered respondents came from the Northeast, similar to unsheltered, but the Midwest is a much closer second-least
+* Again most listed the West as their geographic origin. Here however, the second greatest number of sheltered respondents came from the Southeast, not the Southwest as for unsheltered respondents
+* Numbers across 2016 and 2017 are again relatively similar
+```{r}
+ggplot(sheltered_survey, aes(x=geographic_area)) +
+  geom_bar() +
+  facet_wrap(~year) +
+  ggtitle("Number of Sheltered Respondents By Geographic Area Per Year")
+```
+
+
+## Urban/Suburban/Rural
+
+Unsheltered respondents from:
+* Rural areas: 1358
+* Suburban areas: 1584
+* Urban areas: 22958
+```{r}
+unsheltered_survey %>%
+  group_by(urban_suburban_rural) %>%
+  summarise("count" = n())
+```
+
+
+Sheltered respondents from:
+* Rural areas: 3147
+* Suburban areas: 4256
+* Urban areas: 31443
+```{r}
+sheltered_survey %>%
+  group_by(urban_suburban_rural) %>%
+  summarise("count" = n())
+```
+
+
+Unsheltered respondents from:
+* Midwest:
+  + Rural areas: 120
+  + Suburban areas: 111
+  + Urban areas: 1452
+* Northeast:
+  + Rural areas: 46
+  + Suburban areas:59 
+  + Urban areas: 967
+* Southeast:
+  + Rural areas: 208
+  + Suburban areas: 242
+  + Urban areas: 3939
+* Southwest:
+  + Rural areas: 280
+  + Suburban areas: 334
+  + Urban areas: 5019
+* West:
+  + Rural areas: 704
+  + Suburban areas: 838
+  + Urban areas: 11581
+  
+* In every region, over 10 times more unsheltered respondents came from urban areas than rural areas
+```{r}
+unsheltered_survey %>%
+  group_by(geographic_area, urban_suburban_rural) %>%
+  summarise("count" = n())
+
+ggplot(unsheltered_survey, aes(x=urban_suburban_rural)) +
+  geom_bar() +
+  facet_wrap(~geographic_area) +
+  ggtitle("Unsheltered Rural/Suburban/Urban Numbers Per Geographic Area")
+```
+
+
+Sheltered respondents from:
+* Midwest:
+  + Rural areas: 448
+  + Suburban areas: 584
+  + Urban areas: 4393
+* Northeast:
+  + Rural areas: 377
+  + Suburban areas: 570
+  + Urban areas: 4023
+* Southeast:
+  + Rural areas: 652
+  + Suburban areas: 931
+  + Urban areas: 6489
+* Southwest:
+  + Rural areas: 596
+  + Suburban areas: 793
+  + Urban areas: 6207
+* West:
+  + Rural areas: 1074
+  + Suburban areas: 1378
+  + Urban areas: 10331
+  
+* In every region, about 10 times more sheltered respondents came from urban areas than rural areas
+```{r}
+sheltered_survey %>%
+  group_by(geographic_area, urban_suburban_rural) %>%
+  summarise("count" = n())
+
+ggplot(sheltered_survey, aes(x=urban_suburban_rural)) +
+  geom_bar() +
+  facet_wrap(~geographic_area) +
+  ggtitle("Sheltered Rural/Suburban/Urban Numbers Per Geographic Area")
+```
+
+
+### Plot Urban/Suburban/Rural change over time
+
+```{r}
+#Unsheltered data
+ggplot(unsheltered_survey, aes(x=year)) +
+  geom_bar() +
+  facet_wrap(~urban_suburban_rural) +
+  ggtitle("Unsheltered Rurual/Suburban/Urban Numbers per Year")
+
+#Sheltered data
+ggplot(sheltered_survey, aes(x=year)) +
+  geom_bar() +
+  facet_wrap(~urban_suburban_rural) +
+  ggtitle("Sheltered Rurual/Suburban/Urban Numbers per Year")
+```
+
+
+## To-Do
+
+* analyze LGBT and police interactions, race and police interactions
+* race and incarceration time
+* normalize incarceration

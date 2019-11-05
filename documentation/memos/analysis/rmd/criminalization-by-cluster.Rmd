@@ -1,0 +1,232 @@
+---
+title: "Criminalization by Cluster"
+author: "Roxanne Ready"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+
+# Set Knitr chunks to echo by default, suppress messages and warnings
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+# Set the Knitr root directory to the project directory, which is one up from where this document is stored
+knitr::opts_knit$set(root.dir = '../..')
+
+```
+
+## Introduction
+
+The following code combines ["Housing Not Handcuffs"](https://nlchp.org/wp-content/uploads/2018/10/Housing-Not-Handcuffs.pdf) (HNH) and a recent homelssness study by [Zillow](https://www.zillow.com/research/homelessness/) to examine how homelessness is criminalized across the country. 
+
+### Zillow Clusters
+
+During Zillow's study, researchers identified six categories of CoC, three of which contained numerous CoCs. Clusters 4, 5 and 6 each contained three or fewer CoCs. This memo explores differences in how homelessness is criminalized in the primary three clusters.
+
+The **three clusters** of note are:
+
+1. low homeless rates, modest housing costs, located mainly in the midwest, mid-Atlantic, and the southeast
+2. intermediate homeless rates, average housing costs, located mainly in New England, Florida, mountain west, and the central United States
+3. high homeless rates, high housing costs, located mainly on the west coast, east coast large metropolitan areas
+
+### Criminalization Score by Prohibited Conduct
+
+I input the tables from HNH's 2018 report, Appendix A, by hand as True/False logical variables for each of the **11 categories of prohibited conduct across 187 U.S. cities**. The 11 categories were:
+
+* Sleeping in public citywide
+* Sleeping in particular public places
+* Camping in public city-wide
+* Camping in particular public places
+* Sitting/ lying in particular public places
+* Lodging, living, or sleeping in vehicles (or parking a vehicle used as a lodging/ living accommodation)
+* Loitering/Loafing/Vagrancy city-wide
+* Loitering/Loafing in particular public places
+* Begging in public places city-wide
+* Begging in particular public places
+* Food Sharing city-wide or in particular public places (i.e. bans)
+
+I then collapsed True/False values into a single row per CoC (see below) and summed the True values for a score of N out of 11. **A higher score indicates the tracked cities in a given CoC criminalize more types of conduct.**
+
+Please note that this does not sum all laws or statutes, but only the number of types of conduct that are criminalized, as distinguished by HNH. For example, one city may have a single law under the category of "sleeping in public citywide," while another may have several. Likewise, it does not take into account the severity of punishment or manner or frequency of enforcement.
+
+### HNH to CoC Crosswalk
+
+It's important to note that the HNH data was classified by city and therefore is not geographically precise to CoCs. Rather, I labeled each city with its corresponding CoC. For example, cases included:
+
+* City was alone in a CoC that roughly corresponded to the city boundaries.
+* City was alone in a CoC that covered large swaths of the state, including cities and towns not tracked by HNH.
+* City was present with multiple other HNH-tracked cities inside a CoC.
+
+In other words, the data below is **not indicitave of entire CoCs, but individual cities within their corresponding CoCs**.
+
+## Analysis
+
+### Load Necessary Data
+
+```{r results = 'hide'}
+
+###############
+### Load In ###
+###############
+
+### Load libraries
+
+library(tidyverse) # For data processing
+library(ggplot2) # For visualization
+library(here) # For consistent file pathing
+
+### Load data
+
+# Zillow aggregate data and clustering, 2017
+zillow_cluster <- read_csv(paste0(here(), "/data/input-data/clean/zillow-cluster.csv")) %>%
+  mutate_at("coc_number", as.character) %>%
+  # Drop the useless stand-alone number
+  select(-coc_number)
+
+# Criminalization data from Housing Not Handcuffs
+criminalization <- read_csv(paste0(here(), "/data/input-data/clean/criminalization-with-cocs.csv")) %>%
+  mutate(score = round(totals/11, 2)) %>%
+  rename(coc_code = CoC)
+
+```
+
+### Collapse and Combine the Data
+
+```{r results = 'hide'}
+
+#####################
+### Preprocessing ###
+#####################
+
+# Criminalization data aggregated into CoCs
+criminalization_by_coc <- criminalization %>%
+  group_by(coc_code) %>%
+  # Collapse True/False values
+  summarize_if(is.logical, any) %>%
+  # Re-add total and score columns
+  mutate(total = rowSums(.[2:ncol(.)]),
+         score = round(total/11, 2))
+
+# Working table combining criminalization data with zillow data
+wk <- zillow_cluster %>%
+  left_join(criminalization_by_coc %>%
+              select(coc_code, score, total)) %>%
+  select(coc_code, coc_name, score, everything())
+
+```
+
+### Visualize the Data
+
+The shape of the distribution can be viewed in multiple ways, displayed below, but the most illuminating is the box + violion plot. This shows **a _slight_ tendancy toward higher criminalization in Cluster 3**, but only slight. 
+
+It is also important to note the number of available data points for each cluster, apparent in the strip plots.
+
+Precice numbers are discussed in the Numeric Outputs section.
+
+```{r}
+
+# Viewed as as a box + violin plot
+ggplot(data = filter(wk, cluster_number_zillow_2017 %in% c(1, 2, 3) & !is.na(total)),
+       aes(x = as.factor(cluster_number_zillow_2017), # Needs to be a factor so it doesn't show a continuous label
+           y = total, 
+           color = as.factor(cluster_number_zillow_2017) # Set color here first
+           )
+       ) +
+  geom_violin(alpha = 0, trim = FALSE, show.legend = FALSE) +
+  geom_boxplot(width = .1, show.legend = FALSE)  +
+  theme_bw() +
+  scale_color_manual(values = c("darkgreen", "orange", "red"), # Then specify the colors here
+                     guide = F) + # Remove the legend
+  scale_y_continuous(breaks=seq(-2, 11, 1)) +
+  labs(title = "Criminalization of Homelessness as Box + Violin Plots",
+       subtitle = "by Zillow Cluster",
+       x = "Cluster Number",
+       y = "Criminalization Score",
+       caption = "Based on findings from from Housing Not Handcuffs on whether a CoC has laws in any of 11 categories.")
+
+# Viewed as overlapping density curves
+ggplot() +
+  geom_density(data = filter(wk, cluster_number_zillow_2017 == 1, !is.na(total)), aes(x = total), color = "darkgreen") +
+  geom_density(data = filter(wk, cluster_number_zillow_2017 == 2, !is.na(total)), aes(x = total), color = "orange") +
+  geom_density(data = filter(wk, cluster_number_zillow_2017 == 3, !is.na(total)), aes(x = total), color = "red") +
+  labs(title = "Criminalization of Homelessness as Density Curves",
+       subtitle = "by Zillow Cluster",
+       x = "Criminalization Score",
+       caption = "Based on findings from from Housing Not Handcuffs on whether a CoC has laws in any of 11 categories.") +
+  annotate(geom = "text", x = 3.25, y = .3, color = "darkgreen", label = "Cluster 1") +
+  annotate(geom = "text", x = 2, y = .2, color = "orange", label = "Cluster 2") +
+  annotate(geom = "text", x = 8, y = .1, color = "red", label = "Cluster 3") +
+  theme_bw()
+
+
+# Viewed as as strip plots
+ggplot() +
+  geom_jitter(data = filter(wk, cluster_number_zillow_2017 %in% c(1, 2, 3) & !is.na(total)),
+              aes(x = as.factor(cluster_number_zillow_2017), y = total,
+                  color = as.factor(cluster_number_zillow_2017) # Set color here first
+                  ),
+              alpha = .5,
+              position = position_jitter(0.03))  +
+  theme_bw() +
+  scale_color_manual(values = c("darkgreen", "orange", "red"), # Then specify the colors here
+                     guide = F) + # Remove the legend
+  scale_y_continuous(breaks = seq(0, 10, 1)) +
+  labs(title = "Criminalization of Homelessness as Strip Plots",
+       subtitle = "by Zillow Cluster",
+       x = "Cluster Number",
+       y = "Criminalization Score",
+       caption = "Based on findings from from Housing Not Handcuffs on whether a CoC has laws in any of 11 categories.")
+
+
+```
+
+### Numeric Outputs
+
+* The **mean of cluster 3** was higher than the others, at **4.9** actions criminalized (out of 11 possible), compared to clusters 1 and 2 at 4.5 and 4.2, respectively. 
+* Cluster 1 topped out with a maximum 7, while 2 and 3 both had a max of 9.
+* Cluster 3 never had fewer than 2. Both 1 and 2 had minimums of 1.
+
+
+```{r}
+
+### Use summary to find min, max, mean, and 1st and 4th quantiles
+
+# Cluster 1
+wk %>% 
+  filter(cluster_number_zillow_2017 == 1, !is.na(total)) %>%
+  select(total) %>%
+  summary()
+
+# Cluster 2
+wk %>% 
+  filter(cluster_number_zillow_2017 == 2, !is.na(total)) %>%
+  select(total) %>%
+  summary()
+
+# Cluster 3
+wk %>% 
+  filter(cluster_number_zillow_2017 == 3, !is.na(total)) %>%
+  select(total) %>%
+  summary()
+
+# Find standard deviation (all)
+wk %>% 
+  select(cluster_number_zillow_2017, total) %>%
+  filter(!is.na(total)) %>%
+  group_by(cluster_number_zillow_2017) %>%
+  summarise(sd= sd(total))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+

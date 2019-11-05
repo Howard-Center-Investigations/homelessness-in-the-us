@@ -1,0 +1,185 @@
+---
+title: "PIT analysis"
+author: "Sean Mussenden | Howard Center for Investigative Journalism"
+date: "9/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+``` {r}
+#######################
+#### Load Packages ####
+#######################
+
+# For debugging rm(list=ls())
+
+rm(list=ls())
+
+library(tidyverse)
+library(stringr)
+library(lubridate)
+library(readxl)
+library(janitor)
+library(weathermetrics)
+library(ggplot2)
+library(reshape)
+library(writexl)
+library(dplyr)
+library(naniar)
+
+rm(list=ls())
+
+##############################
+##### LOAD DATA ##############
+##############################
+
+#Point in Time Homeless Counts from HUD 2011-2018
+
+#Eleven_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 8, col_names=TRUE)
+#Twelve_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 7, col_names=TRUE)
+#Thirteen_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 6, col_names=TRUE)
+Fourteen_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 5, col_names=TRUE)
+#Fifteen_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 4, col_names=TRUE)
+#Sixteen_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 3, col_names=TRUE)
+#Seventeen_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 2, col_names=TRUE)
+Eighteen_PIT_Counts <- read_xlsx("../../../data/input-data/2007-2018-PIT-Counts-by-CoC.xlsx", sheet = 1, col_names=TRUE)
+
+### Load COC clusters analysis from Zillow paper to get coc population for 2017
+zillow_coc <- read_csv("../../../data/input-data/CoC_Cluster.csv")
+zillow_coc <- clean_names(zillow_coc) %>%
+  select(coc_number = co_c_number, everything())
+
+
+
+##############################
+##### JOIN DATA ##############
+##############################
+
+#Join all years together into one data table
+
+all_pit <- Eighteen_PIT_Counts %>%
+  #left_join(Seventeen_PIT_Counts, by="CoC Name") %>%
+  #left_join(Sixteen_PIT_Counts, by="CoC Name") %>%
+  #left_join(Fifteen_PIT_Counts, by="CoC Name") %>%
+  left_join(Fourteen_PIT_Counts, by="CoC Name") %>%
+  #left_join(Thirteen_PIT_Counts, by="CoC Name") %>%
+  #left_join(Twelve_PIT_Counts, by="CoC Name") %>%
+  #left_join(Eleven_PIT_Counts, by="CoC Name") %>%
+  clean_names() %>%
+  select(coc_number = co_c_number_x, matches("overall_homeless")) %>%
+  filter(!str_detect(coc_number,"CT-502|CT-506|CT-503|CT-508|CT-512|CT-505|FL-516|FL-503|MA-513|MA-516|MA-520|MA-511|NJ-518|NJ-503|NY-509|NY-502|NY-505|NY-517|	NY-508|PA-507|PA-509|PA-602|PA-601|TX-703|TX-607|IN-500|IN-502|LA-504|LA-509|MA-518|MA-516|ME-502|ME-500|AR-512|AR-503|LA-508|LA-509|WA-507|WA-501"))%>%
+  filter(!is.na(coc_number)) %>%
+  filter(!str_detect(coc_number, "territory")) %>%
+  filter(!str_detect(coc_number, "AR-512")) %>%
+  na.omit() %>%
+  left_join(zillow_coc, by="coc_number") %>%
+  select(coc_number, coc_name = co_c_name, overall_homeless_2014, overall_homeless_2018, total_population_2017 = co_c_total_population) %>%
+  na.omit() %>%
+  mutate_at(vars(matches("overall_homeless")), as.numeric) %>%
+  mutate(homeless_rate_2014 = overall_homeless_2014/total_population_2017*100,
+         homeless_rate_2018 = overall_homeless_2018/total_population_2017*100,
+         overall_change_2014_2018 = overall_homeless_2018 -  overall_homeless_2014,
+         overall_pct_change_2014_2018 = (overall_homeless_2018 -  overall_homeless_2014)/overall_homeless_2014,
+         overall_pct_pt_change_2014_2018 = homeless_rate_2018 - homeless_rate_2014
+         )
+
+
+```
+
+
+## Zillow Analysis ##
+
+### Fact: Highest rates of homelessness by COC
+
+In 2017, Mendocino County's COC had the nation's highest rate of homelessness, at 2 percent, followed by Washington, D.C. (1.2 percent).  Five of the top 10 were in California (Mendocino County, Santa Cruz area, San Francisco, Monterey area, Imperial County).  Other areas with high rates: Boston, New York City, Atlanta and the Florida Keys (Monroe County).  
+
+### Supporting code and output
+``` {r}
+
+zillow_coc %>%
+  select(coc_number, co_c_name, estimated_homeless_rate_percent) %>%
+  arrange(desc(estimated_homeless_rate_percent))
+
+```
+
+### Fact: Highest rates of homelessness
+Washington, D.C., followed by Hawaii, Oregon and California had highest average rates
+
+### Supporting code and output
+
+``` {r}
+
+zillow_coc %>%
+  separate(coc_number, sep="-", into= c("state", "number")) %>%
+  select(state, co_c_name, estimated_homeless_rate_percent) %>%
+  group_by(state) %>%
+  summarise(median_homeless_rate = median(estimated_homeless_rate_percent)) %>%
+  arrange(desc(median_homeless_rate))
+```
+
+
+### ALL PIT
+
+``` {r}
+  all_pit %>%
+    arrange(overall_pct_change_2014_2018) %>%
+    select(coc_number, coc_name, overall_pct_change_2014_2018, everything())
+
+  all_pit %>%
+    arrange(desc(overall_change_2014_2018)) %>%
+    select(coc_number, coc_name, overall_change_2014_2018, everything() )
+
+```
+
+##############################
+##### FINDING TRENDS IN HOMELESS POP ##############
+##############################
+
+##Look at: 2007-2018, 2011-2018, 2014-2018 for overall, sheltered, unsheltered
+
+PIT_counts_most_coc <- eighteen_to_seven_pit[-c(400:4495),] %>% 
+  clean_names() %>%
+  select(coc_number = co_c_number_x, matches("overall_homeless")) %>%
+  mutate(state_name = str_extract_all(coc_number, "\\D\\D")) %>%
+  filter(state_name != "CA",
+         state_name != "MA",
+         state_name != "NY") %>%
+  naniar::replace_with_na_all(condition = ~.x == ".") %>%
+  mutate_at(vars(matches("overall")), as.numeric) %>%
+  mutate(seven_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2007`)/`overall_homeless_2007`))
+
+ggplot(data = PIT_counts_most_coc, aes(x=coc_number, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "2007 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_name, ncol = 3, scales = "free_x")
+
+ggsave(filename = "PIT_counts_most_coc.png", 
+       device = "png", path = "./graphs",
+       width = 15, height = 45, units = "in")
+
+PIT_counts_big_coc <- eighteen_to_seven_pit[-c(400:4495),] %>% 
+  clean_names() %>%
+  select(coc_number = co_c_number_x, matches("overall_homeless")) %>%
+  mutate(state_name = str_extract_all(coc_number, "\\D\\D")) %>%
+  filter(state_name == "CA" | state_name == "MA" | state_name == "NY") %>%
+  naniar::replace_with_na_all(condition = ~.x == ".") %>%
+  mutate_at(vars(matches("overall")), as.numeric) %>%
+  mutate(seven_to_eighteen_change = 100*((`overall_homeless_2018` - `overall_homeless_2007`)/`overall_homeless_2007`))
+
+ggplot(data = PIT_counts_big_coc, aes(x=coc_number, y=seven_to_eighteen_change)) +
+  geom_point() +
+  labs(y = "Percent Change",
+       title = "NY MA & CA 2007 to 2018 Percent Change in Overall Homelessness") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~state_name, ncol = 1, scales = "free_x")
+
+ggsave(filename = "PIT_counts_big_coc.png", 
+       device = "png", path = "./graphs",
+       width = 15, height = 30, units = "in")
