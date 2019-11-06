@@ -570,6 +570,36 @@ max(unsheltered_survey$nights_registered_in_shelter_in_last_24_months)
 count(unsheltered_survey, nights_registered_in_shelter_in_last_24_months)
 ```
 
+The code below examines differences in the number of nights spent in shelters over the past two years by race/ethnicity. 
+
+* There are a significant number of NA values for each racial/ethinicity group (at least 20% of values in each racial/ethnicity group) which lessens the impact/strength of any conclusions.
+* For the racial group's share of a particular bucket, white and black respondents made up the first and second largest groups (accounting for about 50% and 33%) in each bucket, respectively. As there are more white and black respondents than other racial groups, these numbers are not particularly revealing.
+* The largest drop offs in percentage totals of nights spent in shelters by racial group occured after one month (0-30], when the numbers dropped from about half of respondants to about 10%, and after 5 to six months (150-180], when percentages dropped to below 0%. 
+  * The exception is for asians, 12.1% of whom spent 30-60 nights in a shelter, compared to 10% or less for all other racial/ethnic groups.
+```{r}
+#Change all answers to lowercase to eliminate duplicates
+unsheltered_survey$race_ethnicity <- tolower(unsheltered_survey$race_ethnicity)
+
+#Create buckets for number of nights spent in shelter
+#Buckets = 0 days, 1 month, 2ms, 3ms, 4ms, 5ms, 6ms, 7ms, 8ms, 9ms, 10ms, 11ms, 1yr, 12ms, 13ms, 14ms, 15ms, 16ms, 17ms 18mths
+unsheltered_survey$buckets_nights_in_shelter <- cut(x=unsheltered_survey$nights_registered_in_shelter_in_last_24_months, breaks = c(0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 365, 395, 425, 455, 485, 515, 545))
+
+#Groups by number of months in shelter so can compare across racial groups
+#Percentage column represents a racial group's share of a particular number of nights bucket
+unsheltered_survey %>%
+  group_by(buckets_nights_in_shelter) %>%
+  count(race_ethnicity) %>%
+  mutate(percentage_of_total = (n/sum(n))*100)
+
+#groups by racial group so can compare drop off as months spent in shelter increase
+#Percentage column represents a racial group's share of a particular number of nights bucket
+unsheltered_survey %>%
+  group_by(race_ethnicity) %>%
+  count(buckets_nights_in_shelter) %>%
+  mutate(percentage_of_total = (n/sum(n))*100)
+
+```
+
 
 ## Trimorbidity Data
 
@@ -599,6 +629,50 @@ count(unsheltered_survey, trimorbidity)
 ```
 
 
+Gender of tri-morbid respondents:
+
+* As reflected in the percentage breakdown for trimorbidity among sheltered respondents, the majority of sheltered respondents (>96.6% of each gender) regardless of gender were listed as not tri-morbid. Only 1.48% of men are tri-morbid, 2.05% of women, and 3.39% of trans respondents. That trans respondents represent the highest percentage by gender of sheltered respondents who are tri-morbid may reflect the toll that significant personal, societal and systemic oppressions and obstacles have on a trans individual.
+
+* For unsheltered, men were much less likely to be tri-morbid than any other recorded gender. Indeed, men were the only group to have fewer than half of respondents be tri-morbid. In contrast, 60% of trans respondents are tri-morbid and almost 76% of female respondents. It's possible that this is an indication of the impact that -isms and oppressions can have on subgroups who are already dealing with stressors such as homelessness. 
+```{r}
+#How many sheltered respondents, by gender, were marked as tri-morbid?
+#For tri-morbidity, 0 = no and 1 = yes
+sheltered_survey %>%
+  group_by(self_identified_gender) %>%
+  count(trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
+
+#How many unsheltered respondents, by gender, were marked as tri-morbid?
+#For tri-morbidity, 0 = no and 1 = yes
+unsheltered_survey %>%
+  group_by(self_identified_gender) %>%
+  count(trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
+```
+
+
+Race of tri-morbid respondents:
+
+* Again, a small percentage of sheltered respondents, regardless of race, were marked as tri-morbid. However, a few notable racial groups had more than 1% of respondents be marked yes for tri-morbidity: blacks (1.78%), native american (4.55%), and white (1.77%) (asian came close at 0.92%). Based on the hypothesis that societal oppressions compounded with homelessness cause an increase in tri-morbidity, the high percentage of native american and black "yes" respondents is not suprising. However, the percentage of white individuals with tri-morbidity is also high, which could be an exception or show a flaw in the hypothesis.
+  * The yes percentage for sheltered native americans is significantly greater than any other racial group. Why?
+  
+* Though about half of unsheltered respondents were found to be tri-morbid, only among three racial/ethnic groups were at least half of their repondents tri-morbid: black, hispanic and pacific islander. Asians and native americans had the smallest percentage of tri-morbid respondents, around 33% each.
+```{r}
+#How many sheltered respondents, by race, were marked as tri-morbid?
+#For tri-morbidity, 0 = no and 1 = yes
+sheltered_survey %>%
+  group_by(race_ethnicity) %>%
+  count(trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
+
+#How many unsheltered respondents, by race, were marked as tri-morbid?
+#For tri-morbidity, 0 = no and 1 = yes
+unsheltered_survey %>%
+  group_by(race_ethnicity) %>%
+  count(trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
+```
+
 ## LGBTQ+
 
 * What percentage of unsheltered individuals identified as LGBTQQI?
@@ -614,6 +688,28 @@ count(sheltered_survey, identifies_as_lgbtqqi2)
 count(unsheltered_survey, identifies_as_lgbtqqi2)
 ```
 
+Age
+
+```{r}
+#Create new df of Yes LGBTQ respondents
+lgbtq_age <- sheltered_survey %>%
+  filter(identifies_as_lgbtqqi2 == "y") 
+
+#Plot the age frequency of yes LGBTQ respondents
+ggplot(lgbtq_age, aes(x=age)) +
+  geom_histogram()
+
+#Get a precise count of age frequency for yes LGBTQ respondents
+lgbtq_age %>%
+  count(age)
+
+```
+
+Race
+
+```{r}
+
+```
 
 
 ## Race/Ethnicity
