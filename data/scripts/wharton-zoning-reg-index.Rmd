@@ -1,0 +1,85 @@
+---
+title: "Exploration of the Wharton Zoning Reg Index (2007)"
+author: "Roxanne Ready"
+date: "11/6/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+```{r cars}
+
+correlations_bw_vars <- tribble(
+  ~variable, ~var_full, ~adi, ~imputed_adi, ~llpi, ~imputed_llpi,
+  "adi", "approval delay", 1.0, 1.0, .27, .27,
+  "lppi", "local political pressure", .25, .32, 1.0, 1.0,
+  "spii", "state political pressure", .29, .28, .11, .26,
+  "scii", "state court invovlement", -.04, .06, -.08, -.1,
+  "lzai", "local zoning approval", -.12, -.07, .06, -.12,
+  "lpai", "local assembly", .12, .18, .19, .16,
+  "sri", "supply restrictions", .14, .09, .14, -.01,
+  "dri", "density restrictions", .15, .23, .11, .27,
+  "osi", "open space", .17, .16, .17, .14,
+  "ei", "exactions", .04, .04, .09, -.03
+)
+
+wrluri_metros <- tribble(
+  ~metro, ~wrluri, ~num,
+  "Providence-Fall River-Warwick, RI-MA", 1.79, 16,
+  "Boston, MA-NH", 1.54, 41,
+  "Monmouth-Ocean, NJ", 1.21, 15,
+  "Philadelphia, PA", 1.03, 55,
+  "Seattle-Bellevue-Everett, WA", 1.01, 21,
+  "San Francisco, CA", 0.90, 13,
+  "Denver, CO", 0.85, 13,
+  "Nassau-Suffolk, NY", 0.80, 14,
+  "Bergen-Passaic, NJ", 0.71, 21,
+  "Fort Lauderdale, FL", 0.70, 16,
+  "Phoenix-Mesa, AZ", 0.70, 18,
+  "New York, NY", 0.63, 19,
+  "Riverside-San Bernardino, CA", 0.61, 20,
+  "Newark, NJ", 0.60, 25,
+  "Springfield, MA", 0.58, 13,
+  "Harrisburg-Lebanon-Carlise, PA", 0.55, 15,
+  "Oakland, CA", 0.52, 12,
+  "Los Angeles-Long Beach, CA", 0.51, 32,
+  "Hartford, CT", 0.50, 28,
+  "San Diego, CA", 0.48, 11,
+  "Orange County, CA", 0.39, 14,
+  "Minneapolis-St. Paul, MN-WI", 0.34, 48,
+  "Washington, DC-MD-VA-WV", 0.33, 12,
+  "Portland-Vancouver, OR-WA", 0.29, 20,
+  "Milwaukee-Waukesha, WI", 0.25, 21,
+  "Akron, OH", 0.15, 11,
+  "Detroit, MI", 0.12, 46,
+  "Allentown-Bethlehem-Easton, PA", 0.10, 14,
+  "Chicago, IL", 0.06, 95,
+  "Pittsburgh, PA", 0.06, 44,
+  "Atlanta, GA", 0.04, 26,
+  "Scranton-Wilkes-Barre-Hazelton, PA", 0.03, 11,
+  "Salt Lake City-Ogden, UT", -0.10, 19,
+  "Grand Rapids-Muskegon-Holland, MI", -0.15, 16,
+  "Cleveland-Lorain-Elyria, OH", -0.16, 31,
+  "Rochester, NY", -0.17, 12,
+  "Tampa-St. Petersburg-Clearwater, FL", -0.17, 12,
+  "Houston, TX", -0.19, 13,
+  "San Antonio, TX", -0.24, 12,
+  "Fort Worth-Arlington, TX", -0.27, 15,
+  "Dallas, TX", -0.35, 31,
+  "Oklahoma City, OK", -0.41, 12,
+  "Dayton-Springfield, OH", -0.50, 17,
+  "Cincinnati, OH-KY-IN", -0.56, 27,
+  "St. Louis, MO-IL", -0.72, 27,
+  "Indianapolis, IN", -0.76, 12,
+  "Kansas City, MO-KS", -0.80, 29
+)
+
+
+```
+
+
