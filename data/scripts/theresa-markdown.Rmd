@@ -251,9 +251,11 @@ hist(unsheltered_survey$jail_or_prison)
     + No = 23627,    Yes = 2273,     %Yes = 8.8%
 ```{r}
 #Attacked or Beaten
-count(sheltered_survey, have_you_been_attacked_or_beaten_up_since_you_ve_become_homeless)
+count(sheltered_survey, have_you_been_attacked_or_beaten_up_since_you_ve_become_homeless) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, have_you_been_attacked_or_beaten_up_since_you_ve_become_homeless)
+count(unsheltered_survey, have_you_been_attacked_or_beaten_up_since_you_ve_become_homeless) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -264,9 +266,11 @@ count(unsheltered_survey, have_you_been_attacked_or_beaten_up_since_you_ve_becom
     + No = 22626,   Yes = 3274,   %Yes = 12.64%
 ```{r}
 #Threateneded or tried to harm self/someone else
-count(sheltered_survey, have_you_threatened_to_or_tried_to_harm_yourself_or_anyone_else_in_the_last_year)
+count(sheltered_survey, have_you_threatened_to_or_tried_to_harm_yourself_or_anyone_else_in_the_last_year) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, have_you_threatened_to_or_tried_to_harm_yourself_or_anyone_else_in_the_last_year)
+count(unsheltered_survey, have_you_threatened_to_or_tried_to_harm_yourself_or_anyone_else_in_the_last_year) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -278,9 +282,11 @@ count(unsheltered_survey, have_you_threatened_to_or_tried_to_harm_yourself_or_an
 ```{r}
 #Legal Obstacles?
 #There is one "yy" value which is an assumed typo and is included with the "y" count
-count(sheltered_survey, do_you_have_any_legal_stuff_going_on_right_now_that_may_result_in_you_being_locked_up_having_to_pay_nes_or_that_make_it_more_dif_cult_to_rent_a_place_to_live)
+count(sheltered_survey, do_you_have_any_legal_stuff_going_on_right_now_that_may_result_in_you_being_locked_up_having_to_pay_nes_or_that_make_it_more_dif_cult_to_rent_a_place_to_live) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, do_you_have_any_legal_stuff_going_on_right_now_that_may_result_in_you_being_locked_up_having_to_pay_nes_or_that_make_it_more_dif_cult_to_rent_a_place_to_live)
+count(unsheltered_survey, do_you_have_any_legal_stuff_going_on_right_now_that_may_result_in_you_being_locked_up_having_to_pay_nes_or_that_make_it_more_dif_cult_to_rent_a_place_to_live) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -291,9 +297,11 @@ count(unsheltered_survey, do_you_have_any_legal_stuff_going_on_right_now_that_ma
     + No = 22829,		Yes =	3071,		%Yes = 15.05% 
 ```{r}
 #Forced or Tricked?
-count(sheltered_survey, does_anybody_force_or_trick_you_to_do_things_that_you_do_not_want_to_do)
+count(sheltered_survey, does_anybody_force_or_trick_you_to_do_things_that_you_do_not_want_to_do) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, does_anybody_force_or_trick_you_to_do_things_that_you_do_not_want_to_do)
+count(unsheltered_survey, does_anybody_force_or_trick_you_to_do_things_that_you_do_not_want_to_do) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -304,9 +312,11 @@ count(unsheltered_survey, does_anybody_force_or_trick_you_to_do_things_that_you_
     + No = 22001,		Yes = 3899,	  %Yes = 15.05%
 ```{r}
 #Risky Behavior
-count(sheltered_survey, do_you_ever_do_things_that_may_be_considered_to_be_risky_like_exchange_sex_for_money_food_drugs_or_a_place_to_stay_run_drugs_for_someone_have_unprotected_sex_with_someone_you_don_t_know_share_a_needle_or_anything_like_that)
+count(sheltered_survey, do_you_ever_do_things_that_may_be_considered_to_be_risky_like_exchange_sex_for_money_food_drugs_or_a_place_to_stay_run_drugs_for_someone_have_unprotected_sex_with_someone_you_don_t_know_share_a_needle_or_anything_like_that) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, do_you_ever_do_things_that_may_be_considered_to_be_risky_like_exchange_sex_for_money_food_drugs_or_a_place_to_stay_run_drugs_for_someone_have_unprotected_sex_with_someone_you_don_t_know_share_a_needle_or_anything_like_that)
+count(unsheltered_survey, do_you_ever_do_things_that_may_be_considered_to_be_risky_like_exchange_sex_for_money_food_drugs_or_a_place_to_stay_run_drugs_for_someone_have_unprotected_sex_with_someone_you_don_t_know_share_a_needle_or_anything_like_that) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 * Been hospitalized as an inpatient?
@@ -327,9 +337,11 @@ Questions:
 ```{r}
 #Owe Money to Someone?
 #There is one "yy" value which is an assumed typo and is included with the "y" count
-count(sheltered_survey, is_there_any_person_past_landlord_business_bookie_dealer_or_government_group_like_the_irs_that_thinks_you_owe_them_money)
+count(sheltered_survey, is_there_any_person_past_landlord_business_bookie_dealer_or_government_group_like_the_irs_that_thinks_you_owe_them_money) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, is_there_any_person_past_landlord_business_bookie_dealer_or_government_group_like_the_irs_that_thinks_you_owe_them_money)
+count(unsheltered_survey, is_there_any_person_past_landlord_business_bookie_dealer_or_government_group_like_the_irs_that_thinks_you_owe_them_money) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -338,9 +350,11 @@ count(unsheltered_survey, is_there_any_person_past_landlord_business_bookie_deal
   + Unsheltered: No = 18156,   Yes = 7744,   %Yes = 29.9%
 ```{r}
 #Any income?
-count(sheltered_survey, do_you_get_any_money_from_the_government_a_pension_an_inheritance_working_under_the_table_a_regular_job_or_anything_like_that)
+count(sheltered_survey, do_you_get_any_money_from_the_government_a_pension_an_inheritance_working_under_the_table_a_regular_job_or_anything_like_that) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, do_you_get_any_money_from_the_government_a_pension_an_inheritance_working_under_the_table_a_regular_job_or_anything_like_that)
+count(unsheltered_survey, do_you_get_any_money_from_the_government_a_pension_an_inheritance_working_under_the_table_a_regular_job_or_anything_like_that) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -349,9 +363,11 @@ count(unsheltered_survey, do_you_get_any_money_from_the_government_a_pension_an_
   + Unsheltered: No = 12995,   Yes = 12905,  %Yes = 49.8%
 ```{r}
 #Any happy planned activities?
-count(sheltered_survey, do_you_have_planned_activities_other_than_just_surviving_that_make_you_feel_happy_and_ful_lled)
+count(sheltered_survey, do_you_have_planned_activities_other_than_just_surviving_that_make_you_feel_happy_and_ful_lled) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, do_you_have_planned_activities_other_than_just_surviving_that_make_you_feel_happy_and_ful_lled)
+count(unsheltered_survey, do_you_have_planned_activities_other_than_just_surviving_that_make_you_feel_happy_and_ful_lled) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -360,9 +376,11 @@ count(unsheltered_survey, do_you_have_planned_activities_other_than_just_survivi
   + Unsheltered: No = 12965,   Yes = 12935,  %Yes = 49.9%
 ```{r}
 #Can you afford basic needs?
-count(sheltered_survey, are_you_currently_able_to_take_care_of_basic_needs_like_bathing_changing_clothes_using_a_restroom_getting_food_and_clean_water_and_other_things_like_that)
+count(sheltered_survey, are_you_currently_able_to_take_care_of_basic_needs_like_bathing_changing_clothes_using_a_restroom_getting_food_and_clean_water_and_other_things_like_that) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, are_you_currently_able_to_take_care_of_basic_needs_like_bathing_changing_clothes_using_a_restroom_getting_food_and_clean_water_and_other_things_like_that)
+count(unsheltered_survey, are_you_currently_able_to_take_care_of_basic_needs_like_bathing_changing_clothes_using_a_restroom_getting_food_and_clean_water_and_other_things_like_that) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -371,9 +389,11 @@ count(unsheltered_survey, are_you_currently_able_to_take_care_of_basic_needs_lik
   + Unsheltered: No = 13044,   Yes = 12856,  %Yes = 49.64%
 ```{r}
 #Current homelessness related to relationship issues?
-count(sheltered_survey, is_your_current_homelessness_in_any_way_caused_by_a_relationship_that_broke_down_an_unhealthy_or_abusive_relationship_or_because_family_or_friends_caused_you_to_become_evicted)
+count(sheltered_survey, is_your_current_homelessness_in_any_way_caused_by_a_relationship_that_broke_down_an_unhealthy_or_abusive_relationship_or_because_family_or_friends_caused_you_to_become_evicted) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, is_your_current_homelessness_in_any_way_caused_by_a_relationship_that_broke_down_an_unhealthy_or_abusive_relationship_or_because_family_or_friends_caused_you_to_become_evicted)
+count(unsheltered_survey, is_your_current_homelessness_in_any_way_caused_by_a_relationship_that_broke_down_an_unhealthy_or_abusive_relationship_or_because_family_or_friends_caused_you_to_become_evicted) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -388,9 +408,11 @@ Questions:
   + Unsheltered: No = 13875,    Yes = 12025,    %Yes = 46.43%
 ```{r}
 #Physical Health Led to Leaving Housing?
-count(sheltered_survey, have_you_ever_had_to_leave_an_apartment_shelter_program_or_other_place_you_were_staying_because_of_your_physical_health)
+count(sheltered_survey, have_you_ever_had_to_leave_an_apartment_shelter_program_or_other_place_you_were_staying_because_of_your_physical_health) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, have_you_ever_had_to_leave_an_apartment_shelter_program_or_other_place_you_were_staying_because_of_your_physical_health)
+count(unsheltered_survey, have_you_ever_had_to_leave_an_apartment_shelter_program_or_other_place_you_were_staying_because_of_your_physical_health) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -399,9 +421,11 @@ count(unsheltered_survey, have_you_ever_had_to_leave_an_apartment_shelter_progra
   + Unsheltered: No = 13930,    Yes =	11970,   %Yes = 46.2%
 ```{r}
 #Chronic Issues?
-count(sheltered_survey, do_you_have_any_chronic_health_issues_with_your_liver_kidneys_stomach_lungs_or_heart)
+count(sheltered_survey, do_you_have_any_chronic_health_issues_with_your_liver_kidneys_stomach_lungs_or_heart) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, do_you_have_any_chronic_health_issues_with_your_liver_kidneys_stomach_lungs_or_heart)
+count(unsheltered_survey, do_you_have_any_chronic_health_issues_with_your_liver_kidneys_stomach_lungs_or_heart) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -410,9 +434,11 @@ count(unsheltered_survey, do_you_have_any_chronic_health_issues_with_your_liver_
   + Unsheltered: No = 25554,    Yes = 346,      %Yes = 1.34%
 ```{r}
 #Interested in program assisting those with HIV or AIDS?
-count(sheltered_survey, if_there_was_space_available_in_a_program_that_speci_cally_assists_people_that_live_with_hiv_or_aids_would_that_be_of_interest_to_you)
+count(sheltered_survey, if_there_was_space_available_in_a_program_that_speci_cally_assists_people_that_live_with_hiv_or_aids_would_that_be_of_interest_to_you) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, if_there_was_space_available_in_a_program_that_speci_cally_assists_people_that_live_with_hiv_or_aids_would_that_be_of_interest_to_you)
+count(unsheltered_survey, if_there_was_space_available_in_a_program_that_speci_cally_assists_people_that_live_with_hiv_or_aids_would_that_be_of_interest_to_you) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -421,9 +447,11 @@ count(unsheltered_survey, if_there_was_space_available_in_a_program_that_speci_c
   + Unsheltered: No = 23641,    Yes = 2259,     %Yes = 8.72%
 ```{r}
 #Physical Disabilities limiting housing?
-count(sheltered_survey, do_you_have_any_physical_disabilities_that_would_limit_the_type_of_housing_you_could_access_or_would_make_it_hard_to_live_independently_because_you_d_need_help)
+count(sheltered_survey, do_you_have_any_physical_disabilities_that_would_limit_the_type_of_housing_you_could_access_or_would_make_it_hard_to_live_independently_because_you_d_need_help) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, do_you_have_any_physical_disabilities_that_would_limit_the_type_of_housing_you_could_access_or_would_make_it_hard_to_live_independently_because_you_d_need_help)
+count(unsheltered_survey, do_you_have_any_physical_disabilities_that_would_limit_the_type_of_housing_you_could_access_or_would_make_it_hard_to_live_independently_because_you_d_need_help) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -432,22 +460,68 @@ count(unsheltered_survey, do_you_have_any_physical_disabilities_that_would_limit
   + Unsheltered: No = 13631,		 Yes	= 12269,   %Yes = 47.37%
 ```{r}
 #Avoid medical help?
-count(sheltered_survey, when_you_are_sick_or_not_feeling_well_do_you_avoid_getting_medical_help)
+count(sheltered_survey, when_you_are_sick_or_not_feeling_well_do_you_avoid_getting_medical_help) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, when_you_are_sick_or_not_feeling_well_do_you_avoid_getting_medical_help)
+count(unsheltered_survey, when_you_are_sick_or_not_feeling_well_do_you_avoid_getting_medical_help) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
 
-* FOR FEMALE RESPONDENTS ONLY: Are you currently pregnant?
+* FOR FEMALE** RESPONDENTS ONLY: Are you currently pregnant?
   + Sheltered:   NA = 38661,    Yes = 185,                %Yes = .48%
   + Unsheltered: NA = 20906,    Yes = 111,   No = 4883,	  %Yes = .43%,    %NA = 80.72%
+  + **Though we recognize that individuals other than females can be pregnant, the VI-SPDAT data phrased the question this way and thus all calculations are done using data for women only. 
 ```{r}
 #Pregnant?
-count(sheltered_survey, are_you_currently_pregnant)
+count(sheltered_survey, are_you_currently_pregnant) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, are_you_currently_pregnant)
+count(unsheltered_survey, are_you_currently_pregnant) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
+
+* Did only female respondents answer?
+    * Male, female and trans respondents all answered this question (answers are no, yes, NA), so the yes percentages are indicative of what percent of total respondents were pregnant at the time of survey
+```{r}
+unsheltered_survey %>%
+  group_by(self_identified_gender) %>%
+  count(are_you_currently_pregnant)
+```
+
+* From the numbers, it seems that homeless individuals are less likely to be pregnant at any given time than individuals who are not experiencing homelessness 
+* While it's difficult to calculate what percentage of people in the U.S. are pregnant at any given time, [this pdf](https://www.cdc.gov/reproductivehealth/emergency/pdfs/PregnacyEstimatoBrochure508.pdf) provides the equation:
+  * (WomenOfReproductiveAge / 1000) * ((FertilityRates * .75) + (AbortionRate * .167) + (FetalLossRate * .25))
+  * In 2017, those values were:
+    * (74,576,131 / 1000) * ((60.3 * .75) + (13.5 * .167) + (5.8 * .25))
+    * 74576.131 * 48.9295 = **3,648,972.8**
+      * [Women of reproductive age (age 15-49)](https://wonder.cdc.gov/wonder/help/PopulationProjections-2060.html)
+      * [Fertility rate data](https://www.cdc.gov/nchs/fastats/births.htm)
+      * [Abortion rate data](https://www.guttmacher.org/report/abortion-incidence-service-availability-us-2017)
+      * [Fetal loss rate data](https://www.cdc.gov/reproductivehealth/maternalinfanthealth/infantmortality.htm)
+```{r}
+#The following data is from the Center for Disease Control and Prevention Census Population Projections (https://wonder.cdc.gov/population.html). From the 2014-2060 population projections, I requested results grouped by age-group, in the year 2017, for age groups in the tibble below, for women of all ethnicities and races. The data, which was given in .txt format, is reproduced here in tibble form 
+
+reproductive_women <- tribble(
+  ~"Age-Group", ~"count",
+  "15-19",	10316013,
+	"20-24",	10821813,
+	"25-29",	11488328,
+	"30-34",	10877462,
+	"35-39",	10600860,
+	"40-44",	9883910,
+	"45-49",	10587745
+)
+
+#shows the tribble and computes the sum of the count of all age groups
+reproductive_women 
+sum(reproductive_women$count)
+```
+
+* If the number of women pregnant in the US at any one time is roughly 3,648,973 (based on above calculations), and the projected number of women in the US in 2017 is 165,591,056 (also from CDC population estimate data), then an estiamted 2.2% of women in the US are pregnant at any given time. 
+* If [50.8% of the population is female](https://www.census.gov/quickfacts/fact/table/US/LFE046217), then 1.1176% of the US population is pregnant at any given time. 
+* This is more than twice as much as among homeless respondents, of whom .48% sheltered and .43% sheltered said yes.
 
 
 
@@ -456,10 +530,12 @@ count(unsheltered_survey, are_you_currently_pregnant)
   + Unsheltered: No = 12755,    Yes = 13145,    %Yes = 50.75%
 ```{r}
 #Kicked out due to drinking/drug use?
-count(sheltered_survey, has_your_drinking_or_drug_use_led_you_to_being_kicked_out_of_an_apartment_or_program_where_you_were_staying_in_the_past)
+count(sheltered_survey, has_your_drinking_or_drug_use_led_you_to_being_kicked_out_of_an_apartment_or_program_where_you_were_staying_in_the_past) %>%
+  mutate(percentage = (n/sum(n))*100)
 
 #There are three N values, which is an assumed typo for n, and as such the Ns are included in the n totals
-count(unsheltered_survey, has_your_drinking_or_drug_use_led_you_to_being_kicked_out_of_an_apartment_or_program_where_you_were_staying_in_the_past)
+count(unsheltered_survey, has_your_drinking_or_drug_use_led_you_to_being_kicked_out_of_an_apartment_or_program_where_you_were_staying_in_the_past) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -468,10 +544,12 @@ count(unsheltered_survey, has_your_drinking_or_drug_use_led_you_to_being_kicked_
   + Unsheltered: No = 12862,    Yes = 13038,    %Yes = 50.34%
 ```{r}
 #Will drinking or drug issues make it difficult to afford/keep housing?
-count(sheltered_survey, will_drinking_or_drug_use_make_it_dif_cult_for_you_to_stay_housed_or_afford_your_housing)
+count(sheltered_survey, will_drinking_or_drug_use_make_it_dif_cult_for_you_to_stay_housed_or_afford_your_housing) %>%
+  mutate(percentage = (n/sum(n))*100)
 
 #There are four N values, which is an assumed typo for n, and as such the Ns are included in the n totals
-count(unsheltered_survey, will_drinking_or_drug_use_make_it_dif_cult_for_you_to_stay_housed_or_afford_your_housing)
+count(unsheltered_survey, will_drinking_or_drug_use_make_it_dif_cult_for_you_to_stay_housed_or_afford_your_housing) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -483,9 +561,11 @@ count(unsheltered_survey, will_drinking_or_drug_use_make_it_dif_cult_for_you_to_
     + Unsheltered: No = 13068,			Yes =	12832,	  %Yes = 49.5%
 ```{r}
 #Mental health issue?
-count(sheltered_survey, a_mental_health_issue_or_concern)
+count(sheltered_survey, a_mental_health_issue_or_concern) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, a_mental_health_issue_or_concern)
+count(unsheltered_survey, a_mental_health_issue_or_concern) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -494,9 +574,11 @@ count(unsheltered_survey, a_mental_health_issue_or_concern)
     + Unsheltered: No = 12793,      Yes = 13107,    %Yes = 50.61%
 ```{r}
 #Past Head Injury?
-count(sheltered_survey, a_past_head_injury)
+count(sheltered_survey, a_past_head_injury) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, a_past_head_injury)
+count(unsheltered_survey, a_past_head_injury) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -505,9 +587,11 @@ count(unsheltered_survey, a_past_head_injury)
     + Unsheltered: No = 23307,      Yes = 2593,         %Yes = 10.01%
 ```{r}
 #Learning Disability
-count(sheltered_survey, a_learning_disability_developmental_disability_or_other_impairment)
+count(sheltered_survey, a_learning_disability_developmental_disability_or_other_impairment) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, a_learning_disability_developmental_disability_or_other_impairment)
+count(unsheltered_survey, a_learning_disability_developmental_disability_or_other_impairment) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -516,9 +600,11 @@ count(unsheltered_survey, a_learning_disability_developmental_disability_or_othe
   + Unsheltered: No = 23561,    Yes = 2339,     %Yes = 9.03%
 ```{r}
 #Difficulty living independently due to mental health or brain issues?
-count(sheltered_survey, do_you_have_any_mental_health_or_brain_issues_that_would_make_it_hard_for_you_to_live_independently_because_you_d_need_help)
+count(sheltered_survey, do_you_have_any_mental_health_or_brain_issues_that_would_make_it_hard_for_you_to_live_independently_because_you_d_need_help) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, do_you_have_any_mental_health_or_brain_issues_that_would_make_it_hard_for_you_to_live_independently_because_you_d_need_help )
+count(unsheltered_survey, do_you_have_any_mental_health_or_brain_issues_that_would_make_it_hard_for_you_to_live_independently_because_you_d_need_help ) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -527,9 +613,11 @@ count(unsheltered_survey, do_you_have_any_mental_health_or_brain_issues_that_wou
   + Unsheltered: No = 12972,    Yes = 12928,    %Yes = 49.92%
 ```{r}
 #Not taking medications?
-count(sheltered_survey, are_there_any_medications_that_a_doctor_said_you_should_be_taking_that_for_whatever_reason_you_are_not_taking)
+count(sheltered_survey, are_there_any_medications_that_a_doctor_said_you_should_be_taking_that_for_whatever_reason_you_are_not_taking) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, are_there_any_medications_that_a_doctor_said_you_should_be_taking_that_for_whatever_reason_you_are_not_taking)
+count(unsheltered_survey, are_there_any_medications_that_a_doctor_said_you_should_be_taking_that_for_whatever_reason_you_are_not_taking) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -538,9 +626,11 @@ count(unsheltered_survey, are_there_any_medications_that_a_doctor_said_you_shoul
   + Unsheltered: No = 13105,    Yes = 12795,    %Yes = 49.4%
 ```{r}
 #Misuse of medications?
-count(sheltered_survey, are_there_any_medications_like_painkillers_that_you_don_t_take_the_way_the_doctor_prescribed_or_where_you_sell_the_medication)
+count(sheltered_survey, are_there_any_medications_like_painkillers_that_you_don_t_take_the_way_the_doctor_prescribed_or_where_you_sell_the_medication) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, are_there_any_medications_like_painkillers_that_you_don_t_take_the_way_the_doctor_prescribed_or_where_you_sell_the_medication)
+count(unsheltered_survey, are_there_any_medications_like_painkillers_that_you_don_t_take_the_way_the_doctor_prescribed_or_where_you_sell_the_medication) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -549,9 +639,11 @@ count(unsheltered_survey, are_there_any_medications_like_painkillers_that_you_do
   + Unsheltered: No = 13981,    Yes = 11919,    %Yes = 46.02%
 ```{r}
 #Homelessness caused by trauma?
-count(sheltered_survey, yes_no_trauma_or_abuse) 
+count(sheltered_survey, yes_no_trauma_or_abuse) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, yes_no_trauma_or_abuse) 
+count(unsheltered_survey, yes_no_trauma_or_abuse) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -612,9 +704,11 @@ Questions:
   + Unsheltered: 0 = 286			1 =	2880 (11.12%)			2 =	9794 (37.82%)			3 =	12940	(49.96%)
 ```{r}
 #How many of the three issues that make up tri-morbidity?
-count(sheltered_survey, sub_score_trimorbidity)
+count(sheltered_survey, sub_score_trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, sub_score_trimorbidity)
+count(unsheltered_survey, sub_score_trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -623,9 +717,11 @@ count(unsheltered_survey, sub_score_trimorbidity)
   + Unsheltered: No = 12960,     Yes = 12940,      %Yes = 49.96%
 ```{r}
 #How many respondents were marked as tri-morbid?
-count(sheltered_survey, trimorbidity)
+count(sheltered_survey, trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, trimorbidity)
+count(unsheltered_survey, trimorbidity) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -683,32 +779,92 @@ unsheltered_survey %>%
   + Compare this to a [2017 Gallup poll](https://news.gallup.com/poll/234863/estimate-lgbt-population-rises.aspx) that found 4.5% of adult Americans are LGBT 
 ```{r}
 #Identify as LGBT+
-count(sheltered_survey, identifies_as_lgbtqqi2)
+count(sheltered_survey, identifies_as_lgbtqqi2) %>%
+  mutate(percentage = (n/sum(n))*100)
 
-count(unsheltered_survey, identifies_as_lgbtqqi2)
+count(unsheltered_survey, identifies_as_lgbtqqi2) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 Age
 
+* There are no LGBT+ respondents under 21 in either sheltered or unsheltered
+* Sheltered 
+  * The majority (70.6%) are 31-40 or 41-50 years old (1178 and 1275 respondents, respectively)
+* Unsheltered
+  *In contrast to sheltered, the majority (74.8%) of unsheltered respondents were 41-50 or 51-60 (899 and 756 respondents, respectively)
+
 ```{r}
+###Sheltered
+
 #Create new df of Yes LGBTQ respondents
-lgbtq_age <- sheltered_survey %>%
+lgbtq_age_sheltered <- sheltered_survey %>%
   filter(identifies_as_lgbtqqi2 == "y") 
 
 #Plot the age frequency of yes LGBTQ respondents
-ggplot(lgbtq_age, aes(x=age)) +
-  geom_histogram()
+ggplot(lgbtq_age_sheltered, aes(x=age)) +
+  geom_histogram() +
+  labs(title = "Sheltered LGBTQ+ Ages")
 
-#Get a precise count of age frequency for yes LGBTQ respondents
-lgbtq_age %>%
-  count(age)
+#Create buckets for age groups
+#The ( in the bucket indicates that number is not included in the count, while ] indicates a number is
+#Example: (21, 30] includes all numbers between 21 and 30, excluding 21 and including 30
+lgbtq_age_sheltered$age_buckets <- cut(x=lgbtq_age_sheltered$age, c(0, 12, 18, 21, 30, 40, 50, 60, 70, 80, 90))
 
+#Get a precise count of age frequency based on buckets for yes LGBTQ respondents
+lgbtq_age_sheltered %>%
+  count(age_buckets) %>%
+  mutate(percentage = (n/sum(n))*100)
+
+###Unsheltered
+#Create new df of Yes LGBTQ respondents
+lgbtq_age_unsheltered <- unsheltered_survey %>%
+  filter(identifies_as_lgbtqqi2 == "y") 
+
+#Plot the age frequency of yes LGBTQ respondents
+ggplot(lgbtq_age_unsheltered, aes(x=age)) +
+  geom_histogram() +
+  labs(title = "Unsheltered LGBTQ+ Ages")
+
+#Create buckets for age groups
+#The ( in the bucket indicates that number is not included in the count, while ] indicates a number is
+#Example: (21, 30] includes all numbers between 21 and 30, excluding 21 and including 30
+lgbtq_age_unsheltered$age_buckets <- cut(x=lgbtq_age_unsheltered$age, c(0, 12, 18, 21, 30, 40, 50, 60, 70, 80, 90))
+
+#Get a precise count of age frequency based on buckets for yes LGBTQ respondents
+lgbtq_age_unsheltered %>%
+  count(age_buckets) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
-Race
+LGBTQ+ Respondents' Race
+
+* Sheltered
+  * asian:    45,   1.3%
+  * black:    2183, 62.89%
+  * hispanic: 316,  9.1%
+  * native american:  27, .78%
+  * pacific islander: 30, .86%
+  * white:    870,  25.07%
+* Unsheltered
+  * asian:    67,   3.03%
+  * black:    784,  35.49%
+  * hispanic: 66,   2.99%
+  * native american: 22, 1%
+  * white:    1270, 57.49%
 
 ```{r}
+###Sheltered
 
+lgbtq_age_sheltered %>%
+  count(race_ethnicity) %>%
+  mutate(percentage = (n/sum(n))*100)
+
+###Unsheltered
+#Create new df of Yes LGBTQ respondents
+lgbtq_age_unsheltered %>%
+  count(race_ethnicity) %>%
+  mutate(percentage = (n/sum(n))*100)
 ```
 
 
@@ -793,7 +949,7 @@ sheltered_difference <- sheltered_survey %>%
   mutate(date_diff = as.Date(date_of_exit_from_homelessness, format="%Y/%m/%d")-
                   as.Date(date_of_assessment, format="%Y/%m/%d")) %>%
   mutate(date_diff_integer = as.integer(date_diff)) %>%
-  filter(date_diff_integer > 0)
+  filter(date_diff_integer > 0) 
 
 sheltered_difference
 ```
@@ -898,16 +1054,16 @@ sheltered_still_housed
 
 Have homeless indidivudals experienced higher rates of incarceration/interactions with the law in a certain year? Do any correspond with increases in homeless criminilization policies?
 
-Unsheltered respondents on average spent almost a week incarcerated prior to filling out the survey. Sheltered respondents, however, reported an average of less than half a day of incarceration. That said, the greatest number of days incarcerated reported by a sheltered individual, 100, and even the second-greatest amount, 60, are much higher than unsheltered's maximum of 40 days (there were 10 responses of 40 days). The overall total of days spent incarcerated each year is about 10 times greater each year for unsheltered respondents than sheltered.
+Unsheltered respondents on average were incarcerated almost seven times prior to filling out the survey. If each time they were jailed for only one night, that's still one week spent incarcerated *on average* in the past three months. Sheltered respondents, however, reported an average of less than one incarceration. That said, the greatest number of times a sheltered individual reported being incarcerated, 100, and even the second-greatest amount, 60, are much higher than unsheltered's maximum of 40 times (there were 10 responses of 40 times). The overall total of times incarcerated each year is about 10 times greater each year for unsheltered respondents than sheltered.
 
 Basic incarceration statistics:
 
 * Unsheltered: 
-  + Maximum days incarcerated: 40
-    + There were 10 responses of 40 days
+  + Maximum times incarcerated: 40
+    + There were 10 responses of 40 times
 * Sheltered:
-  + Maximum days incarcerated: 100
-  + Second greatest: 60 days
+  + Maximum times incarcerated: 100
+  + Second greatest: 60 times
 ```{r}
 #Sheltered
 max(sheltered_survey$jail_or_prison)
@@ -917,8 +1073,8 @@ max(unsheltered_survey$jail_or_prison)
 ```
 
 
-* Sheltered average days incarcerated: .416568
-* Unsheltered average days incarcerated: 6.799266
+* Sheltered average times incarcerated: .416568
+* Unsheltered average times incarcerated: 6.799266
 ```{r}
 #Sheltered
 mean(sheltered_survey$jail_or_prison)
@@ -928,15 +1084,15 @@ mean(unsheltered_survey$jail_or_prison)
 ```
 
 
-Next two coding sections show cumulative number of days respondents spent incarcerated each year
+Next two coding sections show cumulative number of times respondents were incarcerated each year
 
-Unsheltered incarcerated days:
+Unsheltered incarcerated:
 * 2015:	50821			
 * 2016:	57097			
 * 2017:	58121			
 * 2018:	10062
 
-Sheltered incarcerated days:
+Sheltered incarcerated:
 * 2015:	3938			
 * 2016:	5705			
 * 2017:	4976			
@@ -954,13 +1110,13 @@ sheltered_survey %>%
 ```
 
 
-The code below creates a histogram showing the number of responses each year for a certain value (the value being #days incarcerated). While many respondents - both sheltered and unsheltered - have spent time in jail or prison, unsheltered respondents on average spent significantly longer periods of time incarcerated, as shown by greater counts at jail_or_prison values greater than 1.
+The code below creates a histogram showing the number of responses each year for a certain value (the value being #days incarcerated). While many respondents - both sheltered and unsheltered - have spent time in jail or prison, unsheltered respondents on average were incarcerated many more times than sheltered respondents, as shown by greater counts at jail_or_prison values greater than 1.
 ```{r}
 #Unsheltered Criminalization
 ggplot(unsheltered_survey, aes(x=jail_or_prison)) + 
   geom_histogram() + 
   facet_wrap(~year) +
-  ggtitle("Frequency of #Days Unsheltered Spent Incarcerated Per Year")
+  ggtitle("Frequency of #Times Unsheltered were Incarcerated Per Year")
 
 #ggsave(filename = "unsheltered-jail-prison-time.png", 
 #       device = "png", path = paste0(here::here(), "/graphs/unsheltered"))
@@ -970,7 +1126,7 @@ ggplot(unsheltered_survey, aes(x=jail_or_prison)) +
 ggplot(sheltered_survey, aes(x=jail_or_prison)) + 
   geom_histogram() + 
   facet_wrap(~year) +
-  ggtitle("Frequency of #Days Sheltered Spent Incarcerated Per Year")
+  ggtitle("Frequency of #Times Sheltered were Incarcerated Per Year")
 
 #ggsave(filename = "sheltered-jail-prison-time.png", 
 #       device = "png", path = paste0(here::here(), "/graphs/sheltered"))
