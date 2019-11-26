@@ -1,0 +1,140 @@
+---
+title: "Homeless Population Compared to Beds"
+author: "Roxanne Ready"
+date: "11/26/2019"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Load Libraries and Data
+
+Click the `Code` button to the right to view load-in process.
+
+```{r results = 'hide'}
+
+library(tidyverse) # For tidy data
+library(dplyr)
+library(rlang) # To simplify enqo() to {{}} when building functions
+library(here) # For consistent file pathing
+library(odbc) # For connecting to the database
+library(RMySQL) # For connecting to the database
+library(stringdist) # Dependancy for refinr; do not install from binary
+library(refinr) # For address standardization
+library(devtools)
+
+# Presentation
+library(knitr)
+library(kableExtra)
+
+```
+
+```{r results='hide'}
+
+x <- read.csv(here("data", "output-data", "pit-hic-zillow.csv")) %>%
+  select(coc_code, state_code, coc_name, 
+         coc_total_population_zillow_2017, 
+         pit_overall_homeless_2017, 
+         pit_sheltered_total_homeless_2017, pit_unsheltered_homeless_2017, 
+         hic_total_year_round_beds_es_th_sh_2017)
+
+```
+
+## All Totals and Ratios
+
+Throughout the document, click the `Code` button to the right to view underlying code.
+
+```{r rows.print=20}
+
+wk <- x %>%
+  # Total homeless people to sheltered beds
+  mutate(homeless_to_beds = pit_overall_homeless_2017/hic_total_year_round_beds_es_th_sh_2017) %>%
+  # Total population to sheltered beds
+  mutate(population_to_beds = coc_total_population_zillow_2017/hic_total_year_round_beds_es_th_sh_2017) %>%
+  group_by(state_code) %>%
+  mutate(homeless_to_beds_state = sum(pit_overall_homeless_2017, na.rm = T)/sum(hic_total_year_round_beds_es_th_sh_2017, na.rm = T)) %>%
+  mutate(population_to_beds_state = sum(coc_total_population_zillow_2017, na.rm = T)/sum(hic_total_year_round_beds_es_th_sh_2017, na.rm = T)) %>%
+  left_join(read.csv(here("data", "input-data", "clean", "zillow-cluster.csv")) %>%
+              select(coc_code, cluster_number_zillow_2017)) %>%
+  filter(cluster_number_zillow_2017 == 3) %>%
+  select(-cluster_number_zillow_2017)
+  # select(coc_code, state_code, coc_name,
+  #        homeless_to_beds, homeless_to_beds_state,
+  #        population_to_beds, population_to_beds_state)
+
+wk %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+## Ratio of the Total Homeless Population to Total Shelter Beds 
+
+### By CoC
+
+```{r rows.print=20}
+
+wk %>%
+  arrange(homeless_to_beds) %>%
+  ungroup() %>%
+  select(coc_code, state_code, coc_name, homeless_to_beds) %>%
+  mutate(rank_homeless_to_beds = rank(homeless_to_beds, ties.method= "first")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+### By State
+
+```{r rows.print=20}
+
+wk %>%
+  arrange(homeless_to_beds_state) %>%
+  ungroup() %>%
+  select(state_code, homeless_to_beds_state) %>%
+  distinct(state_code, .keep_all = T) %>%
+  mutate(rank_homeless_to_beds_state = rank(homeless_to_beds_state, ties.method= "first")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+## Ratio of the Total Population to Total Shelter Beds 
+
+### By CoC
+
+```{r rows.print=20}
+
+wk %>%
+  arrange(population_to_beds) %>%
+  ungroup() %>%
+  select(coc_code, state_code, coc_name, population_to_beds) %>%
+  mutate(rank_population_to_beds = rank(population_to_beds, ties.method= "first")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```
+
+### By State
+
+```{r rows.print=20}
+
+wk %>%
+  arrange(population_to_beds_state) %>%
+  ungroup() %>%
+  select(state_code, population_to_beds_state) %>%
+  distinct(state_code, .keep_all = T) %>%
+  mutate(rank_population_to_beds_state = rank(population_to_beds_state, ties.method= "first")) %>%
+  kable() %>%
+  kable_styling("striped", fixed_thead = T) %>%
+  scroll_box(width = "100%", height = "500px")
+
+```

@@ -1,0 +1,108 @@
+---
+title: "Untitled"
+author: "Roxanne Ready"
+output: 
+  html_document:
+    df_print: paged
+    toc: TRUE
+    toc_float: TRUE
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+# Setup Knitr to display code output by default but suppress messages
+knitr::opts_chunk$set(echo = TRUE, paged.print = TRUE, message = FALSE, warning = FALSE, rows.print=10)
+```
+
+## Libraries
+
+```{r results = 'hide'}
+
+library(tidyverse) # For tidy data
+library(dplyr)
+library(rlang) # To simplify enqo() to {{}} when building functions
+library(here) # For consistent file pathing
+library(odbc) # For connecting to the database
+library(RMySQL) # For connecting to the database
+library(stringdist) # Dependancy for refinr; do not install from binary
+library(refinr) # For address standardization
+library(devtools)
+
+# Presentation
+library(knitr)
+library(kableExtra)
+
+```
+
+```{r}
+
+x <- read.csv(here("data", "input-data", "CoC_Cluster.csv")) %>%
+  filter(`Cluster..`== 3) %>%
+  select(CoC.Number, CoC.Name, `Cluster..`) %>%
+  # Add col to designate state for grouping
+  separate(CoC.Number, sep = "-", into = c("state_code", "coc_number"), remove = F) %>%
+  # Drop the useless stand-alone number
+  select(-coc_number) %>%
+  select(state_code, CoC.Name, CoC.Number)
+
+```
+
+
+* Ratio of total homeless people (sheltered and unsheltered) to sheltered beds
+* And ratio of total people to sheltered beds
+* Grouped by CoCs
+* Grouped by state
+
+
+Reporter doing analysis on criminal cases
+Login for case search -- access bulk data
+Process for requesting bulk data
+
+Okaloosa & flagler
+
+IT department
+772-288-5983
+
+```{r}
+
+x <- read.csv(here("data", "output-data", "pit-hic-zillow.csv")) %>%
+  select(coc_code, state_code, coc_name, 
+         coc_total_population_zillow_2017, 
+         pit_overall_homeless_2017, 
+         pit_sheltered_total_homeless_2017, pit_unsheltered_homeless_2017, 
+         hic_total_year_round_beds_es_th_sh_2017)
+
+wk <- x %>%
+  # Total homeless people to sheltered beds
+  mutate(homeless_to_beds = pit_overall_homeless_2017/hic_total_year_round_beds_es_th_sh_2017) %>%
+  # Total population to sheltered beds
+  mutate(population_to_beds = coc_total_population_zillow_2017/hic_total_year_round_beds_es_th_sh_2017) %>%
+  group_by(state_code) %>%
+  mutate(homeless_to_beds_state = sum(pit_overall_homeless_2017, na.rm = T)/sum(hic_total_year_round_beds_es_th_sh_2017, na.rm = T)) %>%
+  mutate(population_to_beds_state = sum(coc_total_population_zillow_2017, na.rm = T)/sum(hic_total_year_round_beds_es_th_sh_2017, na.rm = T)) %>%
+  left_join(read.csv(here("data", "input-data", "clean", "zillow-cluster.csv")) %>%
+              select(coc_code, cluster_number_zillow_2017)) %>%
+  filter(cluster_number_zillow_2017 == 3) %>%
+  select(-cluster_number_zillow_2017) %>%
+  select(coc_code, state_code, coc_name,
+         homeless_to_beds, homeless_to_beds_state,
+         population_to_beds, population_to_beds_state)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
