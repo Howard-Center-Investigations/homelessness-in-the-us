@@ -139,9 +139,9 @@ I look forward to hearing back with next steps. Thank you very much for your tim
 
 Good afternoon, 
 
-I'm a reporter with the Howard Center for Investigative Journalism, requesting bulk court data access. 
+I'm a reporter with the Howard Center for Investigative Journalism, requesting bulk court data access (please see attached for a list of requested variables). 
 Rather than providing a report, other counties in Florida have allowed us to use a log-in and access the data directly via their case-search systems. Either would be acceptable to us, provided the report is in a CSV or similar format, but I expect providing us access would be easier on your end. We have filled out the Online Viewing Agreement, attached, to facilitate the process. 
-Please note we may need a customized access level to be able to view the data in bulk as requested (please see attached list of requested variables).
+Please note we may need a customized access level to be able to view the data in bulk as requested.
 
 Thank you very much for your time,
 
