@@ -90,18 +90,51 @@ wk <- x %>%
 
 ```
 
+Sean L. Mussenden
+202-590-2190
+smussend@umd.edu
+Knight Hall, 7765 Alumni Dr.
+College Park, MD 20742
+
+"Case Lists"
+
+I'm looking for the following fields:
+Case number
+Address
+Dates opened/entered & disposed
+Offense and arrest dates
+Charge and Statute
+Case status
+Agency and Jurisdiction
+Disposition
 
 
 
 
 
+Good afternoon, 
 
+I'm a reporter with the Howard Center for Investigative Journalism and I'm hoping you can direct me to the proper method to request bulk court data access. Rather than providing a report, other counties in Florida have allowed us to use a log-in and access the data directly via their case-search systems. Either would be acceptable to us, provided the report is in a CSV or similar format, but I expect providing us access would be easier on your end.
 
+We are seeking bulk access to all fields for criminal cases returned by date range for at least the previous 5 years. Fields should include but are not limited to:
+Case number
+Defendant Name
+Defendant ID
+Defendant Address
+Agency 
+Jurisdiction
+Date Opened / Entered
+Date Disposed
+Offense Date
+Arrest Date
+Charge 
+Statute
+Case Status
+Plea
+Disposition / Verdict / Sentence
+All fields related to Sentence, Probation, and Suspended times
 
-
-
-
-
+I look forward to hearing back with next steps. Thank you very much for your time,
 
 
 
