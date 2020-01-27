@@ -1,0 +1,19 @@
+---
+title: "NYC 311 Calls"
+author: "Theresa Diffendal"
+date: "1/27/2020"
+always_allow_html: yes
+output: 
+  html_document:
+    toc: false
+    df_print: kable
+  md_document:
+    variant: markdown_github
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
