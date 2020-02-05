@@ -15,7 +15,20 @@ rm(list = ls())
 ```
 
 ```{r}
-install.packages('revgeo')
+install.packages('')
+```
+
+
+```{r}
+# load libraries for leaflet - map 
+library(dplyr)
+library(rgdal)
+library(ggplot2)
+library(leaflet)
+# set factors to false
+options(stringsAsFactors = FALSE)
+
+
 ```
 
 
@@ -24,17 +37,16 @@ library(tidyverse)
 library(janitor)
 library(arcos)
 library(scales)
+library(revgeo)
 library(ggrepel)
-#library(tidycensus)
+library(tidycensus)
 library(readr)
-#library(zipcode)
 library(viridis)
-#library(mapview)
+library(mapview)
 library(ggthemes)
 library(datasets)
 library(plotly)
 library(lubridate)
-library(dplyr)
 library(ggmap)
 library(tidyr)
 library(revgeo)
@@ -48,38 +60,38 @@ Honolulu_2011_2019 <-read_csv ("data/Honolulu_311_2011_2019.csv")
 ```
 
 ```{r}
+
+# need to eliminate year 1899 as it marks fields without year 
+
 Honolulu_Edit <- Honolulu_2011_2019 %>%
   filter(!str_detect(YEAR, '1899')) %>% 
   select(id, ReportType, CurrentStatus, Description, DateCreate_Converted,location, YEAR) %>%
-  separate( location, into = c("Latitude","Longitude"), sep = ",", extra = "merge") %>% 
-  select(id, ReportType, CurrentStatus, Description, DateCreate_Converted, Latitude, Longitude, YEAR)%>%
+  separate( location, into = c("latitude","longitude"), sep = ",", extra = "merge") %>% 
+  select(id, ReportType, CurrentStatus, Description, DateCreate_Converted, latitude, longitude, YEAR)%>%
   print()
 
 ```
 
 ``` {r}
  # eliminate parathenses signs
-Honolulu_Edit$Latitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$Latitude))
-Honolulu_Edit$Longitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$Longitude))
+Honolulu_Edit$latitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$latitude))
+Honolulu_Edit$longitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$longitude))
 
 ```
 
 ```{r}
-# trying to get address 
-
-# Honolulu_Edit$textAddress <- mapply(FUN = function(lon, lat) revgeocode(c(lon, lat)), Honolulu_Edit$lon, Honolulu_Edit$lat)
-
-```
-
-```{r}
-# Honolulu_2011_2019 %>% 
- # mutate (year = year(DateCreate_Converted))
-                # month = month(DateCreate_Converted), 
-                # day = day(DateCreate_Converted)) 
 
 # need to eliminate year 1899 as it marks fields without year 
 
+Honolulu_Edit_Homeless <- Honolulu_Edit %>%
+  filter(ReportType == 'Homeless') %>% 
+  print()
+
 ```
+
+
+
+
 
 Has there been an uptick in calls related to homelessness in comparison to other types of calls?  (utilized Honolulu edited dataset) – 
 
@@ -194,7 +206,7 @@ honolulu_2015 %>% filter(ReportType == 'Homeless') %>% print()
 2016 - 100 out of 3182 observations (5.71 %) are filed under Report Type Homeless. CurrentStatus of some of the reports start showing "Referred to Department". This was not the case in the prior years.  
 ```{r}
 
-honolulu_2016 <-  Honolulu_2011_2019 %>%
+Honolulu_Edit_Homeless <-  Honolulu_2011_2019 %>%
   select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
   filter(YEAR =='2016') %>% 
   print()
@@ -238,5 +250,35 @@ honolulu_2019 <-  Honolulu_2011_2019 %>%
   print()
 
 
+
+
 honolulu_2019 %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
+
+
+
+
+Leaflet analysis 2011- 2019 
+
+```{r}
+#All complaints from 2011 to 2019 
+# Color Scheme
+binpal <- colorBin("plasma", Honolulu_Edit_Homeless$YEAR, 5, pretty = FALSE)
+
+
+# Show first 20 rows from the `quakes` dataset
+leaflet(data = Honolulu_Edit_Homeless) %>% addTiles() %>%
+  addMarkers(~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR))
+``` 
+
+```{r}
+leaflet(Honolulu_Edit_Homeless) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+
+
+
+
