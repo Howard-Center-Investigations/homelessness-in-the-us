@@ -1,0 +1,188 @@
+---
+title: "dc encampments"
+author: "Sean Mussenden | Howard Center for Investigative Journalism"
+date: "2/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(tidycensus)
+library(sf)
+library(leaflet)
+
+census_api_key("549950d36c22ff16455fe196bbbd01d63cfbe6cf")
+
+```
+
+```{r}
+
+dc_encampments <- read_csv("data/dc_encampments.csv") %>%
+  clean_names() %>%
+  select(-notes_questions, -link) %>%
+  filter(!is.na(coordinates))
+
+write.csv(dc_encampments, "data/dc_encampments_cleaned.csv")
+
+dc_encampments_sf <- dc_encampments %>%
+  st_as_sf(coords=c("longitude","latitude"), crs=4269, remove=FALSE)
+
+dc_encampments_plus_tracts <- read_csv("data/encampments_dc_plus_tracts.csv") %>%
+  mutate(GEOID = as.character(GEOID))
+
+Summary(dc_encampments_plus_tracts)
+
+```
+```{r}
+dc_income_2018 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2018) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2018 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2017 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2017) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2017 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2016 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2016) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2016 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2015 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2015) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2015 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2014 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2014) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2014 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2013 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2013) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2013 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2012 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2012) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2012 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2011 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2011) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2011 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income_2010 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2010) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2010 = estimate) %>% 
+  select(-variable, -moe)
+
+dc_income <- dc_income_2018 %>%
+  inner_join(dc_income_2017, by=c("GEOID","NAME")) %>%
+  inner_join(dc_income_2016, by=c("GEOID","NAME")) %>%
+  inner_join(dc_income_2015, by=c("GEOID","NAME")) %>%
+  inner_join(dc_income_2014, by=c("GEOID","NAME")) %>%
+  inner_join(dc_income_2013, by=c("GEOID","NAME")) %>%
+  inner_join(dc_income_2012, by=c("GEOID","NAME")) %>%
+  inner_join(dc_income_2011, by=c("GEOID","NAME")) %>%
+  inner_join(dc_income_2010, by=c("GEOID","NAME")) %>%
+  mutate(chg_pct_2010_2018 = (median_household_income_2018-median_household_income_2010)/median_household_income_2010*100)
+
+```
+
+
+```{r}
+
+dc_encampments_plus_tracts_income <- dc_encampments_plus_tracts %>%
+  left_join(dc_income, by=c("GEOID"))
+  
+  
+
+```
+
+
+```{r}
+
+# Income in census tracts most recent
+
+x <- dc_encampments_plus_tracts_income %>%
+  group_by(NAMELSAD) %>%
+  summarise(count = n(),
+            median_household_income_2018 = mean(median_household_income_2018),
+            median_household_income_2010 = mean(median_household_income_2010),
+            chg_pct_2010_2018 = mean(chg_pct_2010_2018)
+            ) %>%
+  arrange(desc(chg_pct_2010_2018))
+
+write.csv(x, "data/dc_encampments_plus_tracts_income.csv")
+
+# Income multiple years
+
+
+
+```
+
+
+```{r}
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(lng=dc_encampments$longitude, lat=dc_encampments$latitude) %>%
+  addPolygons()
+```
+
+```{r}
+options(tigris_use_cache = TRUE)
+
+
+acs_variables <- load_variables(2017, "acs5", cache = TRUE)
+
+# Get shapefiles with median income in past 12 months
+dc_income <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001") %>%
+  mutate(GEOID = as.character(GEOID))
+
+
+```
+```{r}
+
+plot(dc_tracts$geometry)
+plot(dc_encampments_sf$geometry, add=T, pch=16, cex=0.5, col="gray50")
+
+```
+
+
+```{r}
+st_join(dc_tracts,dc_encampments_sf) 
+
+```
+
+a
+a
+df
+
+
+```{r}
+
+st_crs(dc_encampments_sf)
+st_crs(dc_tracts)
+
+
+```
