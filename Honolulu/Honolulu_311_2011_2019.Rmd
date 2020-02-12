@@ -5,6 +5,38 @@ date: "1/29/2020"
 output: html_document
 ---
 
+
+Has there been an uptick in calls related to homelessness in comparison to other types of calls?  (utilized Honolulu edited dataset) – 
+
+- As a percentage of all calls, calls related to homelessness have not increased. 
+
+- One interesting case is that from 2017 to 2019 there is a downward trend in the volume of all types of calls while there is an increase in calls related to homelessness. 
+
+2011 is an outlier. It would seem data was not yet tracked for this year, or at least not comprehensively. It would be important to look further into this. 
+
+The year with most calls (as a percentage of the whole and excluding 2011) related to homelessness is in 2012. After that the order from most to least reports is 2013, 2016, 2019 and 2018. 
+
+
+ - 2011 - 1 out of 13 reports (7.69%) are categorized under homeless.  
+ - 2012 - 340 out of 4221 reports (8.05%) are categorized under homeless.  
+ - 2013 - 179 out of 3106 reports (5.76 %) are categorized under homeless. 
+ - 2014 - 124 out of 2324 reports (3.07 %) are categorized under homeless. 
+ - 2015 - 71 out of 2310 (3.07 %) observations in 2015 are filed under Report Type Homeless. 
+ - 2016 - 100 out of 3182 observations (5.71 %) are filed under Report Type Homeless. Current Status of some of the reports start showing "Referred to Department". This was not the case in the prior years.   
+ - 2017 - 152 out of 4231 (3.59%) observations are filed under Report Type Homeless. More "Referred to Department".   
+ - 2018 - 123 out of 2840 (4.33%) observations are filed under Report Type Homeless. More "Referred to Department".  
+ -2019 - 61 out of 1358 (4.49%) observations are filed under Report Type Homeless. More "Referred to Department".  
+ 
+ 
+ Where are the calls coming from? 
+ 
+ 
+- Interesting examples? 
+- Search for any terms referring to homelessness under other terminology/ or reports filed as homelessness that are actually something else (campers for example)
+are there more reports in locations experimenting gentrification (year by year)?
+written by citizens/ gov officials 
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -15,7 +47,8 @@ rm(list = ls())
 ```
 
 ```{r}
-install.packages('')
+install.packages("tokenizers")
+
 ```
 
 
@@ -33,6 +66,9 @@ options(stringsAsFactors = FALSE)
 
 
 ```{r}
+library(tokenizers)
+# install.packages('tm')
+library(tm)
 library(tidyverse)
 library(janitor)
 library(arcos)
@@ -56,23 +92,18 @@ library(revgeo)
 311 Calls fom 2011 to 2019 in Honolulu. Non-emergency/ complaints. 
 
 ```{r}
-Honolulu_2011_2019 <-read_csv ("data/Honolulu_311_2011_2019.csv")
-```
+# read Honolulu data 
 
-```{r}
+Honolulu_2011_2019 <-read_csv ("data/Honolulu_311_2011_2019.csv")
 
 # need to eliminate year 1899 as it marks fields without year 
 
 Honolulu_Edit <- Honolulu_2011_2019 %>%
-  filter(!str_detect(YEAR, '1899')) %>% 
-  select(id, ReportType, CurrentStatus, Description, DateCreate_Converted,location, YEAR) %>%
+  filter(!str_detect(YEAR, '1899')) %>%
   separate( location, into = c("latitude","longitude"), sep = ",", extra = "merge") %>% 
-  select(id, ReportType, CurrentStatus, Description, DateCreate_Converted, latitude, longitude, YEAR)%>%
   print()
 
-```
 
-``` {r}
  # eliminate parathenses signs
 Honolulu_Edit$latitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$latitude))
 Honolulu_Edit$longitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$longitude))
@@ -81,8 +112,7 @@ Honolulu_Edit$longitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$longitude
 
 ```{r}
 
-# need to eliminate year 1899 as it marks fields without year 
-
+# filter report type homeless 
 Honolulu_Edit_Homeless <- Honolulu_Edit %>%
   filter(ReportType == 'Homeless') %>% 
   print()
@@ -90,178 +120,206 @@ Honolulu_Edit_Homeless <- Honolulu_Edit %>%
 ```
 
 
+```{r}
+#group by report type 
+# 1151 report types are homeless 
 
-
-
-Has there been an uptick in calls related to homelessness in comparison to other types of calls?  (utilized Honolulu edited dataset) – 
-
-As a percentage of all calls, calls related to homelessness have not increased. 
-
-One interesting case is that from 2017 to 2019 there is a downward trend in the volume of all types of calls while there is an increase in calls related to homelessness. 
-
-2011 is an outlier. It would seem data was not yet tracked for this year, or at least not comprehensively. It would be important to look further into this. 
-
-The year with most calls (as a percentage of the whole and excluding 2011) related to homelessness is in 2012. After that the order from most to least reports is 2013, 2016, 2019 and 2018. 
-
-
- - 2011 - 1 out of 13 reports (7.69%) are categorized under homeless.  
- - 2012 - 340 out of 4221 reports (8.05%) are categorized under homeless.  
- - 2013 - 179 out of 3106 reports (5.76 %) are categorized under homeless. 
- - 2014 - 124 out of 2324 reports (3.07 %) are categorized under homeless. 
- - 2015 - 71 out of 2310 (3.07 %) observations in 2015 are filed under Report Type Homeless. 
- - 2016 - 100 out of 3182 observations (5.71 %) are filed under Report Type Homeless. Current Status of some of the reports start showing "Referred to Department". This was not the case in the prior years.   
- - 2017 - 152 out of 4231 (3.59%) observations are filed under Report Type Homeless. More "Referred to Department".   
- - 2018 - 123 out of 2840 (4.33%) observations are filed under Report Type Homeless. More "Referred to Department".  
- -2019 - 61 out of 1358 (4.49%) observations are filed under Report Type Homeless. More "Referred to Department".  
- 
- 
-Interesting examples? 
-Where are the calls coming from? 
-Search for any terms referring to homelessness under other terminology/ or reports filed as homelessness that are actually something else (campers for example)
-are there more reports in locations experimenting gentrification (year by year)?
-written by citizens/ gov officials 
-
+Honolulu_Edit %>% group_by(ReportType) %>% 
+  summarize(count = n()) %>% 
+  arrange(desc(count))
+``` 
 
 
 2011 - 
 
-1  out of 13 reports (7.69% ) are categorized under homeless. 
-In 2011 only one Report type for Homeless is populated. 
-Homeless ( Couldn't choose other option for issue. Correct issue bulb burnt out/flashing on light pole. ) - 	12/6/11 18:22 
-Why were there so few reports in 2011? Did data tracking not begin until later? 
-
 ```{r}
 
-honolulu_2011 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+# 1  out of 13 reports (7.69% ) are categorized under homeless. In 2011 only one Report type for Homeless is populated. Homeless ( Couldn't choose other option for issue. Correct issue bulb burnt out/flashing on light pole. ) - 	12/6/11 18:22  Why were there so few reports in 2011? Did data tracking not begin until later? 
+ 
+
+Honolulu_2011 <-  Honolulu_Edit  %>%
   filter(YEAR =='2011') %>% 
   print()
 
-honolulu_2011 %>% filter(ReportType == 'Homeless')
+Honolulu_2011 %>% filter(ReportType == 'Homeless')
+
 ``` 
 
-
-
 2012 - 
-340  out of 4221 reports (8.05% )  are categorized under homeless. 
-Many of the case description udner homeless mention "	Mopeds are stored here" or things like " This moped frequently parks on the sidewalk in front of 1505 Kewalo st. It's there now. License # R 39814". This might be a report type error. 
-
-Homeless camp/ encampment 
-
 
 ```{r}
-
-honolulu_2012 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+#  2012 -  340  out of 4221 reports (8.05% )  are categorized under homeless.  Many of the case description udner homeless mention "	Mopeds are stored here" or things like " This moped frequently parks on the sidewalk in front of 1505 Kewalo st. It's there now. License # R 39814". This might be a report type error.  Homeless camp/ encampment 
+  
+Honolulu_2012 <-  Honolulu_Edit  %>%
   filter(YEAR =='2012') %>% 
   print()
 
-honolulu_2012 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2012 %>% filter(ReportType == 'Homeless')
 ``` 
 
 2013 -
 
-179 out of 3106 reports ( 5.76 % )  are categorized under homeless. 
-
-Homeless camp/ encampment/ smell. Certain complaints are not regarding homlessness, for example "This is a no parking zone until 9 am but many people park here from 8:40 or 8:45 am everyday. Common description is also ilegal storage / building material / ilegal parking. 
-
-
 ```{r}
 
-honolulu_2013 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+# 179 out of 3106 reports ( 5.76 % )  are categorized under homeless. Homeless camp/ encampment/ smell. Certain complaints are not regarding homlessness, for example "This is a no parking zone until 9 am but many people park here from 8:40 or 8:45 am everyday. Common description is also ilegal storage / building material / ilegal parking.   
+
+
+Honolulu_2013 <-  Honolulu_Edit  %>%
   filter(YEAR =='2013') %>% 
   print()
 
-honolulu_2013 %>% filter(ReportType == 'Homeless') %>% print()
+
+Honolulu_2013 %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
 
 
-2014 - 124 out of 2324 reports (3.07 %)  are categorized under homeless. 
+2014 - 
 
 ```{r}
+# 124 out of 2324 reports (3.07 %)  are categorized under homeless.  
 
-honolulu_2014 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+Honolulu_2014 <-  Honolulu_Edit  %>%
   filter(YEAR =='2014') %>% 
   print()
 
-honolulu_2014 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2014 %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
 
 
-2015 - 71 out of 2310  (3.07 %) observations in 2015 are filed under Report Type Homeless. 
+2015 -
 
 ```{r}
 
-honolulu_2015 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+# 71 out of 2310  (3.07 %) observations in 2015 are filed under Report Type Homeless. 
+
+Honolulu_2015 <-  Honolulu_Edit  %>%
   filter(YEAR =='2015') %>% 
   print()
 
-honolulu_2015 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2015  %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
 
 
-2016 - 100 out of 3182 observations (5.71 %) are filed under Report Type Homeless. CurrentStatus of some of the reports start showing "Referred to Department". This was not the case in the prior years.  
+2016 
 ```{r}
 
-Honolulu_Edit_Homeless <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+# 2016 - 100 out of 3182 observations (5.71 %) are filed under Report Type Homeless. CurrentStatus of some of the reports start showing "Referred to Department". This was not the case in the prior years.   
+
+
+Honolulu_2016 <-  Honolulu_Edit  %>%
   filter(YEAR =='2016') %>% 
   print()
 
-
-honolulu_2016 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2016 %>% filter(ReportType == 'Homeless') %>% print()
 ```
 
 
 2017 - 152 out of 4231 (3.59%) observations are filed under Report Type Homeless. More "Referred to Department". 
 ```{r}
 
-honolulu_2017 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+Honolulu_2017 <-  Honolulu_Edit  %>%
   filter(YEAR =='2017') %>% 
   print()
 
+Honolulu_2017 %>% filter(ReportType == 'Homeless') %>% print()
 
-honolulu_2017 %>% filter(ReportType == 'Homeless') %>% print()
 ```
 
 
 
 2018 - 123 out of 2840 (4.33%) observations are filed under Report Type Homeless. More "Referred to Department". 
 ```{r} 
-honolulu_2018 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+
+Honolulu_2018 <-  Honolulu_Edit  %>%
   filter(YEAR =='2018') %>% 
   print()
 
+Honolulu_2018 %>% filter(ReportType == 'Homeless') %>% print()
 
-honolulu_2018 %>% filter(ReportType == 'Homeless') %>% print()
 ```
 
 2019 - 61 out of 1358 (4.49%) observations are filed under Report Type Homeless. More "Referred to Department". 
 ```{r}
 
-honolulu_2019 <-  Honolulu_2011_2019 %>%
-  select (id,ReportType,CurrentStatus,Description,DateCreate_Converted, DateClosed_Converted,location,YEAR) %>%
+Honolulu_2019 <-  Honolulu_Edit  %>%
   filter(YEAR =='2019') %>% 
   print()
 
+Honolulu_2018 %>% filter(ReportType == 'Homeless') %>% print() 
 
-
-
-honolulu_2019 %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
 
 
 
 
+Tokenizer- Breakdown of descriptions into words / 2 words / etc 
+
+```{r}
+Honolulu_Edit_x <- Honolulu_Edit %>%
+  clean_names() %>%
+  mutate(description_edit = tolower(description)) %>%
+  mutate(description_edit = removePunctuation(description_edit)) %>%
+  mutate(description_edit = removeWords(description_edit, stopwords("english"))) %>%
+  mutate(description_edit = stripWhitespace(description_edit)) %>%
+  mutate(description_edit = str_trim(description_edit)) %>%
+  select(description_edit)
+
+
+dfCorpus <- Corpus(VectorSource(Honolulu_Edit_x$description_edit)) 
+
+x <- scan_tokenizer(dfCorpus)
+
+y <- as_tibble(x) %>%
+  mutate(value = str_remove(value, "c\\(")) %>%
+  mutate(value = removePunctuation(value)) %>%
+  group_by(value) %>%
+  summarise(count=n()) %>%
+  arrange(desc(count))
+
+```
+
+```{r}
+
+# lower case description column in Honolulu_Edit 
+Honolulu_Edit[[4]] <- tolower(Honolulu_Edit[[4]])
+
+```
+
+
+```{r}
+#Honolulu_tokenize <- Honolulu_Edit %>% tokenize_words(Honolulu_Edit[[4]]) 
+
+x <- Honolulu_Edit %>%
+  mutate(x = tokenize_words(Description)) %>%
+  mutate(x = removePunctuation(Description))
+
+``` 
+
+
+
+from the breakdown of counts per word pulled from the description column, terms that popped up were the following: 
+
+- Homeless - common report type was homeless and a significant amount of other / some people spelled homeless wrong. They typed homless, categorized as other 
+- Urinating/ feces- includes homeless/ camping- many are categorized as other 
+- Congregating - homeless people, homeless campers, homeless squatters (2 are categorized as other report type )
+- Encampment/ camping/ campsite/ campsites- many are categorized as homeless, some are categorized as other 
+- (women/men/woman/women/sleeps/ sleeping - many are referring to homeless individuals, most are categorized as homeless or other 
+
+ 
+ 
+ tokenize by two words - 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
 Leaflet analysis 2011- 2019 
 
 ```{r}
-#All complaints from 2011 to 2019 
+#All homeless report type from 2011 to 2019 
 # Color Scheme
 binpal <- colorBin("plasma", Honolulu_Edit_Homeless$YEAR, 5, pretty = FALSE)
 
@@ -279,6 +337,13 @@ leaflet(Honolulu_Edit_Homeless) %>% addTiles() %>%
 ```
 
 
+MAPS BY YEAR TO SEE PROGRESSION IN LOCATIONS
 
 
+```{r}
+leaflet(honolulu_2011) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
 
