@@ -1,0 +1,1013 @@
+---
+title: "NYC 311 Calls"
+author: "Theresa Diffendal"
+date: "1/27/2020"
+output: 
+  html_document:
+      toc: true
+      toc_depth: 3
+      toc_float: true
+    md_document:
+      variant: markdown_github
+      toc: true
+      toc_depth: 3
+---
+
+An analysis of New YOrk City's 311 call data from 2010-present. Data found on New York's [open data site](https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9/data).
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+###Libraries
+
+#install.packages("readr")
+#install.packages("bit64")
+
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(ggplot2)
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(data.table)
+library(readr)
+#library(bit64)
+```
+
+## Cleaning Work
+### Column Names
+```{r}
+##Load the csv in chunks, clean names, maniuplate date_time columns into separate year, month, and time columns
+
+ccolumns <- list("Unique Key", "Created Date", "Closed Date", "Agency", "Agency Name", "Complaint Type", "Descriptor", "Location Type", "Incident Zip", "Incident Address", "Street Name", "Cross Street 1", "Cross Street 2", "Intersection Street 1", "Intersection Street 2", "Address Type", "City", "Landmark", "Facility Type", "Status", "Due Date", "Resolution Description", "Resolution Action Updated Date", "Community Board", "BBL", "Borough", "X Coordinate (State Plane)", "Y Coordinate (State Plane)", "Open Data Channel Type", "Park Facility Name", "Park Borough", "Vehicle Type", "Taxi Company Borough", "Taxi Pick Up Location", "Bridge Highway Name", "Bridge Highway Direction", "Road Ramp", "Bridge Highway Segment", "Latitude", "Longitude", "Location")
+
+#coltypess <- c("double", "date", "date", "text", "text", "text", "text", "text", "double", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "date", "text", "date", "text", "double", "text", "double", "double", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "double", "double", "double")
+
+#col_datetime(format = "%m/%d/%Y %I:%M:%S %p")
+```
+
+
+### Read in CSV 1 million lines at a time, save as RDS
+
+```{r}
+#########################
+##### First Million #####
+#########################
+
+sskip = 1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_01 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_01$dates <- as.Date(nyc_calls_01$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_01, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_01.Rds")
+
+
+
+
+#########################
+######Second Million#####
+#########################
+
+sskip = 1e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_02 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ") 
+  
+  nyc_calls_02$dates <- as.Date(nyc_calls_02$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_02, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_02.Rds")
+
+
+
+########################
+#####Third Million######
+########################
+
+sskip = 2e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_03 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ") 
+
+  nyc_calls_03$dates <- as.Date(nyc_calls_03$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_03, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_03.Rds")
+
+
+
+#########################
+#### Fourth Million #####
+#########################
+
+sskip = 3e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_04 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_04$dates <- as.Date(nyc_calls_04$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_04, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_04.Rds")
+
+
+
+#########################
+##### Fifth Million #####
+#########################
+
+sskip = 4e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_05 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_05$dates <- as.Date(nyc_calls_05$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_05, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_05.Rds")
+
+
+#########################
+####### 6 Million #######
+#########################
+
+sskip = 5e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_06 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_06$dates <- as.Date(nyc_calls_06$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_06, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_06.Rds")
+
+
+
+
+#########################
+####### 7 Million #######
+#########################
+
+sskip = 6e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_07 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_07$dates <- as.Date(nyc_calls_07$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_07, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_07.Rds")
+
+
+
+
+#########################
+####### 8 Million #######
+#########################
+
+sskip = 7e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_08 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_08$dates <- as.Date(nyc_calls_08$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_08, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_08.Rds")
+
+
+
+
+#########################
+####### 9 Million #######
+#########################
+
+sskip = 8e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_09 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_09$dates <- as.Date(nyc_calls_09$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_09, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_09.Rds")
+
+
+
+#########################
+####### 10 Million ######
+#########################
+
+sskip = 9e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_10 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_10$dates <- as.Date(nyc_calls_10$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_10, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_10.Rds")
+
+
+
+#########################
+###### 11 Million #######
+#########################
+
+sskip = 1e7 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_11 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_11$dates <- as.Date(nyc_calls_11$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_11, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_11.Rds")
+
+
+
+
+
+#########################
+###### 12 Million #######
+#########################
+
+sskip = 11e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_12 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_12$dates <- as.Date(nyc_calls_12$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_12, "~/Documents/GitHub/homelessness-in-the-us/new-york-311//NYC-311-Service-Requests_12.Rds")
+
+
+
+
+
+
+#########################
+###### 13 Million #######
+#########################
+
+sskip = 12e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_13 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_13$dates <- as.Date(nyc_calls_13$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_13, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_13.Rds")
+
+
+
+
+#########################
+##### 14 Million #####
+#########################
+
+sskip = 13e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_14 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_14$dates <- as.Date(nyc_calls_14$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_14, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_14.Rds")
+
+
+
+
+#########################
+##### 15 Million #####
+#########################
+
+sskip = 14e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_15 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_15$dates <- as.Date(nyc_calls_15$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_15, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_15.Rds")
+
+#########################
+###### 16 Million #######
+#########################
+
+sskip = 15e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_16 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_16$dates <- as.Date(nyc_calls_16$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_16, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_16.Rds")
+
+
+
+#########################
+###### 17 Million #######
+#########################
+
+sskip = 16e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_17 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_17$dates <- as.Date(nyc_calls_17$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_17, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_17.Rds")
+
+
+
+#########################
+##### 18 Million #####
+#########################
+
+sskip = 17e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_18 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_18$dates <- as.Date(nyc_calls_18$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_18, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_18.Rds")
+
+
+
+#########################
+###### 19 Million #######
+#########################
+
+sskip = 18e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_19 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_19$dates <- as.Date(nyc_calls_19$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_19, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_19.Rds")
+
+
+
+ 
+#########################
+###### 20 Million #######
+#########################
+
+sskip = 19e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_20 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_20$dates <- as.Date(nyc_calls_20$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_20, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_20.Rds")
+
+
+
+#########################
+##### 21 Million #####
+#########################
+
+sskip = 2e7 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_21 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_21$dates <- as.Date(nyc_calls_21$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_21, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_21.Rds")
+
+
+
+
+#########################
+###### 22 Million #######
+#########################
+
+sskip = 21e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_22 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_22$dates <- as.Date(nyc_calls_22$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_22, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_22.Rds")
+
+
+
+#########################
+###### 23 Million #######
+#########################
+
+sskip = 22e6 +1
+nn_max = 0
+
+while(nn_max < 1e6) {  
+  #22.4e6 is the total number of rows in the dataset
+  
+  nn_max = nn_max + 100000
+  
+  nyc_calls_23 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
+    clean_names() %>%
+    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+    unite("time", "hour":"AM/PM", sep = " ")
+
+  nyc_calls_23$dates <- as.Date(nyc_calls_23$dates, format = "%m/%d/%Y")
+  
+  sskip = sskip + 100000
+}
+
+#save as Rds(for faster processing)
+saveRDS(nyc_calls_23, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_23.Rds")
+
+```
+
+### Create all NYC calls dataset
+```{r}
+
+# Read in the multiple RDS files and filter by date
+
+calls_01 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_01.Rds")
+calls_02 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_02.Rds")
+calls_03 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_03.Rds")
+calls_04 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_04.Rds")
+calls_05 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_05.Rds")
+calls_06 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_06.Rds")
+calls_07 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_07.Rds")
+calls_08 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_08.Rds")
+calls_09 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_09.Rds")
+calls_10 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_10.Rds")
+calls_11 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_11.Rds")
+calls_12 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_12.Rds")
+calls_13 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_13.Rds")
+calls_14 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_14.Rds")
+calls_15 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_15.Rds")
+calls_16 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_16.Rds")
+calls_17 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_17.Rds")
+calls_18 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_18.Rds")
+calls_19 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_19.Rds")
+calls_20 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_20.Rds")
+calls_21 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_21.Rds")
+calls_22 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_22.Rds")
+calls_23 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_23.Rds")
+  
+
+#create object with file names and full paths
+#f <- file.path("~/Documents/GitHub/homelessness-in-the-us/new-york-311", c("NYC-311-Service-Requests_01.Rds", "NYC-311-Service-Requests_02.Rds", "NYC-311-Service-Requests_03.Rds", "NYC-311-Service-Requests_04.Rds", "NYC-311-Service-Requests_05.Rds", "NYC-311-Service-Requests_06.Rds", "NYC-311-Service-Requests_07.Rds", "NYC-311-Service-Requests_08.Rds", "NYC-311-Service-Requests_09.Rds", "NYC-311-Service-Requests_10.Rds", "NYC-311-Service-Requests_11.Rds", "NYC-311-Service-Requests_12.Rds", "NYC-311-Service-Requests_13.Rds", "NYC-311-Service-Requests_14.Rds", "NYC-311-Service-Requests_15.Rds", "NYC-311-Service-Requests_16.Rds", "NYC-311-Service-Requests_17.Rds", "NYC-311-Service-Requests_18.Rds", "NYC-311-Service-Requests_19.Rds", "NYC-311-Service-Requests_20.Rds", "NYC-311-Service-Requests_21.Rds", "NYC-311-Service-Requests_22.Rds", "NYC-311-Service-Requests_23.Rds"))
+
+
+#bind RDS files to an all in one
+all_nyc_calls <- rbind(calls_01, calls_02, calls_03, calls_04, calls_05, calls_06, calls_07, calls_08, calls_09, calls_10, calls_11, calls_12, calls_13, calls_14, calls_15, calls_16, calls_17, calls_18, calls_19, calls_20, calls_21, calls_22) 
+
+saveRDS(all_nyc_calls, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/ALL_NYC-311-Service-Requests.Rds")
+```
+
+### Create RDS sheet with each year, filtered from all NYC calls
+```{r}
+#Filter all calls for each year and save RDS
+
+#2010
+calls_2010 <- all_nyc_calls %>%
+  filter(year == 2010) 
+calls_2010[order(calls_2010$month, calls_2010$day, calls_2010$time),]
+saveRDS(calls_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds")
+
+#2011
+calls_2011 <- all_nyc_calls %>%
+  filter(year == 2011) 
+calls_2011[order(calls_2011$month, calls_2011$day, calls_2011$time),]
+saveRDS(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.Rds")
+
+#2012 
+calls_2012 <- all_nyc_calls %>%
+  filter(year == 2012) 
+calls_2012[order(calls_2012$month, calls_2012$day, calls_2012$time),]
+saveRDS(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.Rds")
+
+#2013
+calls_2013 <- all_nyc_calls %>%
+  filter(year == 2013) 
+calls_2013[order(calls_2013$month, calls_2013$day, calls_2013$time),]
+saveRDS(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.Rds")
+
+#2014
+calls_2014 <- all_nyc_calls %>%
+  filter(year == 2014) 
+calls_2014[order(calls_2014$month, calls_2014$day, calls_2014$time),]
+saveRDS(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.Rds")
+
+#2015
+calls_2015 <- all_nyc_calls %>%
+  filter(year == 2015) 
+calls_2015[order(calls_2015$month, calls_2015$day, calls_2015$time),]
+saveRDS(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.Rds")
+
+#2016
+calls_2016 <- all_nyc_calls %>%
+  filter(year == 2016) 
+calls_2016[order(calls_2016$month, calls_2016$day, calls_2016$time),]
+saveRDS(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.Rds")
+
+#2017
+calls_2017 <- all_nyc_calls %>%
+  filter(year == 2017) 
+calls_2017[order(calls_2017$month, calls_2017$day, calls_2017$time),]
+saveRDS(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.Rds")
+
+#2018
+calls_2018 <- all_nyc_calls %>%
+  filter(year == 2018) 
+calls_2018[order(calls_2018$month, calls_2018$day, calls_2018$time),]
+saveRDS(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.Rds")
+
+#2019
+calls_2019 <- all_nyc_calls %>%
+  filter(year == 2019) 
+calls_2019[order(calls_2019$month, calls_2019$day, calls_2019$time),]
+saveRDS(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.Rds")
+
+```
+
+### Load all NYC call sheet
+```{r}
+
+#all_nyc_calls <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/ALL_NYC-311-Service-Requests.Rds")
+
+```
+
+## Observation values pertaining to homelessness:
+
+Agency:
+* DHS
+
+Agency Name:
+* Department of Homeless Services
+  * In 2010, listed as DHS Advantage Programs, which is a one to two-year rental assistance program for homeless families. In existence 2007-2011. Had work requirements.
+
+Complaint Type:
+* Homeless encampment
+* Panhandling
+* Homeless Street Condition
+* Homeless Person Assistance
+
+Location:
+* Homeless shelter
+
+Descriptor:
+* Homeless Issue
+  * Under complaint type "Ferry Complaint"
+* 2010 - unenroll from Advantage Program
+* Payment Not Received from DHS
+
+## Analyze each year {.tabset}
+
+### 2010
+
+```{r}
+
+#Load data
+calls_2010 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds")
+
+#calls_2010 %>%
+  #parse_date_time(time, '%I:%M %p')
+  #strptime(time, "%I:%M %p")
+  #format(strptime(time, format = '%I:%M%p)
+
+agency_calls_2010 <- calls_2010 %>%
+  group_by(agency) %>%
+  summarize(count = n())
+
+complaints_calls_2010 <- calls_2010 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n())
+
+descriptor_calls_2010 <- calls_2010 %>%
+  group_by(descriptor) %>%
+  summarize(count = n())
+
+location_calls_2010 <- calls_2010 %>%
+  group_by(location_type) %>%
+  summarize(count = n())
+
+resolution_calls_2010 <- calls_2010 %>%
+  group_by(resolution_description) %>%
+  summarize(count = n())
+
+# Relevant types: Homeless Encampment, Panhandling
+  
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2010 <- calls_2010 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2011
+
+```{r}
+#Load data
+calls_2011 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2011 <- calls_2011 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2012
+
+```{r}
+#Load data
+calls_2012 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2012 <- calls_2012 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2013
+
+```{r}
+#Load data
+calls_2013 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2013 <- calls_2013 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2014
+
+```{r}
+#Load data
+calls_2014 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.Rds")
+  
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2014 <- calls_2014 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2015
+
+```{r}
+#Load data
+calls_2015 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2015 <- calls_2015 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2016
+
+```{r}
+#Load data
+calls_2016 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2016 <- calls_2016 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2017
+
+```{r}
+#Load data
+calls_2017 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2017 <- calls_2017 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2018
+
+```{r}
+#Load data
+calls_2018 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2018 <- calls_2018 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+### 2019
+
+```{r}
+#Load data
+calls_2019 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.Rds")
+
+#Take the year-by-year dataframes and only return those with mention of homeless
+homeless_2019 <- calls_2019 %>%
+  filter_all(any_vars(. %in% c('homeless')))
+
+saveRDS(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-HOMELESS-NYC-Service-Requests.Rds")
+
+```
