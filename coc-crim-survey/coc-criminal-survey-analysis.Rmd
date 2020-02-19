@@ -1,0 +1,335 @@
+---
+title: "CoC Criminal Survey Analysis"
+author: "Theresa Diffendal"
+date: "2/17/2020"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+## Read in data and clean
+
+##Libraries
+
+#update.packages()
+#install.packages("knitr")
+
+library(knitr)
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(kableExtra)
+
+## Set working directory
+setwd("~/Documents/GitHub/homelessness-in-the-us/coc-crim-survey")
+
+crim_survey <- read_csv("coc-crim-survey.csv") %>%
+  ##only select rows with data
+  slice(1:59) %>%
+  
+  ##rename the columns
+  rename("name" = "coc-crim-",
+         "coc" = X2,
+         "city" = X3,
+         "public_sleeping_law"  = X10,
+         "public_sleeping_link" = X11,
+         "public_camping_law" = X13,
+         "public_camping_link" = X14,
+         "public_sitting_law" = X16,
+         "public_sitting_link" = X17,
+         "vehicle_living_law" = X19,
+         "vehicle_living_link" = X20,
+         "loitering_law" = X22,
+         "loitering_link" = X23,
+         "begging_law" = X25,
+         "begging_link" = X26,
+         "food_sharing_law" = X28,
+         "food_sharing_link" = X29,
+         "public_urination_law" = X31,
+         "public_urination_link" = X32,
+         "public_intoxication_law" = X34,
+         "public_intoxication_link" = X35,
+         "misc_law" = X37,
+         "misc_link" = X38) %>%
+  
+  ##clean column names
+  clean_names() %>%
+  ##change all observations to lower case
+  mutate_all(funs(tolower))
+
+
+crim_survey <- crim_survey %>%
+  ##create columns to summarize how many laws are citywide, particular, none or unclear in each row
+  mutate(citywide = rowSums(crim_survey == "citywide", na.rm=TRUE),   
+         particular_places = rowSums(crim_survey == "only in particular places", na.rm=TRUE),
+         none = rowSums(crim_survey == "none", na.rm=TRUE),
+         unclear = rowSums(crim_survey == "unclear", na.rm=TRUE)) %>%
+  
+  ##calculate what percentage of a city's laws are citywide, particular, none or unclear
+  mutate(percent_possible_citywide = ((citywide / 9) *100),
+         percent_possible_particular_places = ((particular_places / 9) *100),
+         percent_possible_none = ((none / 9) *100),
+         percent_possible_unclear = ((unclear / 9) *100)) %>%
+  
+  ##get rid of columns we don't need to analyze
+  select(-name, -complete, -new_reporting_or_nlchp_fact_check, -contains ("link"), -contains("law")) %>%
+  ##reorder columns with mutated columns first
+  select(1:3,15:18,19:22,4:14)
+```
+
+## Analyze each state {.tabset}
+
+```{r, include=FALSE}
+crim_survey_states <- crim_survey %>%
+  group_by(state) %>%
+  summarise(count=n())
+
+states <- as.vector(crim_survey_states$state)
+
+print(states)
+
+```
+
+### Alaska
+
+* Alaska has one law against sleeping in public that is county-wide, the only county law in this criminal survey analysis
+  + However sitting, laying or camping in public is not allowed citywide
+* There is no food sharing ban but there is a citywide law against begging
+```{r}
+
+alaska <- crim_survey %>%
+  subset(state %in% "ak")
+
+kable(alaska) %>%
+  column_spec(2:ncol(alaska), border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+
+```
+
+### California
+
+```{r}
+
+california <- crim_survey %>%
+  subset(state %in% "ca")
+  
+
+kable(california) %>%
+  column_spec (2:ncol(california),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "500px")
+```
+
+### DC
+
+```{r}
+
+dc <- crim_survey %>%
+  subset(state %in% "dc")
+
+kable(dc) %>%
+  column_spec (2:ncol(dc),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### Florida
+
+```{r}
+
+florida <- crim_survey %>%
+  subset(state %in% "fl")
+
+kable(florida) %>%
+  column_spec (2:ncol(florida),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "500px")
+```
+
+### Hawaii
+
+```{r}
+
+hawaii <- crim_survey %>%
+  subset(state %in% "hi")
+
+kable(hawaii) %>%
+  column_spec (2:ncol(hawaii),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### Kentucky
+
+```{r}
+kentucky <- crim_survey %>%
+  subset(state %in% "ky")
+
+kable(kentucky) %>%
+  column_spec (2:ncol(kentucky),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### Louisiana
+
+```{r}
+
+louisiana <- crim_survey %>%
+  subset(state %in% "la")
+
+kable(louisiana) %>%
+  column_spec (2:ncol(louisiana),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### Maryland
+
+```{r}
+
+maryland <- crim_survey %>%
+  subset(state %in% "md")
+
+kable(maryland) %>%
+  column_spec (2:ncol(maryland),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### Massachusetts 
+
+```{r}
+
+massachusetts <- crim_survey %>%
+  subset(state %in% "ma")
+
+kable(massachusetts) %>%
+  column_spec (2:ncol(massachusetts),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### New York
+
+```{r}
+
+new_york <- crim_survey %>%
+  subset(state %in% "ny")
+
+kable(new_york) %>%
+  column_spec (2:ncol(new_york),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### North Carolina
+
+```{r}
+
+north_carolina <- crim_survey %>%
+  subset(state %in% "nc")
+
+kable(north_carolina) %>%
+  column_spec (2:ncol(north_carolina),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+### Oregon
+
+```{r}
+
+oregon <- crim_survey %>%
+  subset(state %in% "or")
+
+kable(oregon) %>%
+  column_spec (2:ncol(oregon),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+## Citywide or Particular Place Laws by State
+
+**Notes:**
+
+* All the included Massachusetts laws are citywide
+* California and Florida had the most citywide with 72 and 46, respectively
+  + Note that California and Florida had more analyzed cities than other states
+
+```{r}
+
+#bind all the state analyses together
+all_state <- rbind(alaska, california, dc, florida, hawaii, kentucky, louisiana, maryland, massachusetts, new_york, north_carolina, oregon) %>%
+  
+  #only select the columns with sums and calculations
+  select(c(3:7)) %>%
+  
+  #group by state in this dataset instead of city in the previous sets
+  group_by(state) %>%
+  
+  #sum the number of citywide, particular, none, and unclear laws for each state
+  summarise(sum_state_citywide = sum(citywide),
+            sum_state_particular_places = sum(particular_places),
+            sum_state_none = sum(none),
+            sum_state_unclear = sum(unclear)) 
+
+all_state <- all_state %>%
+  
+  #calculate what percentage of the state's laws are citywide, particular, none, unclear
+  mutate(percent_state_citywide = (sum_state_citywide / rowSums(all_state[,c(2:5)]) * 100),
+         percent_state_particular_places = (sum_state_particular_places / rowSums(all_state[,c(2:5)]) * 100),
+         percent_state_none = (sum_state_none / rowSums(all_state[,c(2:5)]) * 100),
+         percent_state_unclear = (sum_state_unclear / rowSums(all_state[,c(2:5)]) * 100)) %>%
+  
+  #calculate each state's share of the total citywide, particular, unclear, none laws in the sheet
+  mutate(percent_all_citywide = (sum_state_citywide / sum(sum_state_citywide) * 100),
+         percent_all_particular_places = (sum_state_particular_places / sum(sum_state_particular_places) * 100),
+         percent_all_none = (sum_state_none / sum(sum_state_none) * 100),
+         percent_all_unclear = (sum_state_unclear / sum(sum_state_unclear) * 100)) %>%
+  
+  #add a row with totals
+  janitor::adorn_totals("row")
+
+kable(all_state) %>%
+  column_spec (2:ncol(all_state),border_left = T, border_right = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+
+options(error=recover)
+```
+
+
+```{r, include=FALSE}
+## Write csv files for all state summaries
+#setwd("~/Documents/GitHub/homelessness-in-the-us/coc-crim-survey")
+#write.csv(alaska, "alaska-summary.csv")
+#write.csv(california, "california-summary.csv")
+#write.csv(dc, "dc-summary.csv")
+#write.csv(florida, "florida-summary.csv")
+#write.csv(hawaii, "hawaii-summary.csv")
+#write.csv(kentucky, "kentucky-summary.csv")
+#write.csv(louisiana, "louisiana-summary.csv")
+#write.csv(maryland, "maryland-summary.csv")
+#write.csv(massachusetts, "massachusetts-summary.csv")
+#write.csv(new_york, "new-york-summary.csv")
+#write.csv(north_carolina, "north-carolina-summary.csv")
+#write.csv(oregon, "oregon-summary.csv")
+```

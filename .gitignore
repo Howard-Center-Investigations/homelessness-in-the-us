@@ -68,3 +68,7 @@ Temporary Items
 .apdisk
 .Rproj.user
 *.icloud
+
+
+# Files that are too dang big
+/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv
