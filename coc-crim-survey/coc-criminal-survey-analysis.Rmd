@@ -17,7 +17,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Introduction
 
+This rMarkdown file analyzes criminal charges related to homelessness in 11 states and the District of Columbia as collected by students in Deborah Nelson's JOUR698I class at the University of Maryland's Philip Merrill College of Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as "citywide"), only applied to particular places ("particular_places"), there was no law ("none"), or the law was unclear ("unclear"). Laws were not examined for every city in each state; cities were examined based on the focus of the class' investigation.
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 ## Read in data and clean
@@ -93,18 +95,56 @@ crim_survey <- crim_survey %>%
   select(1:3,15:18,19:22,4:14)
 ```
 
-## Analyze each state {.tabset}
+## State and City Information
 
-```{r, include=FALSE}
+* 11 states are examined: Alaska, California, Florida, Hawaii, Kentucky, Louisiana, Massachusetts, Maryland, New York, North Carolina, and Oregon; and the District of Columbia.
+* Number of cities examined in each state:
+  + Alaska - 1
+  + California - 21
+  + The District of Columbia - 1
+  + Florida - 17
+  + Hawaii - 2
+  + Kentucky - 1
+  + Louisiana - 1
+  + Massachusetts - 6
+  + Maryland - 3
+  + New York - 1
+  + North Carolina - 2
+  + Oregon - 3
+
+```{r}
+#Get the abbreviations of all examined states
+states <- as.vector(crim_survey$state)
+print(unique(states))
+```
+
+```{r}
+# See how many states there are; answer: 11 + D.C.
+length(unique(states))
+```
+
+```{r}
+#How many cities were analyzed in each state
 crim_survey_states <- crim_survey %>%
   group_by(state) %>%
-  summarise(count=n())
-
-states <- as.vector(crim_survey_states$state)
-
-print(states)
-
+  summarise(city_count=n())
+print(crim_survey_states)
 ```
+
+```{r}
+# See each city examined in each state
+crim_survey_cities <- crim_survey %>%
+  group_by(state) %>%
+  select(state, city) %>%
+  arrange(state)
+
+kable(crim_survey_cities) %>%
+  column_spec(2, border_left = T, border_right = F) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "250px")
+```
+
+## Analyze each state {.tabset}
 
 ### Alaska
 
@@ -117,9 +157,9 @@ alaska <- crim_survey %>%
   subset(state %in% "ak")
 
 kable(alaska) %>%
-  column_spec(2:ncol(alaska), border_left = T, border_right = T) %>%
+  column_spec(3:ncol(alaska), border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
+  scroll_box(height = "200px")
 
 ```
 
@@ -132,7 +172,7 @@ california <- crim_survey %>%
   
 
 kable(california) %>%
-  column_spec (2:ncol(california),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(california),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "500px")
 ```
@@ -145,7 +185,7 @@ dc <- crim_survey %>%
   subset(state %in% "dc")
 
 kable(dc) %>%
-  column_spec (2:ncol(dc),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(dc),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -158,7 +198,7 @@ florida <- crim_survey %>%
   subset(state %in% "fl")
 
 kable(florida) %>%
-  column_spec (2:ncol(florida),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(florida),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "500px")
 ```
@@ -171,7 +211,7 @@ hawaii <- crim_survey %>%
   subset(state %in% "hi")
 
 kable(hawaii) %>%
-  column_spec (2:ncol(hawaii),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(hawaii),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -183,7 +223,7 @@ kentucky <- crim_survey %>%
   subset(state %in% "ky")
 
 kable(kentucky) %>%
-  column_spec (2:ncol(kentucky),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(kentucky),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -196,7 +236,7 @@ louisiana <- crim_survey %>%
   subset(state %in% "la")
 
 kable(louisiana) %>%
-  column_spec (2:ncol(louisiana),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(louisiana),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -209,7 +249,7 @@ maryland <- crim_survey %>%
   subset(state %in% "md")
 
 kable(maryland) %>%
-  column_spec (2:ncol(maryland),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(maryland),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -222,9 +262,9 @@ massachusetts <- crim_survey %>%
   subset(state %in% "ma")
 
 kable(massachusetts) %>%
-  column_spec (2:ncol(massachusetts),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(massachusetts),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
+  scroll_box(height = "300px")
 ```
 
 ### New York
@@ -235,7 +275,7 @@ new_york <- crim_survey %>%
   subset(state %in% "ny")
 
 kable(new_york) %>%
-  column_spec (2:ncol(new_york),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(new_york),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -248,7 +288,7 @@ north_carolina <- crim_survey %>%
   subset(state %in% "nc")
 
 kable(north_carolina) %>%
-  column_spec (2:ncol(north_carolina),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(north_carolina),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -261,7 +301,7 @@ oregon <- crim_survey %>%
   subset(state %in% "or")
 
 kable(oregon) %>%
-  column_spec (2:ncol(oregon),border_left = T, border_right = T) %>%
+  column_spec (3:ncol(oregon),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -270,9 +310,13 @@ kable(oregon) %>%
 
 **Notes:**
 
-* All the included Massachusetts laws are citywide
+* All the included Massachusetts laws are citywide, the only state to have all citywide laws
+* Hawaii had the fewest citywide laws, accounting for only 16.67% of the 18 HI laws recorded
+  + Hawaii also had the most "unclear" laws, accounting for 27.78% of its examined laws
 * California and Florida had the most citywide with 72 and 46, respectively
   + Note that California and Florida had more analyzed cities than other states
+* A quarter (25%) of all citywide laws examined are in Florida
+* There are more citywide laws than any other kind (184), followed by none (157), particular places (95) and unclear(38)
 
 ```{r}
 
@@ -304,16 +348,15 @@ all_state <- all_state %>%
          percent_all_particular_places = (sum_state_particular_places / sum(sum_state_particular_places) * 100),
          percent_all_none = (sum_state_none / sum(sum_state_none) * 100),
          percent_all_unclear = (sum_state_unclear / sum(sum_state_unclear) * 100)) %>%
-  
+
   #add a row with totals
   janitor::adorn_totals("row")
 
 kable(all_state) %>%
-  column_spec (2:ncol(all_state),border_left = T, border_right = T) %>%
+  column_spec (2:ncol(all_state),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 
-options(error=recover)
 ```
 
 
