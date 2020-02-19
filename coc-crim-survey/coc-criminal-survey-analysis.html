@@ -2798,7 +2798,7 @@ div.tocify {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This rMarkdown file analyzes criminal charges related to homelessness in 11 states and the District of Columbia as collected by students in Deborah Nelson’s JOUR698I class at the University of Maryland’s Philip Merrill College of Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as “citywide”), only applied to particular places (“particular_places”), there was no law (“none”), or the law was unclear (“unclear”). Laws were not examined for every city in each state; cities were examined based on the focus of the class’ investigation.</p>
+<p>This rMarkdown file analyzes criminal charges related to homelessness in 11 states and the District of Columbia as collected by students in Deborah Nelson’s JOUR698I class at the University of Maryland’s Philip Merrill College of Journalism’s Howard Center for Investigative Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as “citywide”), only applied to particular places (“particular_places”), there was no law (“none”), or the law was unclear (“unclear”). Laws were not examined for every city in each state; cities were examined based on the focus of the class’ investigation.</p>
 </div>
 <div id="state-and-city-information" class="section level2">
 <h2>State and City Information</h2>
@@ -2853,6 +2853,7 @@ crim_survey_cities &lt;- crim_survey %&gt;%
   select(state, city) %&gt;%
   arrange(state)
 
+## all the kable code creates an interactive, scrollable table in the .html output
 kable(crim_survey_cities) %&gt;%
   column_spec(2, border_left = T, border_right = F) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
@@ -3353,7 +3354,7 @@ corvallis
 <ul>
 <li>Alaska has one law against sleeping in public that is county-wide, the only county law in this criminal survey analysis
 <ul>
-<li>However sitting, laying or camping in public is not allowed citywide</li>
+<li>However, sitting, laying or camping in public is not allowed citywide</li>
 </ul></li>
 <li>There is no food sharing ban but there is a citywide law against begging</li>
 </ul>
@@ -3369,13 +3370,13 @@ kable(alaska) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -3400,12 +3401,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -3439,14 +3434,14 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-ak-anchorage coc
-</td>
-<td style="text-align:left;">
-anchorage
-</td>
-<td style="text-align:left;border-left:1px solid;">
 ak
 </td>
+<td style="text-align:left;">
+ak-anchorage coc
+</td>
+<td style="text-align:left;border-left:1px solid;">
+anchorage
+</td>
 <td style="text-align:right;border-left:1px solid;">
 4
 </td>
@@ -3470,12 +3465,6 @@ ak
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 county
@@ -3524,13 +3513,13 @@ kable(california) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -3555,12 +3544,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -3594,13 +3577,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-ca-humboldt county coc
+ca
 </td>
 <td style="text-align:left;">
-eureka
+ca-humboldt county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+eureka
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -3625,12 +3608,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -3661,14 +3638,14 @@ citywide
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ca
+</td>
 <td style="text-align:left;">
 ca-pasadena coc
 </td>
-<td style="text-align:left;">
-pasadena
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+pasadena
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -3693,12 +3670,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 select type
@@ -3729,14 +3700,14 @@ citywide
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ca
+</td>
 <td style="text-align:left;">
 ca-chico/paradise/butte county coc
 </td>
-<td style="text-align:left;">
-chico
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+chico
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -3761,12 +3732,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 22.22222
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -3797,14 +3762,14 @@ citywide
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ca
+</td>
 <td style="text-align:left;">
 ca-colusa, glenn, trinity counties coc
 </td>
-<td style="text-align:left;">
-orland (glenn)
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+orland (glenn)
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -3829,12 +3794,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 22.22222
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -3865,14 +3824,14 @@ only in particular places
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ca
+</td>
 <td style="text-align:left;">
 ca-yuba city &amp; county/sutter county coc
 </td>
-<td style="text-align:left;">
-marysville
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+marysville
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -3897,12 +3856,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 22.22222
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -3933,14 +3886,14 @@ only in particular places
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ca
+</td>
 <td style="text-align:left;">
 ca-long beach coc
 </td>
-<td style="text-align:left;">
-long beach
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+long beach
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -3965,12 +3918,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -4001,14 +3948,14 @@ only in particular places
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ca
+</td>
 <td style="text-align:left;">
 ca-los angeles city &amp; county coc
 </td>
-<td style="text-align:left;">
-redondo beach
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+redondo beach
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -4033,12 +3980,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -4070,13 +4011,13 @@ only in particular places
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-san diego city and county coc
+ca
 </td>
 <td style="text-align:left;">
-el cajon
+ca-san diego city and county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+el cajon
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -4101,12 +4042,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -4138,43 +4073,37 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-san diego city and county coc
-</td>
-<td style="text-align:left;">
-san diego
-</td>
-<td style="text-align:left;border-left:1px solid;">
 ca
 </td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0.00000
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0.00000
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0.00000
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0.00000
+<td style="text-align:left;">
+ca-san diego city and county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-yes
+san diego
 </td>
-<td style="text-align:left;border-left:1px solid;">
-yes
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.00000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.00000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.00000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
 select type
@@ -4205,14 +4134,14 @@ select type
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ca
+</td>
 <td style="text-align:left;">
 ca-watsonville/santa cruz city &amp; county coc
 </td>
-<td style="text-align:left;">
-santa cruz
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+santa cruz
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -4237,12 +4166,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 unclear
@@ -4274,13 +4197,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-san jose/santa clara city &amp; county coc
+ca
 </td>
 <td style="text-align:left;">
-san jose
+ca-san jose/santa clara city &amp; county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+san jose
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -4305,12 +4228,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -4342,13 +4259,13 @@ only in particular places
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-san luis obispo county coc
+ca
 </td>
 <td style="text-align:left;">
-san luis obispo
+ca-san luis obispo county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+san luis obispo
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -4373,12 +4290,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 county
@@ -4410,13 +4321,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-san francisco coc
+ca
 </td>
 <td style="text-align:left;">
-NA
+ca-san francisco coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+NA
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -4443,12 +4354,6 @@ ca
 100.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
 unclear
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4478,13 +4383,13 @@ unclear
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-amador, calaveras, tuolumne and mariposa counties coc
+ca
 </td>
 <td style="text-align:left;">
-ione
+ca-amador, calaveras, tuolumne and mariposa counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+ione
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -4511,12 +4416,6 @@ ca
 22.22222
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4546,13 +4445,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-richmond/contra costa county coc
+ca
 </td>
 <td style="text-align:left;">
-concord
+ca-richmond/contra costa county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+concord
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -4579,12 +4478,6 @@ ca
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4614,13 +4507,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-salinas/monterey, san benito counties coc
+ca
 </td>
 <td style="text-align:left;">
-salinas
+ca-salinas/monterey, san benito counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+salinas
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -4647,12 +4540,6 @@ ca
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4682,13 +4569,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-santa rosa/petaluma/sonoma county coc
+ca
 </td>
 <td style="text-align:left;">
-santa rosa
+ca-santa rosa/petaluma/sonoma county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+santa rosa
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -4715,12 +4602,6 @@ ca
 11.11111
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4750,13 +4631,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-mendocino county coc
+ca
 </td>
 <td style="text-align:left;">
-ukiah
+ca-mendocino county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+ukiah
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -4781,12 +4662,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -4818,13 +4693,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-oakland/alameda county coc
+ca
 </td>
 <td style="text-align:left;">
-berkeley
+ca-oakland/alameda county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+berkeley
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -4851,12 +4726,6 @@ ca
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4886,13 +4755,13 @@ only in particular places
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-oakland/alameda county coc
+ca
 </td>
 <td style="text-align:left;">
-oakland
+ca-oakland/alameda county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+oakland
 </td>
 <td style="text-align:right;border-left:1px solid;">
 7
@@ -4919,12 +4788,6 @@ ca
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4954,13 +4817,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-oakland/alameda county coc
+ca
 </td>
 <td style="text-align:left;">
-union city
+ca-oakland/alameda county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ca
+union city
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -4985,12 +4848,6 @@ ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -5038,13 +4895,13 @@ kable(dc) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -5069,12 +4926,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -5108,13 +4959,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-dc-district of columbia coc
+dc
 </td>
 <td style="text-align:left;">
-washington, d.c.
+dc-district of columbia coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-dc
+washington, d.c.
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -5139,12 +4990,6 @@ dc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 22.22222
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -5192,13 +5037,13 @@ kable(florida) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -5223,12 +5068,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -5262,13 +5101,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-fl-columbia, hamilton, lafayette, suwannee counties coc
+fl
 </td>
 <td style="text-align:left;">
-lake city
+fl-columbia, hamilton, lafayette, suwannee counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+lake city
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -5295,12 +5134,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5330,13 +5163,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-punta gorda/charlotte county coc
+fl
 </td>
 <td style="text-align:left;">
-port charlotte (census designated place)
+fl-punta gorda/charlotte county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+port charlotte (census designated place)
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -5363,12 +5196,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5398,13 +5225,13 @@ only in particular places
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-daytona beach/daytona/volusia, flagler counties coc
+fl
 </td>
 <td style="text-align:left;">
-daytona beach
+fl-daytona beach/daytona/volusia, flagler counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+daytona beach
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -5431,12 +5258,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
 citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5466,13 +5287,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-monroe county coc
+fl
 </td>
 <td style="text-align:left;">
-key west
+fl-monroe county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+key west
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -5499,12 +5320,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
 citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5534,13 +5349,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-select coc
+fl
 </td>
 <td style="text-align:left;">
-gainesville
+select coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+gainesville
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -5567,12 +5382,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-no
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
 none
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5602,13 +5411,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-st. petersburg/clearwater/largo/pinellas county coc
+fl
 </td>
 <td style="text-align:left;">
-clearwater
+fl-st. petersburg/clearwater/largo/pinellas county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+clearwater
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -5635,12 +5444,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
-</td>
-<td style="text-align:left;border-left:1px solid;">
 citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5670,13 +5473,13 @@ only in particular places
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-saint johns county coc
+fl
 </td>
 <td style="text-align:left;">
-st. augustine
+fl-saint johns county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+st. augustine
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -5703,12 +5506,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
 citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5738,13 +5535,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-fort pierce/st. lucie, indian river, martin counties coc
+fl
 </td>
 <td style="text-align:left;">
-stuart
+fl-fort pierce/st. lucie, indian river, martin counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+stuart
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -5769,12 +5566,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -5806,13 +5597,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-fort pierce/st. lucie, indian river, martin counties coc
+fl
 </td>
 <td style="text-align:left;">
-fort pierce
+fl-fort pierce/st. lucie, indian river, martin counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+fort pierce
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -5839,12 +5630,6 @@ fl
 0.00000
 </td>
 <td style="text-align:left;border-left:1px solid;">
-no
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
-</td>
-<td style="text-align:left;border-left:1px solid;">
 only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5874,13 +5659,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-hendry, hardee, highlands counties coc
+fl
 </td>
 <td style="text-align:left;">
-hendry county, clewiston
+fl-hendry, hardee, highlands counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+hendry county, clewiston
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -5905,12 +5690,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -5942,13 +5721,13 @@ county
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-hendry, hardee, highlands counties coc
+fl
 </td>
 <td style="text-align:left;">
-hardee county, wauchula
+fl-hendry, hardee, highlands counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+hardee county, wauchula
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -5973,12 +5752,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -6010,13 +5783,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-hendry, hardee, highlands counties coc
+fl
 </td>
 <td style="text-align:left;">
-highlands county
+fl-hendry, hardee, highlands counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+highlands county
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -6041,12 +5814,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 unclear
@@ -6077,14 +5844,14 @@ citywide
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+fl
+</td>
 <td style="text-align:left;">
 fl-pasco county coc
 </td>
-<td style="text-align:left;">
-new port richey
-</td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+new port richey
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -6109,12 +5876,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 county
@@ -6146,13 +5907,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-fort walton beach/okaloosa, walton counties coc
+fl
 </td>
 <td style="text-align:left;">
-destin
+fl-fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+destin
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -6177,12 +5938,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -6214,13 +5969,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-fort walton beach/okaloosa, walton counties coc
+fl
 </td>
 <td style="text-align:left;">
-fort walton beach
+fl-fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+fort walton beach
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -6245,12 +6000,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -6282,13 +6031,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-fort walton beach/okaloosa, walton counties coc
+fl
 </td>
 <td style="text-align:left;">
-okaloosa county
+fl-fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+okaloosa county
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -6313,12 +6062,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -6350,13 +6093,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-fl-fort walton beach/okaloosa, walton counties coc
+fl
 </td>
 <td style="text-align:left;">
-state of florida
+fl-fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fl
+state of florida
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -6381,12 +6124,6 @@ fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -6434,13 +6171,13 @@ kable(hawaii) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -6465,12 +6202,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -6504,13 +6235,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-hi-honolulu coc
+hi
 </td>
 <td style="text-align:left;">
-honolulu
+hi-honolulu coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-hi
+honolulu
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -6535,12 +6266,6 @@ hi
 </td>
 <td style="text-align:right;border-left:1px solid;">
 44.44444
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -6572,13 +6297,13 @@ unclear
 </tr>
 <tr>
 <td style="text-align:left;">
-hi-hawaii balance of state coc
+hi
 </td>
 <td style="text-align:left;">
-maui co.
+hi-hawaii balance of state coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-hi
+maui co.
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -6603,12 +6328,6 @@ hi
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -6656,13 +6375,13 @@ kable(kentucky) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -6687,12 +6406,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -6726,13 +6439,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-ky-lexington/fayette county coc
+ky
 </td>
 <td style="text-align:left;">
-lexington
+ky-lexington/fayette county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ky
+lexington
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -6757,12 +6470,6 @@ ky
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -6810,13 +6517,13 @@ kable(louisiana) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -6841,12 +6548,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -6880,13 +6581,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-la-new orleans/jefferson parish coc
+la
 </td>
 <td style="text-align:left;">
-new orleans
+la-new orleans/jefferson parish coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-la
+new orleans
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -6911,12 +6612,6 @@ la
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -6964,13 +6659,13 @@ kable(maryland) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -6995,12 +6690,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -7034,13 +6723,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-md-charles, calvert, st.mary’s counties coc
+md
 </td>
 <td style="text-align:left;">
-la plata
+md-charles, calvert, st.mary’s counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-md
+la plata
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -7065,12 +6754,6 @@ md
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -7102,13 +6785,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-md-baltimore city coc
+md
 </td>
 <td style="text-align:left;">
-baltimore city
+md-baltimore city coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-md
+baltimore city
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -7133,12 +6816,6 @@ md
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -7170,13 +6847,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-md-charles, calvert, st.mary’s counties coc
+md
 </td>
 <td style="text-align:left;">
-waldorf (laws are from charles county)
+md-charles, calvert, st.mary’s counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-md
+waldorf (laws are from charles county)
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -7201,12 +6878,6 @@ md
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -7254,13 +6925,13 @@ kable(massachusetts) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -7285,12 +6956,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -7324,13 +6989,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-ma-cambridge coc
+ma
 </td>
 <td style="text-align:left;">
-cambridge
+ma-cambridge coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ma
+cambridge
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -7357,12 +7022,6 @@ ma
 0
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 select type
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -7392,13 +7051,13 @@ select type
 </tr>
 <tr>
 <td style="text-align:left;">
-ma-boston coc
+ma
 </td>
 <td style="text-align:left;">
-boston
+ma-boston coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ma
+boston
 </td>
 <td style="text-align:right;border-left:1px solid;">
 7
@@ -7425,12 +7084,6 @@ ma
 0
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -7459,14 +7112,14 @@ citywide
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ma
+</td>
 <td style="text-align:left;">
 ma-cambridge coc
 </td>
-<td style="text-align:left;">
-cambridge
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ma
+cambridge
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -7491,12 +7144,6 @@ ma
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 select type
@@ -7527,14 +7174,14 @@ citywide
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+ma
+</td>
 <td style="text-align:left;">
 ma-springfield coc
 </td>
-<td style="text-align:left;">
-springfield
-</td>
 <td style="text-align:left;border-left:1px solid;">
-ma
+springfield
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -7559,12 +7206,6 @@ ma
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 select type
@@ -7596,13 +7237,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ma-new bedford coc
+ma
 </td>
 <td style="text-align:left;">
-new bedford
+ma-new bedford coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ma
+new bedford
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -7629,12 +7270,6 @@ ma
 0
 </td>
 <td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
 select type
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -7664,13 +7299,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-ma-lowell coc
+ma
 </td>
 <td style="text-align:left;">
-lowell
+ma-lowell coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ma
+lowell
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -7695,12 +7330,6 @@ ma
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -7748,13 +7377,13 @@ kable(new_york) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -7779,12 +7408,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -7818,13 +7441,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-ny-new york city coc
+ny
 </td>
 <td style="text-align:left;">
-nyc
+ny-new york city coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ny
+nyc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -7849,12 +7472,6 @@ ny
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -7902,13 +7519,13 @@ kable(north_carolina) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -7933,12 +7550,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -7972,13 +7583,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-nc-northwest north carolina coc
+nc
 </td>
 <td style="text-align:left;">
-town of boone (watauga county seat)
+nc-northwest north carolina coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-nc
+town of boone (watauga county seat)
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -8003,12 +7614,6 @@ nc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 unclear
@@ -8040,13 +7645,13 @@ only in particular places
 </tr>
 <tr>
 <td style="text-align:left;">
-nc-northwest north carolina coc
+nc
 </td>
 <td style="text-align:left;">
-town of sparta (alleghany county seat)
+nc-northwest north carolina coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-nc
+town of sparta (alleghany county seat)
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8071,12 +7676,6 @@ nc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -8124,13 +7723,13 @@ kable(oregon) %&gt;%
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+state
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 coc
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 citywide
@@ -8155,12 +7754,6 @@ percent_possible_none
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 percent_possible_unclear
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-c3
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-meet_definition
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -8194,13 +7787,13 @@ public_intoxication
 <tbody>
 <tr>
 <td style="text-align:left;">
-or-medford/ashland/jackson county coc
+or
 </td>
 <td style="text-align:left;">
-medford
+or-medford/ashland/jackson county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-or
+medford
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
@@ -8225,12 +7818,6 @@ or
 </td>
 <td style="text-align:right;border-left:1px solid;">
 11.11111
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -8262,13 +7849,13 @@ citywide
 </tr>
 <tr>
 <td style="text-align:left;">
-or-central oregon coc
+or
 </td>
 <td style="text-align:left;">
-bend
+or-central oregon coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-or
+bend
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -8293,12 +7880,6 @@ or
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-no
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -8330,13 +7911,13 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-or-oregon balance of state coc
+or
 </td>
 <td style="text-align:left;">
-corvallis
+or-oregon balance of state coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-or
+corvallis
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -8361,12 +7942,6 @@ or
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.00000
-</td>
-<td style="text-align:left;border-left:1px solid;">
-NA
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yes
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -8401,27 +7976,29 @@ citywide
 </div>
 </div>
 </div>
-<div id="citywide-or-particular-place-laws-by-state" class="section level2">
-<h2>Citywide or Particular Place Laws by State</h2>
+<div id="types-of-laws-by-state" class="section level2">
+<h2>Types of Laws by State</h2>
 <p><strong>Notes:</strong></p>
 <ul>
-<li>All the included Massachusetts laws are citywide, the only state to have all citywide laws</li>
-<li>Hawaii had the fewest citywide laws, accounting for only 16.67% of the 18 HI laws recorded
-<ul>
-<li>Hawaii also had the most “unclear” laws, accounting for 27.78% of its examined laws</li>
-</ul></li>
-<li>California and Florida had the most citywide with 72 and 46, respectively
+<li>There are more citywide laws than any other kind (184), followed by none (157), particular places (95) and unclear(38)</li>
+<li>Fewer than 45% of the laws in 9 of the 12 states/DC analyzed are citywide</li>
+<li>California and Florida had the most citywide laws with 72 and 46, respectively
 <ul>
 <li>Note that California and Florida had more analyzed cities than other states</li>
 </ul></li>
 <li>A quarter (25%) of all citywide laws examined are in Florida</li>
-<li>There are more citywide laws than any other kind (184), followed by none (157), particular places (95) and unclear(38)</li>
+<li>All the included Massachusetts laws are citywide, the only state to have all citywide laws</li>
+<li>Hawaii had the fewest citywide laws, accounting for only 16.67% of the 18 HI laws recorded
+<ul>
+<li>Hawaii also had the most “unclear” laws, accounting for 27.78% of its examined laws, followed by D.C. with 22.22%</li>
+</ul></li>
+<li>Over half (55.56%) of the examined laws in New York and Louisiana are only applicable in particular places</li>
 </ul>
 <pre class="r"><code>#bind all the state analyses together
 all_state &lt;- rbind(alaska, california, dc, florida, hawaii, kentucky, louisiana, maryland, massachusetts, new_york, north_carolina, oregon) %&gt;%
   
   #only select the columns with sums and calculations
-  select(c(3:7)) %&gt;%
+  select(c(1,3:7)) %&gt;%
   
   #group by state in this dataset instead of city in the previous sets
   group_by(state) %&gt;%
@@ -9035,7 +8612,6 @@ Total
 </tbody>
 </table>
 </div>
-<pre class="r"><code>options(error=recover)</code></pre>
 </div>
 
 

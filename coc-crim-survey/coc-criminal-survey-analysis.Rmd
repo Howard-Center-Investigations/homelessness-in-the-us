@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This rMarkdown file analyzes criminal charges related to homelessness in 11 states and the District of Columbia as collected by students in Deborah Nelson's JOUR698I class at the University of Maryland's Philip Merrill College of Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as "citywide"), only applied to particular places ("particular_places"), there was no law ("none"), or the law was unclear ("unclear"). Laws were not examined for every city in each state; cities were examined based on the focus of the class' investigation.
+This rMarkdown file analyzes criminal charges related to homelessness in 11 states and the District of Columbia as collected by students in Deborah Nelson's JOUR698I class at the University of Maryland's Philip Merrill College of Journalism's Howard Center for Investigative Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as "citywide"), only applied to particular places ("particular_places"), there was no law ("none"), or the law was unclear ("unclear"). Laws were not examined for every city in each state; cities were examined based on the focus of the class' investigation.
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 ## Read in data and clean
@@ -90,9 +90,9 @@ crim_survey <- crim_survey %>%
          percent_possible_unclear = ((unclear / 9) *100)) %>%
   
   ##get rid of columns we don't need to analyze
-  select(-name, -complete, -new_reporting_or_nlchp_fact_check, -contains ("link"), -contains("law")) %>%
+  select(-name, -complete, -new_reporting_or_nlchp_fact_check, -c3, -meet_definition, -contains ("link"), -contains("law")) %>%
   ##reorder columns with mutated columns first
-  select(1:3,15:18,19:22,4:14)
+  select(3,1,2,13:20,4:12)
 ```
 
 ## State and City Information
@@ -138,6 +138,7 @@ crim_survey_cities <- crim_survey %>%
   select(state, city) %>%
   arrange(state)
 
+## all the kable code creates an interactive, scrollable table in the .html output
 kable(crim_survey_cities) %>%
   column_spec(2, border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
@@ -149,7 +150,7 @@ kable(crim_survey_cities) %>%
 ### Alaska
 
 * Alaska has one law against sleeping in public that is county-wide, the only county law in this criminal survey analysis
-  + However sitting, laying or camping in public is not allowed citywide
+  + However, sitting, laying or camping in public is not allowed citywide
 * There is no food sharing ban but there is a citywide law against begging
 ```{r}
 
@@ -306,17 +307,19 @@ kable(oregon) %>%
   scroll_box(height = "250px")
 ```
 
-## Citywide or Particular Place Laws by State
+## Types of Laws by State
 
 **Notes:**
 
-* All the included Massachusetts laws are citywide, the only state to have all citywide laws
-* Hawaii had the fewest citywide laws, accounting for only 16.67% of the 18 HI laws recorded
-  + Hawaii also had the most "unclear" laws, accounting for 27.78% of its examined laws
-* California and Florida had the most citywide with 72 and 46, respectively
+* There are more citywide laws than any other kind (184), followed by none (157), particular places (95) and unclear(38)
+* Fewer than 45% of the laws in 9 of the 12 states/DC analyzed are citywide
+* California and Florida had the most citywide laws with 72 and 46, respectively
   + Note that California and Florida had more analyzed cities than other states
 * A quarter (25%) of all citywide laws examined are in Florida
-* There are more citywide laws than any other kind (184), followed by none (157), particular places (95) and unclear(38)
+* All the included Massachusetts laws are citywide, the only state to have all citywide laws
+* Hawaii had the fewest citywide laws, accounting for only 16.67% of the 18 HI laws recorded
+  + Hawaii also had the most "unclear" laws, accounting for 27.78% of its examined laws, followed by D.C. with 22.22%
+* Over half (55.56%) of the examined laws in New York and Louisiana are only applicable in particular places
 
 ```{r}
 
@@ -324,7 +327,7 @@ kable(oregon) %>%
 all_state <- rbind(alaska, california, dc, florida, hawaii, kentucky, louisiana, maryland, massachusetts, new_york, north_carolina, oregon) %>%
   
   #only select the columns with sums and calculations
-  select(c(3:7)) %>%
+  select(c(1,3:7)) %>%
   
   #group by state in this dataset instead of city in the previous sets
   group_by(state) %>%
