@@ -19,7 +19,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This rMarkdown file analyzes criminal charges related to homelessness in 11 states and the District of Columbia as collected by students in Deborah Nelson's JOUR698I class at the University of Maryland's Philip Merrill College of Journalism's Howard Center for Investigative Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as "citywide"), only applied to particular places ("particular_places"), there was no law ("none"), or the law was unclear ("unclear"). Laws were not examined for every city in each state; cities were examined based on the focus of the class' investigation.
+This rMarkdown file analyzes criminal charges related to homelessness in 11 states and the District of Columbia as collected by students in Deborah Nelson's JOUR698I class at the University of Maryland's Philip Merrill College of Journalism's Howard Center for Investigative Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as "citywide"), only applied to particular places ("particular_places"), there was no law ("none"), or the law was unclear ("unclear"). Laws were not examined for every city in each state; cities were examined based on the focus of the class' investigation. 
+
+The acronym CoC will be used to mean Continuum of Care, which are citywide or regional areas across which housing and services for the homeless are coordinated. Read more about CoCs [here](https://www.hudexchange.info/programs/coc/).
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 ## Read in data and clean
@@ -83,16 +85,31 @@ crim_survey <- crim_survey %>%
          none = rowSums(crim_survey == "none", na.rm=TRUE),
          unclear = rowSums(crim_survey == "unclear", na.rm=TRUE)) %>%
   
-  ##calculate what percentage of a city's laws are citywide, particular, none or unclear
-  mutate(percent_possible_citywide = ((citywide / 9) *100),
-         percent_possible_particular_places = ((particular_places / 9) *100),
-         percent_possible_none = ((none / 9) *100),
-         percent_possible_unclear = ((unclear / 9) *100)) %>%
-  
   ##get rid of columns we don't need to analyze
+  filter(complete == "yes") %>%
   select(-name, -complete, -new_reporting_or_nlchp_fact_check, -c3, -meet_definition, -contains ("link"), -contains("law")) %>%
   ##reorder columns with mutated columns first
-  select(3,1,2,13:20,4:12)
+  select(3,1,2,13:16,4:12)
+```
+
+## Overall Law Information
+
+Most of the laws examined are applicable across the city (162), which is only slightly greater than the amount of laws that are not on the books (153). Together, "citywide" and "none" account for over 70% of the laws examined, with 36.65% and 34.62%, respectively. 21.49% of laws are only applicable in particular places while about 7% of the laws were unclear.
+
+While laws applicable in particular places represent a fifth of the laws examined, the majority of the time it appears that laws either apply citywide or do not exist.
+
+```{r}
+overall_laws <- crim_survey %>%
+  select(citywide, particular_places, unclear, none) %>%
+  colSums() %>%
+  as.data.frame(, keep.rownames=TRUE) %>%
+  tibble::rownames_to_column() %>%
+  rename("count" = ".") %>%
+  mutate(pct = (count / sum(count))*100) 
+
+print(overall_laws)
+
+#YOURE BEAUTIFUL
 ```
 
 ## State and City Information
@@ -100,16 +117,16 @@ crim_survey <- crim_survey %>%
 * 11 states are examined: Alaska, California, Florida, Hawaii, Kentucky, Louisiana, Massachusetts, Maryland, New York, North Carolina, and Oregon; and the District of Columbia.
 * Number of cities examined in each state:
   + Alaska - 1
-  + California - 21
+  + California - 20
   + The District of Columbia - 1
-  + Florida - 17
+  + Florida - 18
   + Hawaii - 2
   + Kentucky - 1
-  + Louisiana - 1
-  + Massachusetts - 6
+  + Louisiana - analysis not complete yet
+  + Massachusetts - analysis not complete yet
   + Maryland - 3
   + New York - 1
-  + North Carolina - 2
+  + North Carolina - 1
   + Oregon - 3
 
 ```{r}
@@ -145,164 +162,86 @@ kable(crim_survey_cities) %>%
   scroll_box(height = "250px")
 ```
 
-## Analyze each state {.tabset}
+## Continuum of Care Analysis
 
-### Alaska
-
-* Alaska has one law against sleeping in public that is county-wide, the only county law in this criminal survey analysis
-  + However, sitting, laying or camping in public is not allowed citywide
-* There is no food sharing ban but there is a citywide law against begging
-```{r}
-
-alaska <- crim_survey %>%
-  subset(state %in% "ak")
-
-kable(alaska) %>%
-  column_spec(3:ncol(alaska), border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "200px")
-
-```
-
-### California
+* CoCs in California and Florida are tied for the greatest number of laws. Both Oakland/Alameda CoC in California and Fort Walton Beach/Okaloosa/Walton CoC in Florida have 17 total laws. Florida's CoC consisting of Fort Pierce/St. Lucie/Indian River/Martin Counties is a close second with 16 laws.
+* CoCs in California and Florida also have the fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa CoC in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.
 
 ```{r}
-
-california <- crim_survey %>%
-  subset(state %in% "ca")
+## create new data set
+coc_totals <- crim_survey %>%
   
+  ## group by coc so totals are by coc
+  group_by(coc) %>%
+  
+  ## sum all indications that a law exists (so not including none or unclear)
+  summarise(total_laws = sum(citywide + particular_places)) %>%
+  
+  ## get rid of other columns
+  select(coc, total_laws) %>%
+  
+  ## put the coc with the most laws first
+  arrange(desc(total_laws))
 
-kable(california) %>%
-  column_spec (3:ncol(california),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "500px")
-```
-
-### DC
-
-```{r}
-
-dc <- crim_survey %>%
-  subset(state %in% "dc")
-
-kable(dc) %>%
-  column_spec (3:ncol(dc),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
-```
-
-### Florida
-
-```{r}
-
-florida <- crim_survey %>%
-  subset(state %in% "fl")
-
-kable(florida) %>%
-  column_spec (3:ncol(florida),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "500px")
-```
-
-### Hawaii
-
-```{r}
-
-hawaii <- crim_survey %>%
-  subset(state %in% "hi")
-
-kable(hawaii) %>%
-  column_spec (3:ncol(hawaii),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
-```
-
-### Kentucky
-
-```{r}
-kentucky <- crim_survey %>%
-  subset(state %in% "ky")
-
-kable(kentucky) %>%
-  column_spec (3:ncol(kentucky),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
-```
-
-### Louisiana
-
-```{r}
-
-louisiana <- crim_survey %>%
-  subset(state %in% "la")
-
-kable(louisiana) %>%
-  column_spec (3:ncol(louisiana),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
-```
-
-### Maryland
-
-```{r}
-
-maryland <- crim_survey %>%
-  subset(state %in% "md")
-
-kable(maryland) %>%
-  column_spec (3:ncol(maryland),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
-```
-
-### Massachusetts 
-
-```{r}
-
-massachusetts <- crim_survey %>%
-  subset(state %in% "ma")
-
-kable(massachusetts) %>%
-  column_spec (3:ncol(massachusetts),border_left = T, border_right = F) %>%
+kable(coc_totals) %>%
+  column_spec (2:ncol(coc_totals),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "300px")
 ```
 
-### New York
+## City Analysis
+
+* The city of Waldorf has the fewest laws with only 1. Lake City and Ione round out the bottom three with two laws each.
+* Oakland has the most with 9 laws. This means that Oakland has every possible examined law on the books.
+* No state has 8 laws, but seven states have 7 laws.
 
 ```{r}
+## create new data set
+city_totals <- crim_survey %>%
+  
+  ## group by state so totals are by state
+  group_by(city) %>%
+  
+  ## sum all indications that a law exists (so not including none or unclear)
+  summarise(total_laws = sum(citywide + particular_places),
+            "citywide"=citywide, 
+            "particular_places"=particular_places, 
+            "unclear"=unclear, 
+            "none"=none) %>%
+  
+  ## put the state with the most laws first
+  arrange(desc(total_laws))
 
-new_york <- crim_survey %>%
-  subset(state %in% "ny")
-
-kable(new_york) %>%
-  column_spec (3:ncol(new_york),border_left = T, border_right = F) %>%
+kable(city_totals) %>%
+  column_spec (2:ncol(city_totals),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
 
-### North Carolina
+## Which state has the most laws?
+
+* California comes in first with 122 laws
+* Alaska and Kentucky have the fewest laws with only 4
+* In the four states with the fewest laws (Kentucky, North Carolina, New York and Alaska) and D.C, only one city was examined.
 
 ```{r}
+## create new data set
+state_totals <- crim_survey %>%
+  
+  ## group by state so totals are by state
+  group_by(state) %>%
+  
+  ## sum all indications that a law exists (so not including none or unclear)
+  summarise(total_laws = sum(citywide + particular_places)) %>%
+  
+  ## get rid of other columns
+  select(state, total_laws) %>%
+  
+  ## put the state with the most laws first
+  arrange(desc(total_laws))
 
-north_carolina <- crim_survey %>%
-  subset(state %in% "nc")
-
-kable(north_carolina) %>%
-  column_spec (3:ncol(north_carolina),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
-```
-
-### Oregon
-
-```{r}
-
-oregon <- crim_survey %>%
-  subset(state %in% "or")
-
-kable(oregon) %>%
-  column_spec (3:ncol(oregon),border_left = T, border_right = F) %>%
+kable(state_totals) %>%
+  column_spec (2:ncol(state_totals),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
@@ -324,7 +263,9 @@ kable(oregon) %>%
 ```{r}
 
 #bind all the state analyses together
-all_state <- rbind(alaska, california, dc, florida, hawaii, kentucky, louisiana, maryland, massachusetts, new_york, north_carolina, oregon) %>%
+all_state <- crim_survey %>%
+  
+  #louisiana massachusetts
   
   #only select the columns with sums and calculations
   select(c(1,3:7)) %>%
@@ -358,7 +299,7 @@ all_state <- all_state %>%
 kable(all_state) %>%
   column_spec (2:ncol(all_state),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
+  scroll_box(height = "300px")
 
 ```
 
