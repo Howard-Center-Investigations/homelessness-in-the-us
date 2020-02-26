@@ -1,4 +1,3 @@
----
 title: "NYC 311 Calls"
 author: "Theresa Diffendal"
 date: "1/27/2020"
@@ -27,11 +26,9 @@ library(tidyverse)
 library(janitor)
 library(lubridate)
 library(ggplot2)
-library(readxl)
+#library(tidyr)
+library(disk.frame)
 library(dplyr)
-library(tidyr)
-library(data.table)
-library(readr)
 #library(bit64)
 ```
 
@@ -814,75 +811,319 @@ saveRDS(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019
 ### Load all NYC call sheet
 ```{r}
 
-#all_nyc_calls <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
+all_nyc_calls <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
 
 ```
 
-## Observation values pertaining to homelessness:
 
-Agency:
-* DHS
+##Try Loading Data with disk.frame
+```{r}
+#set up disk.frame so it can use multiple CPUS
+setup_disk.frame()
 
-Agency Name:
-* Department of Homeless Services
-  * In 2010, listed as DHS Advantage Programs, which is a one to two-year rental assistance program for homeless families. In existence 2007-2011. Had work requirements.
+# this allows large datasets to be transferred between sessions
+options(future.globals.maxSize = Inf)
 
-Complaint Type:
-* Homeless encampment
-* Panhandling
-* Homeless Street Condition
-* Homeless Person Assistance
+#disk.frame is an r package that will apparently load big sets of data more quickly because it makes use of multiple processors and then saves the chunks as lists in .fts files. When the file is worked on (i.e. filter, summarise), the output is a data frame
+all_nyc_calls <- csv_to_disk.frame("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", in_chunk_size = 1e6, colClasses = list(character=c("Unique Key", "Created Date", "Closed Date", "Agency", "Agency Name", "Complaint Type", "Descriptor", "Location Type", "Incident Zip", "Incident Address", "Street Name", "Cross Street 1", "Cross Street 2", "Intersection Street 1", "Intersection Street 2", "Address Type", "City", "Landmark", "Facility Type", "Status", "Due Date", "Resolution Description", "Resolution Action Updated Date", "Community Board", "BBL", "Borough", "X Coordinate (State Plane)", "Y Coordinate (State Plane)", "Open Data Channel Type", "Park Facility Name", "Park Borough", "Vehicle Type", "Taxi Company Borough", "Taxi Pick Up Location", "Bridge Highway Name", "Bridge Highway Direction", "Road Ramp", "Bridge Highway Segment", "Latitude", "Longitude", "Location"))) 
 
-Location:
-* Homeless shelter
+#getting errors here
+all_nyc_calls %>%
+  janitor::make_clean_names() %>%
+  separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
+  separate("dates", c("month", "day", "year"), remove=FALSE) %>%
+  unite("time", "hour":"AM/PM", sep = " ")
+```
 
-Descriptor:
-* Homeless Issue
-  * Under complaint type "Ferry Complaint"
-* 2010 - unenroll from Advantage Program
-* Payment Not Received from DHS
+### Create disk.frame for each year, filtered from all NYC calls
+```{r}
+#Currently getting errors bc clean names and separate aren't working
+#Filter all calls for each year and save disk.frame
+
+#2010
+calls_2010 <- all_nyc_calls %>%
+  collect() %>%
+  filter(year==2010) %>%
+  group_by(month, day, time)
+
+#calls_2010[order(calls_2010$month, calls_2010$day, calls_2010$time),]
+write_disk.frame(calls_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.df")
+
+#2011
+calls_2011 <- all_nyc_calls %>%
+  filter(year == 2011) 
+calls_2011[order(calls_2011$month, calls_2011$day, calls_2011$time),]
+write_disk.frame(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.df")
+
+#2012 
+calls_2012 <- all_nyc_calls %>%
+  filter(year == 2012) 
+calls_2012[order(calls_2012$month, calls_2012$day, calls_2012$time),]
+write_disk.frame(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.df")
+
+#2013
+calls_2013 <- all_nyc_calls %>%
+  filter(year == 2013) 
+calls_2013[order(calls_2013$month, calls_2013$day, calls_2013$time),]
+write_disk.frame(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.df")
+
+#2014
+calls_2014 <- all_nyc_calls %>%
+  filter(year == 2014) 
+calls_2014[order(calls_2014$month, calls_2014$day, calls_2014$time),]
+write_disk.frame(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.df")
+
+#2015
+calls_2015 <- all_nyc_calls %>%
+  filter(year == 2015) 
+calls_2015[order(calls_2015$month, calls_2015$day, calls_2015$time),]
+write_disk.frame(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.df")
+
+#2016
+calls_2016 <- all_nyc_calls %>%
+  filter(year == 2016) 
+calls_2016[order(calls_2016$month, calls_2016$day, calls_2016$time),]
+write_disk.frame(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.df")
+
+#2017
+calls_2017 <- all_nyc_calls %>%
+  filter(year == 2017) 
+calls_2017[order(calls_2017$month, calls_2017$day, calls_2017$time),]
+write_disk.frame(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.df")
+
+#2018
+calls_2018 <- all_nyc_calls %>%
+  filter(year == 2018) 
+calls_2018[order(calls_2018$month, calls_2018$day, calls_2018$time),]
+write_disk.frame(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.df")
+
+#2019
+calls_2019 <- all_nyc_calls %>%
+  filter(year == 2019) 
+calls_2019[order(calls_2019$month, calls_2019$day, calls_2019$time),]
+write_disk.frame(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.df")
+
+```
+
+
 
 ## Analyze each year {.tabset}
 
 ### 2010
 
 ```{r}
-
 #Load data
-calls_2010 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds")
+calls_2010 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds") 
+```
 
-#calls_2010 %>%
-  #parse_date_time(time, '%I:%M %p')
-  #strptime(time, "%I:%M %p")
-  #format(strptime(time, format = '%I:%M%p)
+#### Agencies
 
+  * DHS received 37973 calls, the tenth most of any agency
+  * All the DHS agency calls were for complaint types related to DHS Advantage
+  * NYPD handles homeless encampment and panhandling complaint types
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
 agency_calls_2010 <- calls_2010 %>%
   group_by(agency) %>%
-  summarize(count = n())
+  summarize(count = n()) %>%
+  arrange(desc(count))
+```
 
+#### Relevant Complaints
+
+  * DHS Advantage - Tenant	        22548
+  * DHS Advantage - Third Party	    788
+  * DHS Advantage - Landlord/Broker	14637
+    + The DHS Advantage Programs were one to two-year rental assistance programs for homeless families. In existence 2007-2011. Had work requirements.
+  * Homeless Encampment	            1787
+    + Of all complaint types, homeless encampment ranked 89 in number of calls out of 191 total types
+  * Pandhandling                    136
+
+```{r}
+#Get all complaint types and arrange from most to least
 complaints_calls_2010 <- calls_2010 %>%
   group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+```
+
+In complaints filtered for the values listed above, DHS Advantage - Tenant had the most entries with 22548
+```{r}
+#Isolate complaint types related to homelessness
+
+homeless_complaints_calls_2010 <- complaints_calls_2010 %>%
+  filter(complaint_type %in% c("DHS Advantage - Tenant", "DHS Advantage - Third Party", "DHS Advantage -Landlord/Broker", "Homeless Encampment"))
+```
+
+What complaint types does DHS handle? 
+  * Only DHS Advantage complaints, not Homeless Encampment or Panhandling
+```{r}
+dhs_agency_2010 <- calls_2010 %>%
+  select(agency, complaint_type) %>%
+  filter(str_detect(agency, "DHS")) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+Interesting; NYPD is the agency for Panhandling and Homeless Encampment calls
+```{r}
+homeless_encampment_agency <- calls_2010 %>%
+  select(agency, complaint_type) %>%
+  filter(str_detect(complaint_type, "Homeless|Panhandling")) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+Out of all calls to NYPD, how many were for Homeless Encampments or Panhandling?
+* Homeless Encampment - 1787 (.62% of total)
+* Panhandling         - 136  (.045% of total)
+* Total Calls         - 286163
+```{r}
+nypd_agency_2010 <- calls_2010 %>%
+  select(agency, complaint_type) %>%
+  filter(str_detect(agency, "NYPD")) %>%
+  group_by(agency, complaint_type) %>%
   summarize(count = n())
 
+total_nypd_2010 <- nypd_agency_2010 %>%
+  summarize(total = sum(count))
+```
+
+#### Relevant Descriptors 
+
+Out of 1079 total types:
+  + Payment Not Received from DHS	   10933
+    + Rank: 36
+  + No Parking, Standing, Stopping	 2872
+    + Rank: 130
+    + Upon further analysis (shown below), it does not seem that the descriptor "No Parking, Standing, Stopping" relates to homelessness
+ 
+```{r}
+#get a list of all descriptors and the number of times they appear
 descriptor_calls_2010 <- calls_2010 %>%
   group_by(descriptor) %>%
-  summarize(count = n())
+  summarize(count = n()) %>%
+  arrange(desc(count))
+```
 
+What complaint types get the descriptor "No Parking, Stnading, Stopping"
+  * It seems like "No Parking, Standing, Stopping" isn't related to homelessness as all the complaint types are:
+    + Street Sign - Damaged
+    + Street Sign - Dangling
+    + Street Sign - Missing
+```{r}
+no_standing_complaints <- calls_2010 %>%
+  group_by(agency, descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  filter(str_detect(descriptor, "No Parking"))
+```
+
+#### Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+  * Quite a few descriptors for DHS Advantage complaint types:
+    + Court Date Within 7 Days	
+    + Landlord Requesting Additonal Rent	
+    + Lease Already Expired
+    + Lease Expiring
+    + Lease Renewal Question
+    + Other Issue	
+    + Possible Landlord Foreclosure	
+    + Unenroll from Advantage Program	
+    + Payment Not Received from DHS
+    + Returning Payment
+    + Payment Not Received from Tenant
+  * Not sure how many of the above relate to homeless individuals,  if any since the advantage program is a housing assistance program
+  * What are the descriptors for the complaint type Homeless Encampment?
+    + Lol the descriptors for Homeless Encampment are NA
+    + Descriptors for Panhandling are ALSO NA
+```{r}
+complaint_and_descriptor <- calls_2010 %>%
+  select(complaint_type, descriptor) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+Question: For DHS Advantage complaint types, there are multiple descriptors; how many involve homeless individuals?
+  * Unsure of answer
+```{r}
+dhs_complaint_and_descriptor <- calls_2010 %>%
+  select(agency, complaint_type, descriptor) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  filter(str_detect(complaint_type, "DHS Advantage")) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+  * Homeless shelters - 12
+  * Soup kitchens     - 16
+  * Total             - 2031599
+
+```{r}
 location_calls_2010 <- calls_2010 %>%
   group_by(location_type) %>%
   summarize(count = n())
 
+total_locations_2010 <- location_calls_2010 %>%
+  summarize(total = sum(count))
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints.
+
+  * DHS Advantage Resolution Descriptions
+    + The Department of Homeless Services attempted to contact you for additional information but has been unable to reach you.	
+    + The Department of Homeless Services has addressed the payment issue.
+    + The Department of Homeless Services has authorized a lease renewal.	
+    + The Department of Homeless Services has provided the information requested for the upcoming court date.	
+    + The Department of Homeless Services has referred your issue to the Homebase Community Homelessness Prevention Program.
+    + The Department of Homeless Services has removed the tenant from the program as per your request.
+    + The issue has been referred to another unit within the Department of Homeless Services.
+    + The issue is not within the jurisdiction of the Department of Homeless Services.
+      + This would seem to make the complaint types with these resolution descriptors ineligible for calls relating to homelessness
+    + See notes.
+
+* Homeless Encampment Resolution Descriptions
+  + The Police Department issued a summons in response to the complaint.
+  + The Police Department made an arrest in response to the complaint.
+    + This is particularly interesting: an arrest made due to a complaint about homeless encampments.
+  + The Police Department responded and upon arrival those responsible for the condition were gone.
+  + The Police Department responded to the complaint and a report was prepared.
+  + The Police Department responded to the complaint and determined that police action was not necessary.
+  + The Police Department responded to the complaint and took action to fix the condition.
+  + The Police Department responded to the complaint and with the information available observed no evidence of the violation at that time.
+  + The Police Department responded to the complaint but officers were unable to gain entry into the premises.
+  + The Police Department reviewed your complaint and provided additional information below.
+  + This complaint does not fall under the Police Department's jurisdiction.
+  + Your request can not be processed at this time because of insufficient contact information. Please create a new Service Request on NYC.gov and provide more detailed contact information.
+
+* Panhandling Resolution Descriptions
+  + The Police Department responded and upon arrival those responsible for the condition were gone.
+  + The Police Department responded to the complaint and determined that police action was not necessary.
+  + The Police Department responded to the complaint and took action to fix the condition.
+  + The Police Department responded to the complaint and with the information available observed no evidence of the violation at that time.
+  + The Police Department reviewed your complaint and provided additional information below.
+```{r}
 resolution_calls_2010 <- calls_2010 %>%
-  group_by(resolution_description) %>%
+  filter(str_detect(complaint_type, "Panhandling|Homeless|DHS")) %>%
+  group_by(complaint_type, resolution_description) %>%
   summarize(count = n())
+```
 
-# Relevant types: Homeless Encampment, Panhandling
-  
-#Take the year-by-year dataframes and only return those with mention of homeless
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  * 39896 total observations for filtered dataset out of 2,031,599 total calls
+  * 1.96% 311 calls in 2010 related to homelessness
+```{r}
 homeless_2010 <- calls_2010 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+  filter(location =="Homeless Shelter" |
+          agency == "DHS" |
+           str_detect(complaint_type, "Panhandling|Homeless|DHS"))
 
-saveRDS(calls_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(homeless_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -891,10 +1132,116 @@ saveRDS(calls_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010
 ```{r}
 #Load data
 calls_2011 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
+#### Relevant Complaints
+
+What complaints seem relevant to homelessness?
+
+Strongly likely:
+  * Homeless Encampment
+  * Panhandling
+
+Potentially:
+  * Dirty conditions
+  * Sanitation Condition
+  * Sidewalk Condition
+  * DHS Advantage - Tenant
+  * DHS Advantage -Landlord/Broker
+  * DHS Advantage - Third Party
+  * DHS Income Savings Requirement
+  * Special Projects Inspection Team (SPIT)
+  * Emergency Response Team (ERT)
+  * Curb Condition
+  * Urinating in Public
+  * Ferry Complaint?
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2011 <- calls_2011 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+  * NYPD
+  * DHS
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2011 <- calls_2011 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+```
+
+What agencies cover the complaints identified above?
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_calls_2011 <- calls_2011 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+```
+
+#### Relevant Descriptors 
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_calls_2011 <- calls_2011 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+```
+
+#### Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+```{r}
+complaint_and_descriptor_2011 <- calls_2011 %>%
+  select(complaint_type, descriptor) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+```{r}
+location_calls_2011 <- calls_2011 %>%
+  group_by(location_type) %>%
+  summarize(count = n())
+
+total_locations_2011 <- location_calls_2011 %>%
+  summarize(total = sum(count))
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints.
+
+```{r}
+resolution_calls_2011 <- calls_2011 %>%
+  filter(str_detect(complaint_type, "Panhandling|Homeless|DHS")) %>%
+  group_by(complaint_type, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  * 
+```{r}
 homeless_2011 <- calls_2011 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+  filter(location =="Homeless Shelter" |
+          agency == "DHS" |
+           str_detect(complaint_type, "Panhandling|Homeless|DHS"))
 
 saveRDS(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-HOMELESS-NYC-Service-Requests.Rds")
 
