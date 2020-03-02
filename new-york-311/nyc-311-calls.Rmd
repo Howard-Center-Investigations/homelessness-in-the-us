@@ -32,881 +32,6 @@ library(dplyr)
 #library(bit64)
 ```
 
-## Cleaning Work
-### Column Names
-```{r}
-##Load the csv in chunks, clean names, maniuplate date_time columns into separate year, month, and time columns
-
-ccolumns <- list("Unique Key", "Created Date", "Closed Date", "Agency", "Agency Name", "Complaint Type", "Descriptor", "Location Type", "Incident Zip", "Incident Address", "Street Name", "Cross Street 1", "Cross Street 2", "Intersection Street 1", "Intersection Street 2", "Address Type", "City", "Landmark", "Facility Type", "Status", "Due Date", "Resolution Description", "Resolution Action Updated Date", "Community Board", "BBL", "Borough", "X Coordinate (State Plane)", "Y Coordinate (State Plane)", "Open Data Channel Type", "Park Facility Name", "Park Borough", "Vehicle Type", "Taxi Company Borough", "Taxi Pick Up Location", "Bridge Highway Name", "Bridge Highway Direction", "Road Ramp", "Bridge Highway Segment", "Latitude", "Longitude", "Location")
-
-#coltypess <- c("double", "date", "date", "text", "text", "text", "text", "text", "double", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "date", "text", "date", "text", "double", "text", "double", "double", "text", "text", "text", "text", "text", "text", "text", "text", "text", "text", "double", "double", "double")
-
-#col_datetime(format = "%m/%d/%Y %I:%M:%S %p")
-```
-
-
-### Read in CSV 1 million lines at a time, save as RDS
-
-```{r}
-#########################
-##### First Million #####
-#########################
-
-sskip = 1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_01 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_01$dates <- as.Date(nyc_calls_01$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_01, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_01.Rds")
-
-
-
-
-#########################
-######Second Million#####
-#########################
-
-sskip = 1e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_02 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ") 
-  
-  nyc_calls_02$dates <- as.Date(nyc_calls_02$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_02, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_02.Rds")
-
-
-
-########################
-#####Third Million######
-########################
-
-sskip = 2e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_03 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ") 
-
-  nyc_calls_03$dates <- as.Date(nyc_calls_03$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_03, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_03.Rds")
-
-
-
-#########################
-#### Fourth Million #####
-#########################
-
-sskip = 3e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_04 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_04$dates <- as.Date(nyc_calls_04$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_04, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_04.Rds")
-
-
-
-#########################
-##### Fifth Million #####
-#########################
-
-sskip = 4e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_05 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_05$dates <- as.Date(nyc_calls_05$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_05, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_05.Rds")
-
-
-#########################
-####### 6 Million #######
-#########################
-
-sskip = 5e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_06 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_06$dates <- as.Date(nyc_calls_06$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_06, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_06.Rds")
-
-
-
-
-#########################
-####### 7 Million #######
-#########################
-
-sskip = 6e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_07 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_07$dates <- as.Date(nyc_calls_07$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_07, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_07.Rds")
-
-
-
-
-#########################
-####### 8 Million #######
-#########################
-
-sskip = 7e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_08 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_08$dates <- as.Date(nyc_calls_08$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_08, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_08.Rds")
-
-
-
-
-#########################
-####### 9 Million #######
-#########################
-
-sskip = 8e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_09 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_09$dates <- as.Date(nyc_calls_09$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_09, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_09.Rds")
-
-
-
-#########################
-####### 10 Million ######
-#########################
-
-sskip = 9e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_10 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_10$dates <- as.Date(nyc_calls_10$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_10, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_10.Rds")
-
-
-
-#########################
-###### 11 Million #######
-#########################
-
-sskip = 1e7 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_11 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_11$dates <- as.Date(nyc_calls_11$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_11, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_11.Rds")
-
-
-
-
-
-#########################
-###### 12 Million #######
-#########################
-
-sskip = 11e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_12 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_12$dates <- as.Date(nyc_calls_12$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_12, "~/Documents/GitHub/homelessness-in-the-us/new-york-311//NYC-311-Service-Requests_12.Rds")
-
-
-
-
-
-
-#########################
-###### 13 Million #######
-#########################
-
-sskip = 12e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_13 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_13$dates <- as.Date(nyc_calls_13$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_13, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_13.Rds")
-
-
-
-
-#########################
-##### 14 Million #####
-#########################
-
-sskip = 13e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_14 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_14$dates <- as.Date(nyc_calls_14$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_14, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_14.Rds")
-
-
-
-
-#########################
-##### 15 Million #####
-#########################
-
-sskip = 14e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_15 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_15$dates <- as.Date(nyc_calls_15$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_15, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_15.Rds")
-
-#########################
-###### 16 Million #######
-#########################
-
-sskip = 15e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_16 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_16$dates <- as.Date(nyc_calls_16$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_16, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_16.Rds")
-
-
-
-#########################
-###### 17 Million #######
-#########################
-
-sskip = 16e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_17 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_17$dates <- as.Date(nyc_calls_17$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_17, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_17.Rds")
-
-
-
-#########################
-##### 18 Million #####
-#########################
-
-sskip = 17e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_18 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_18$dates <- as.Date(nyc_calls_18$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_18, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_18.Rds")
-
-
-
-#########################
-###### 19 Million #######
-#########################
-
-sskip = 18e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_19 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_19$dates <- as.Date(nyc_calls_19$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_19, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_19.Rds")
-
-
-
- 
-#########################
-###### 20 Million #######
-#########################
-
-sskip = 19e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_20 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_20$dates <- as.Date(nyc_calls_20$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_20, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_20.Rds")
-
-
-
-#########################
-##### 21 Million #####
-#########################
-
-sskip = 2e7 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_21 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_21$dates <- as.Date(nyc_calls_21$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_21, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_21.Rds")
-
-
-
-
-#########################
-###### 22 Million #######
-#########################
-
-sskip = 21e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_22 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_22$dates <- as.Date(nyc_calls_22$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_22, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_22.Rds")
-
-
-
-#########################
-###### 23 Million #######
-#########################
-
-sskip = 22e6 +1
-nn_max = 0
-
-while(nn_max < 1e6) {  
-  #22.4e6 is the total number of rows in the dataset
-  
-  nn_max = nn_max + 100000
-  
-  nyc_calls_23 <- read_csv("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", col_names = as.character(ccolumns), col_types = cols(.default = col_character()), n_max = nn_max, skip = sskip) %>%
-    clean_names() %>%
-    separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-    separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-    unite("time", "hour":"AM/PM", sep = " ")
-
-  nyc_calls_23$dates <- as.Date(nyc_calls_23$dates, format = "%m/%d/%Y")
-  
-  sskip = sskip + 100000
-}
-
-#save as Rds(for faster processing)
-saveRDS(nyc_calls_23, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_23.Rds")
-
-```
-
-### Create all NYC calls dataset
-```{r}
-
-# Read in the multiple RDS files and filter by date
-
-calls_01 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_01.Rds")
-calls_02 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_02.Rds")
-calls_03 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_03.Rds")
-calls_04 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_04.Rds")
-calls_05 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_05.Rds")
-calls_06 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_06.Rds")
-calls_07 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_07.Rds")
-calls_08 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_08.Rds")
-calls_09 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_09.Rds")
-calls_10 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_10.Rds")
-calls_11 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_11.Rds")
-calls_12 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_12.Rds")
-calls_13 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_13.Rds")
-calls_14 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_14.Rds")
-calls_15 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_15.Rds")
-calls_16 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_16.Rds")
-calls_17 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_17.Rds")
-calls_18 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_18.Rds")
-calls_19 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_19.Rds")
-calls_20 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_20.Rds")
-calls_21 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_21.Rds")
-calls_22 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_22.Rds")
-calls_23 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_23.Rds")
-  
-
-#create object with file names and full paths
-#f <- file.path("~/Documents/GitHub/homelessness-in-the-us/new-york-311", c("NYC-311-Service-Requests_01.Rds", "NYC-311-Service-Requests_02.Rds", "NYC-311-Service-Requests_03.Rds", "NYC-311-Service-Requests_04.Rds", "NYC-311-Service-Requests_05.Rds", "NYC-311-Service-Requests_06.Rds", "NYC-311-Service-Requests_07.Rds", "NYC-311-Service-Requests_08.Rds", "NYC-311-Service-Requests_09.Rds", "NYC-311-Service-Requests_10.Rds", "NYC-311-Service-Requests_11.Rds", "NYC-311-Service-Requests_12.Rds", "NYC-311-Service-Requests_13.Rds", "NYC-311-Service-Requests_14.Rds", "NYC-311-Service-Requests_15.Rds", "NYC-311-Service-Requests_16.Rds", "NYC-311-Service-Requests_17.Rds", "NYC-311-Service-Requests_18.Rds", "NYC-311-Service-Requests_19.Rds", "NYC-311-Service-Requests_20.Rds", "NYC-311-Service-Requests_21.Rds", "NYC-311-Service-Requests_22.Rds", "NYC-311-Service-Requests_23.Rds"))
-
-
-#bind RDS files to an all in one
-all_nyc_calls <- rbind(calls_01, calls_02, calls_03, calls_04, calls_05, calls_06, calls_07, calls_08, calls_09, calls_10, calls_11, calls_12, calls_13, calls_14, calls_15, calls_16, calls_17, calls_18, calls_19, calls_20, calls_21, calls_22) 
-
-saveRDS(all_nyc_calls, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
-```
-
-### Create RDS sheet with each year, filtered from all NYC calls
-```{r}
-#Filter all calls for each year and save RDS
-
-#2010
-calls_2010 <- all_nyc_calls %>%
-  filter(year == 2010) 
-calls_2010[order(calls_2010$month, calls_2010$day, calls_2010$time),]
-saveRDS(calls_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds")
-
-#2011
-calls_2011 <- all_nyc_calls %>%
-  filter(year == 2011) 
-calls_2011[order(calls_2011$month, calls_2011$day, calls_2011$time),]
-saveRDS(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.Rds")
-
-#2012 
-calls_2012 <- all_nyc_calls %>%
-  filter(year == 2012) 
-calls_2012[order(calls_2012$month, calls_2012$day, calls_2012$time),]
-saveRDS(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.Rds")
-
-#2013
-calls_2013 <- all_nyc_calls %>%
-  filter(year == 2013) 
-calls_2013[order(calls_2013$month, calls_2013$day, calls_2013$time),]
-saveRDS(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.Rds")
-
-#2014
-calls_2014 <- all_nyc_calls %>%
-  filter(year == 2014) 
-calls_2014[order(calls_2014$month, calls_2014$day, calls_2014$time),]
-saveRDS(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.Rds")
-
-#2015
-calls_2015 <- all_nyc_calls %>%
-  filter(year == 2015) 
-calls_2015[order(calls_2015$month, calls_2015$day, calls_2015$time),]
-saveRDS(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.Rds")
-
-#2016
-calls_2016 <- all_nyc_calls %>%
-  filter(year == 2016) 
-calls_2016[order(calls_2016$month, calls_2016$day, calls_2016$time),]
-saveRDS(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.Rds")
-
-#2017
-calls_2017 <- all_nyc_calls %>%
-  filter(year == 2017) 
-calls_2017[order(calls_2017$month, calls_2017$day, calls_2017$time),]
-saveRDS(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.Rds")
-
-#2018
-calls_2018 <- all_nyc_calls %>%
-  filter(year == 2018) 
-calls_2018[order(calls_2018$month, calls_2018$day, calls_2018$time),]
-saveRDS(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.Rds")
-
-#2019
-calls_2019 <- all_nyc_calls %>%
-  filter(year == 2019) 
-calls_2019[order(calls_2019$month, calls_2019$day, calls_2019$time),]
-saveRDS(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.Rds")
-
-```
-
-### Load all NYC call sheet
-```{r}
-
-all_nyc_calls <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
-
-```
-
-
-##Try Loading Data with disk.frame
-```{r}
-#set up disk.frame so it can use multiple CPUS
-setup_disk.frame()
-
-# this allows large datasets to be transferred between sessions
-options(future.globals.maxSize = Inf)
-
-#disk.frame is an r package that will apparently load big sets of data more quickly because it makes use of multiple processors and then saves the chunks as lists in .fts files. When the file is worked on (i.e. filter, summarise), the output is a data frame
-all_nyc_calls <- csv_to_disk.frame("~/Documents/GitHub/homelessness-in-the-us/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv", in_chunk_size = 1e6, colClasses = list(character=c("Unique Key", "Created Date", "Closed Date", "Agency", "Agency Name", "Complaint Type", "Descriptor", "Location Type", "Incident Zip", "Incident Address", "Street Name", "Cross Street 1", "Cross Street 2", "Intersection Street 1", "Intersection Street 2", "Address Type", "City", "Landmark", "Facility Type", "Status", "Due Date", "Resolution Description", "Resolution Action Updated Date", "Community Board", "BBL", "Borough", "X Coordinate (State Plane)", "Y Coordinate (State Plane)", "Open Data Channel Type", "Park Facility Name", "Park Borough", "Vehicle Type", "Taxi Company Borough", "Taxi Pick Up Location", "Bridge Highway Name", "Bridge Highway Direction", "Road Ramp", "Bridge Highway Segment", "Latitude", "Longitude", "Location"))) 
-
-#getting errors here
-all_nyc_calls %>%
-  janitor::make_clean_names() %>%
-  separate(created_date, c("dates", "hour", "AM/PM"), " ") %>%
-  separate("dates", c("month", "day", "year"), remove=FALSE) %>%
-  unite("time", "hour":"AM/PM", sep = " ")
-```
-
-### Create disk.frame for each year, filtered from all NYC calls
-```{r}
-#Currently getting errors bc clean names and separate aren't working
-#Filter all calls for each year and save disk.frame
-
-#2010
-calls_2010 <- all_nyc_calls %>%
-  collect() %>%
-  filter(year==2010) %>%
-  group_by(month, day, time)
-
-#calls_2010[order(calls_2010$month, calls_2010$day, calls_2010$time),]
-write_disk.frame(calls_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.df")
-
-#2011
-calls_2011 <- all_nyc_calls %>%
-  filter(year == 2011) 
-calls_2011[order(calls_2011$month, calls_2011$day, calls_2011$time),]
-write_disk.frame(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.df")
-
-#2012 
-calls_2012 <- all_nyc_calls %>%
-  filter(year == 2012) 
-calls_2012[order(calls_2012$month, calls_2012$day, calls_2012$time),]
-write_disk.frame(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.df")
-
-#2013
-calls_2013 <- all_nyc_calls %>%
-  filter(year == 2013) 
-calls_2013[order(calls_2013$month, calls_2013$day, calls_2013$time),]
-write_disk.frame(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.df")
-
-#2014
-calls_2014 <- all_nyc_calls %>%
-  filter(year == 2014) 
-calls_2014[order(calls_2014$month, calls_2014$day, calls_2014$time),]
-write_disk.frame(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.df")
-
-#2015
-calls_2015 <- all_nyc_calls %>%
-  filter(year == 2015) 
-calls_2015[order(calls_2015$month, calls_2015$day, calls_2015$time),]
-write_disk.frame(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.df")
-
-#2016
-calls_2016 <- all_nyc_calls %>%
-  filter(year == 2016) 
-calls_2016[order(calls_2016$month, calls_2016$day, calls_2016$time),]
-write_disk.frame(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.df")
-
-#2017
-calls_2017 <- all_nyc_calls %>%
-  filter(year == 2017) 
-calls_2017[order(calls_2017$month, calls_2017$day, calls_2017$time),]
-write_disk.frame(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.df")
-
-#2018
-calls_2018 <- all_nyc_calls %>%
-  filter(year == 2018) 
-calls_2018[order(calls_2018$month, calls_2018$day, calls_2018$time),]
-write_disk.frame(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.df")
-
-#2019
-calls_2019 <- all_nyc_calls %>%
-  filter(year == 2019) 
-calls_2019[order(calls_2019$month, calls_2019$day, calls_2019$time),]
-write_disk.frame(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.df")
-
-```
-
-
-
 ## Analyze each year {.tabset}
 
 ### 2010
@@ -1129,6 +254,10 @@ homeless_2010 <- calls_2010 %>%
 
 ### 2011
 
+Total calls: 1961228
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
+
 ```{r}
 #Load data
 calls_2011 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.Rds")
@@ -1137,31 +266,174 @@ calls_2011 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/20
 #### Relevant Complaints
 
 What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 199
 
 Strongly likely:
-  * Homeless Encampment
-  * Panhandling
+  * Homeless Encampment: 1839
+  * Panhandling: 115
 
 Potentially:
-  * Dirty conditions
-  * Sanitation Condition
-  * Sidewalk Condition
-  * DHS Advantage - Tenant
-  * DHS Advantage -Landlord/Broker
-  * DHS Advantage - Third Party
-  * DHS Income Savings Requirement
-  * Special Projects Inspection Team (SPIT)
-  * Emergency Response Team (ERT)
-  * Curb Condition
-  * Urinating in Public
-  * Ferry Complaint?
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
 
 ```{r}
 #Get all complaint types and arrange from most to least
 complaints_2011 <- calls_2011 %>%
   group_by(complaint_type) %>%
   summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
   arrange(desc(count))
+
+complaint_list_2011 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2011 <- complaints_2011 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2011 <- calls_2011 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2011 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2011 <- calls_2011 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2011 <- calls_2011 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2011 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2011 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
 ```
 
 #### Agencies
@@ -1169,8 +441,7 @@ complaints_2011 <- calls_2011 %>%
 What are the agencies? Do any relate to homelessness?
 [Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
 
-  * NYPD
-  * DHS
+Interestingly, even though the dataset is all service calls in 2011, 311 is listed as an agency, with 8158 directed specifically to them. 
 
 ```{r}
 #Get number of calls pertaining to each agency; DHS is Department of Homeless Services
@@ -1178,183 +449,3201 @@ agency_2011 <- calls_2011 %>%
   group_by(agency) %>%
   summarize(count = n()) %>%
   arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2011 <- calls_2011 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
 ```
 
 What agencies cover the complaints identified above?
 
-```{r}
-#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
-agency_calls_2011 <- calls_2011 %>%
-  group_by(agency) %>%
-  summarize(count = n()) %>%
-  arrange(desc(count))
-```
-
-#### Relevant Descriptors 
-
-```{r}
-#get a list of all descriptors and the number of times they appear
-descriptor_calls_2011 <- calls_2011 %>%
-  group_by(descriptor) %>%
-  summarize(count = n()) %>%
-  arrange(desc(count))
-```
-
-#### Check pairings of complaints and descriptors
-
-Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
 
 ```{r}
-complaint_and_descriptor_2011 <- calls_2011 %>%
-  select(complaint_type, descriptor) %>%
-  group_by(complaint_type, descriptor) %>%
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2011 <- calls_2011 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
 
 #### Relevant locations
 
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
 ```{r}
 location_calls_2011 <- calls_2011 %>%
   group_by(location_type) %>%
-  summarize(count = n())
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
 
-total_locations_2011 <- location_calls_2011 %>%
-  summarize(total = sum(count))
+location_list_2011 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
+
+```
+
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2011 <- calls_2011 %>%
+  filter(complaint_type %in% complaint_list_2011 |
+           descriptor %in% descriptor_list_2011 |
+           location_type %in% location_list_2011) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
 ```
 
 #### View Resolution Descriptions
 
-Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints.
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
 
 ```{r}
+#see all resolution calls 
 resolution_calls_2011 <- calls_2011 %>%
-  filter(str_detect(complaint_type, "Panhandling|Homeless|DHS")) %>%
-  group_by(complaint_type, resolution_description) %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2011 <- calls_2011 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
 
 #### Only Calls Relating to Homelessness
 
 Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
-  * 
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
 ```{r}
-homeless_2011 <- calls_2011 %>%
-  filter(location =="Homeless Shelter" |
-          agency == "DHS" |
-           str_detect(complaint_type, "Panhandling|Homeless|DHS"))
+descriptor_list_2011 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
 
-saveRDS(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-HOMELESS-NYC-Service-Requests.Rds")
+complaint_list_2011 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2011 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
+homeless_2011 <- calls_2011 %>%
+  filter(!location_type %in% not_location_list_2011,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2011 |
+           complaint_type %in% complaint_list_2011) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
+
+total_homeless_calls_2011 <- homeless_2011 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
 ### 2012
 
+Total calls: 1961228
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
+
 ```{r}
 #Load data
 calls_2012 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
+#### Relevant Complaints
+
+What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 199
+
+Strongly likely:
+  * Homeless Encampment: 1839
+  * Panhandling: 115
+
+Potentially:
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2012 <- calls_2012 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2012 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2012 <- complaints_2012 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2012 <- calls_2012 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2012 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2012 <- calls_2012 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2012 <- calls_2012 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2012 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2012 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2012, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2012 <- calls_2012 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2012 <- calls_2012 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2012 <- calls_2012 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2012 <- calls_2012 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2012 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
+
+```
+
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2012 <- calls_2012 %>%
+  filter(complaint_type %in% complaint_list_2012 |
+           descriptor %in% descriptor_list_2012 |
+           location_type %in% location_list_2012) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2012 <- calls_2012 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2012 <- calls_2012 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2012 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2012 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2012 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
 homeless_2012 <- calls_2012 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+  filter(!location_type %in% not_location_list_2012,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2012 |
+           complaint_type %in% complaint_list_2012) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
 
-saveRDS(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-HOMELESS-NYC-Service-Requests.Rds")
+total_homeless_calls_2012 <- homeless_2012 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
 ### 2013
 
+Total calls: 
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
+
 ```{r}
 #Load data
 calls_2013 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
+#### Relevant Complaints
+
+What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 
+
+Strongly likely:
+  * Homeless Encampment: 
+  * Panhandling: 
+
+Potentially:
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2013 <- calls_2013 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2013 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2013 <- complaints_2013 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2013 <- calls_2013 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2013 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2013 <- calls_2013 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2013 <- calls_2013 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2013 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2013 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2013, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2013 <- calls_2013 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2013 <- calls_2013 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2013 <- calls_2013 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2013 <- calls_2013 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2013 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
+
+```
+
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2013 <- calls_2013 %>%
+  filter(complaint_type %in% complaint_list_2013 |
+           descriptor %in% descriptor_list_2013 |
+           location_type %in% location_list_2013) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2013 <- calls_2013 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2013 <- calls_2013 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2013 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2013 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2013 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
 homeless_2013 <- calls_2013 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+  filter(!location_type %in% not_location_list_2013,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2013 |
+           complaint_type %in% complaint_list_2013) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
 
-saveRDS(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-HOMELESS-NYC-Service-Requests.Rds")
+total_homeless_calls_2013 <- homeless_2013 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
 ### 2014
 
+Total calls: 
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
+
 ```{r}
 #Load data
 calls_2014 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.Rds")
-  
-#Take the year-by-year dataframes and only return those with mention of homeless
-homeless_2014 <- calls_2014 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+```
 
-saveRDS(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-HOMELESS-NYC-Service-Requests.Rds")
+#### Relevant Complaints
+
+Total complaint types: 208
+
+What complaints seem relevant to homelessness?
+
+Strongly likely:
+  * Homeless Encampment: 
+  * Panhandling: 
+
+Potentially:
+  * Street Condition
+  * UNSANITARY CONDITION
+  * Dirty conditions: 
+  * Sanitation Condition: 
+  * Sidewalk Condition: 
+  * SAFETY (line 56)
+  * Quality of Life
+  * DHS Income Savings Requirement:
+  * DHS Advantage -Landlord/Broker:
+  
+  * DHS Advantage - Tenant: 
+   
+  * DHS Advantage - Third Party: 
+  
+  * Special Projects Inspection Team (SPIT):
+  * Emergency Response Team (ERT): 
+  * Housing options: 
+  * Curb Condition: 
+  * Urinating in Public: 
+  * Ferry Complaint:  
+  * Ferry Permit: 
+  * Ferry Inquiry: 
+  * Violation of Park Rules:
+  * Miscellaneous Categories: 
+  * Other Enforcement: 
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2014 <- calls_2014 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2014 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2014 <- complaints_2014 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:
+  * E3 Dirty Sidewalk:
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:
+  * Sidewalk Violation:
+  * Structure - Outdoors:
+  * No Parking, Standing, Stopping:
+  * Other Housing Options:
+  * Unclean Condition:
+  * Trespassing:
+  * Dirt, Debris, Litter Complaint:
+  * Dirt, Litter, Debris - Lot:
+  * Homeless Issue:
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2014 <- calls_2014 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2014 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2014 <- calls_2014 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2014 <- calls_2014 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2014 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2014 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2014, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2014 <- calls_2014 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2014 <- calls_2014 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2014 <- calls_2014 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2014 <- calls_2014 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2014 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
+
+```
+
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2014 <- calls_2014 %>%
+  filter(complaint_type %in% complaint_list_2014 |
+           descriptor %in% descriptor_list_2014 |
+           location_type %in% location_list_2014) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2014 <- calls_2014 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2014 <- calls_2014 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2014 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2014 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2014 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
+homeless_2014 <- calls_2014 %>%
+  filter(!location_type %in% not_location_list_2014,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2014 |
+           complaint_type %in% complaint_list_2014) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
+
+total_homeless_calls_2014 <- homeless_2014 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
 ### 2015
 
+Total calls: 
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
+
 ```{r}
 #Load data
 calls_2015 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
+#### Relevant Complaints
+
+What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 
+
+Strongly likely:
+  * Homeless Encampment: 
+  * Panhandling: 
+
+Potentially:
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2015 <- calls_2015 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2015 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2015 <- complaints_2015 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2015 <- calls_2015 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2015 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2015 <- calls_2015 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2015 <- calls_2015 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2015 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2015 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2015, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2015 <- calls_2015 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2015 <- calls_2015 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2015 <- calls_2015 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2015 <- calls_2015 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2015 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
+
+```
+
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2015 <- calls_2015 %>%
+  filter(complaint_type %in% complaint_list_2015 |
+           descriptor %in% descriptor_list_2015 |
+           location_type %in% location_list_2015) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2015 <- calls_2015 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2015 <- calls_2015 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2015 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2015 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2015 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
 homeless_2015 <- calls_2015 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+  filter(!location_type %in% not_location_list_2015,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2015 |
+           complaint_type %in% complaint_list_2015) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
 
-saveRDS(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-HOMELESS-NYC-Service-Requests.Rds")
+total_homeless_calls_2015 <- homeless_2015 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
 ### 2016
 
+Total calls: 1961228
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
+
 ```{r}
 #Load data
 calls_2016 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
+#### Relevant Complaints
+
+What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 199
+
+Strongly likely:
+  * Homeless Encampment: 1839
+  * Panhandling: 115
+
+Potentially:
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2016 <- calls_2016 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2016 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2016 <- complaints_2016 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2016 <- calls_2016 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2016 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2016 <- calls_2016 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2016 <- calls_2016 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2016 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2016 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2016, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2016 <- calls_2016 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2016 <- calls_2016 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2016 <- calls_2016 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2016 <- calls_2016 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2016 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
+
+```
+
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2016 <- calls_2016 %>%
+  filter(complaint_type %in% complaint_list_2016 |
+           descriptor %in% descriptor_list_2016 |
+           location_type %in% location_list_2016) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2016 <- calls_2016 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2016 <- calls_2016 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2016 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2016 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2016 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
 homeless_2016 <- calls_2016 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+  filter(!location_type %in% not_location_list_2016,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2016 |
+           complaint_type %in% complaint_list_2016) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
 
-saveRDS(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-HOMELESS-NYC-Service-Requests.Rds")
+total_homeless_calls_2016 <- homeless_2016 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
 ### 2017
 
+
+
+Total calls: 
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
+
 ```{r}
 #Load data
 calls_2017 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
-homeless_2017 <- calls_2017 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+#### Relevant Complaints
 
-saveRDS(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-HOMELESS-NYC-Service-Requests.Rds")
+What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 
+
+Strongly likely:
+  * Homeless Encampment: 
+  * Panhandling: 
+
+Potentially:
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2017 <- calls_2017 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2017 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2017 <- complaints_2017 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2017 <- calls_2017 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2017 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2017 <- calls_2017 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2017 <- calls_2017 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2017 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2017 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2017, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2017 <- calls_2017 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2017 <- calls_2017 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2017 <- calls_2017 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2017 <- calls_2017 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2017 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
 
 ```
 
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2017 <- calls_2017 %>%
+  filter(complaint_type %in% complaint_list_2017 |
+           descriptor %in% descriptor_list_2017 |
+           location_type %in% location_list_2017) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2017 <- calls_2017 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2017 <- calls_2017 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2017 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2017 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2017 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
+homeless_2017 <- calls_2017 %>%
+  filter(!location_type %in% not_location_list_2017,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2017 |
+           complaint_type %in% complaint_list_2017) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
+
+total_homeless_calls_2017 <- homeless_2017 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+
 ### 2018
+
+
+
+Total calls: 
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
 
 ```{r}
 #Load data
 calls_2018 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
-homeless_2018 <- calls_2018 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+#### Relevant Complaints
 
-saveRDS(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-HOMELESS-NYC-Service-Requests.Rds")
+What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 
+
+Strongly likely:
+  * Homeless Encampment: 
+  * Panhandling: 
+
+Potentially:
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2018 <- calls_2018 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2018 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2018 <- complaints_2018 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2018 <- calls_2018 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2018 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2018 <- calls_2018 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2018 <- calls_2018 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2018 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2018 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2018, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2018 <- calls_2018 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2018 <- calls_2018 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2018 <- calls_2018 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2018 <- calls_2018 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2018 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
 
 ```
 
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2018 <- calls_2018 %>%
+  filter(complaint_type %in% complaint_list_2018 |
+           descriptor %in% descriptor_list_2018 |
+           location_type %in% location_list_2018) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2018 <- calls_2018 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2018 <- calls_2018 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2018 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2018 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2018 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
+homeless_2018 <- calls_2018 %>%
+  filter(!location_type %in% not_location_list_2018,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2018 |
+           complaint_type %in% complaint_list_2018) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
+
+total_homeless_calls_2018 <- homeless_2018 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
+
 ### 2019
+
+
+
+Total calls: 
+
+In the code below I will examine different fields in the dataset to identify and narrow down observation values that seem to relate to homelessness. There will be errors as the descriptor and resolution description columns do not always specifically mention if a homeless person or the Department of Homeless Services were involved. Certain complaints that often impact homeless individuals - such as dirty sidewalk conditions or urinating in public - will be included.
 
 ```{r}
 #Load data
 calls_2019 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.Rds")
+```
 
-#Take the year-by-year dataframes and only return those with mention of homeless
-homeless_2019 <- calls_2019 %>%
-  filter_all(any_vars(. %in% c('homeless')))
+#### Relevant Complaints
 
-saveRDS(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-HOMELESS-NYC-Service-Requests.Rds")
+What complaints seem relevant to homelessness?
+  * Every identified complaint type comprised less than 2 percent of all total complaint calls. 
+  * Dirty Conditions had the greatest share, with 1.88%
+  * Sanitation Condition and Sidewalk Condition were the only other types with more than 1% of total calls
+  * Homeless Encampment is .094% while Panhandling is .0059%, indicating that situtaions concerning homeless individuals is on the rarer end. 
+
+Total complaint types: 
+
+Strongly likely:
+  * Homeless Encampment: 
+  * Panhandling: 
+
+Potentially:
+  * Dirty conditions: 36926
+  * Sanitation Condition: 24563
+  * Sidewalk Condition: 20041
+  * DHS Advantage - Tenant: 16104
+  * DHS Advantage -Landlord/Broker: 14044
+  * DHS Advantage - Third Party: 401
+  * DHS Income Savings Requirement: 59
+  * Special Projects Inspection Team (SPIT): 2924  - NOT RELATED TO HOMELESSNESS (see below)
+  * Emergency Response Team (ERT): 2750
+  * Housing options: 1762
+  * Curb Condition: 2109
+  * Urinating in Public: 370
+  * Ferry Complaint: 204 
+  * Ferry Permit: 20
+  * Ferry Inquiry: 532
+  * Violation of Park Rules:	1681 - NOT RELATED TO HOMELESSNESS (see below)
+  * Miscellaneous Categories: 128
+  * Other Enforcement: 4368
+
+```{r}
+#Get all complaint types and arrange from most to least
+complaints_2019 <- calls_2019 %>%
+  group_by(complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+  arrange(desc(count))
+
+complaint_list_2019 = c("Homeless Encampment",
+               "Panhandling",
+               "Dirty Conditions",
+               "Sanitation Condition",
+               "Sidewalk Condition",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Special Projects Inspection Team (SPIT)",
+               "Emergency Response Team (ERT)",
+               "Housing Options",
+               "Curb Condition",
+               "Urinating in Public", 
+               "Ferry Complaint",  
+               "Ferry Permit",
+               "Ferry Inquiry",
+               "Violation of Park Rules",
+               "Miscellaneous Categories")
+
+filtered_complaints_2019 <- complaints_2019 %>%
+  filter(complaint_type %in% complaint_list)
+```
+
+#### Relevant Descriptors 
+
+Descriptors related to dirty/unsanitary conditions were selected as homeless encampements are often categorized as dirty
+
+  * Payment Not Received from DHS:	9895	(0.5045%)
+  * E3 Dirty Sidewalk:	6694	(0.3413%)
+    * Unsure if E3 is part of a code
+  * E3A Dirty Area/Alleyway:	5831	(0.2973%)
+  * Sidewalk Violation:	5404	(0.2755%)
+  * Structure - Outdoors:	3317	(0.1691)
+  * No Parking, Standing, Stopping:	2889	(0.1473)
+  * Other Housing Options:	980	(0.0500)
+  * Unclean Condition:	941	(0.0480)
+  * Trespassing:	818	(0.0417)
+  * Dirt, Debris, Litter Complaint:	68	(0.00347)
+  * Dirt, Litter, Debris - Lot:	9	  (0.000459)
+  * Homeless Issue:	2	(0.000102)
+
+```{r}
+#get a list of all descriptors and the number of times they appear
+descriptor_2019 <- calls_2019 %>%
+  group_by(descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = count/sum(count) * 100) %>%
+  arrange(desc(count))
+
+#create a list of related descriptors to filter for later
+descriptor_list_2019 = c("Payment Not Received from DHS",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "No Parking, Standing, Stopping",
+                    "Other Housing Options",
+                    "Unclean Condition",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue"
+                    )
+```
+
+#### Cross-Check pairings of complaints and descriptors
+
+Question: Are any descriptors paired to complaint types we've identified as relating to homelessness, or vice versa?
+
+Complaint Types:
+  * Violation of Park Rules seems to have no descriptors related to homelessness, so we can eliminate that complaint type
+  * Same with Special Projects Inspection Team (SPIT), Emergency Response Team (ERT), Curb Condition, Miscellaneous Categories, Ferry Inquiry, Housing Options
+  * The Structure - Outdoors descriptor relates to the complaint type Maintenance or Facility
+  * Only some descriptors are relevant to the following complaint types:
+    * Ferry Complaint - Homeless Issue
+    * Dirty Conditions - E1 Improper Disposal, E11 Litter Surveillance, E12 Illegal Dumping Surveillance, E13 Throw-Out, E1A Litter Basket / Improper Use, E3 Dirty Sidewalk, E3A Dirty Area/Alleyway, E5 Loose Rubbish,
+    * Sanitation Condition - 15 Street Cond/Dump-Out/Drop-Off
+    * Sidewalk Condition - Sidewalk Violation
+  
+Descriptors:
+  * No Parking, Standing, Stopping only relates to Street Sign - Damaged/Dangling/Missing, so that can be eliminated from the descriptor list
+  * Unclean Condition was only used for the complaint type School Maintenance - can be eliminated
+  * Trespassing is filed under the complaint type "Non-Emergency Police Matter"
+  * Dirt, Debris, Litter Complaint falls under both Bridge Condition and Tunnel Condition, both of which are possible areas where homeless individuals would gather to sleep/escape weather conditions
+
+```{r}
+complaint_and_descriptor_2019 <- calls_2019 %>%
+  select(complaint_type, descriptor) %>%
+  filter(complaint_type %in% complaint_list) %>%
+  group_by(complaint_type, descriptor) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+descriptor_and_complaint_2019 <- calls_2019 %>%
+  select(complaint_type, descriptor) %>%
+  filter(descriptor %in% descriptor_list) %>%
+  group_by(descriptor, complaint_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3)) 
+
+#construct updated descriptor and complaint lists
+descriptor_list_2019 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2019 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+```
+
+#### Agencies
+
+What are the agencies? Do any relate to homelessness?
+[Link](https://www1.nyc.gov/site/mocs/about/agencies-acronyms-initialisms.page) to New York City department acronyms
+
+Interestingly, even though the dataset is all service calls in 2019, 311 is listed as an agency, with 8158 directed specifically to them. 
+
+```{r}
+#Get number of calls pertaining to each agency; DHS is Department of Homeless Services
+agency_2019 <- calls_2019 %>%
+  group_by(agency) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+#Get an overall view of what agencies handle what complaint_types
+agency_complaint_2019 <- calls_2019 %>%
+  select(agency, complaint_type) %>%
+  group_by(agency, complaint_type) %>%
+  summarize(count = n())
+```
+
+What agencies cover the complaints identified above?
+
+  * The NYPD covers both panhandling, urinating in public and homeless encampments
+    * The NYPD seems to cover everything homeless related
+  * The DHS only covers complaint types related to the DHS Advantage program
+  * Not all descriptors of the following complaint types are relevant, but for the relevant descriptors: 
+    * DFTA covers housing issues
+    * DPR (Department of Parks and Recreation) handles outdoor structures
+    * The DSNY (Department of Sanitation) answers calls for Sanitation and Dirty Conditions
+    * The DOT (Department of Transportation) responds to Ferry related calls, two of which have the descriptor of "homeless" (not sure why or what that means exactly)
+
+```{r}
+#Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
+filtered_agency_complaint_2019 <- calls_2019 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(agency, complaint_type, descriptor) %>%
+  summarize(count = n())
+```
+
+#### Relevant locations
+
+123 location types, including NA
+
+Possible relevant locations:
+  * Address Unknown: 930 calls here
+  * Homeless Shelter: 5
+  * Lot: 8677
+  * Park/Playground: 2797
+  * Park: 11132
+  * Parking Lot/Garage: 124
+  * Public Garden: 53
+  * Public/Unfenced Area: 1021
+  * Street and Sidewalk: 975
+  * Street/Sidewalk: 142797
+  * Vacant Land: 9
+  * Vacant Lot: 1478
+  * NA: 513290
+
+```{r}
+location_calls_2019 <- calls_2019 %>%
+  group_by(location_type) %>%
+  summarize(count = n()) %>%
+  mutate(pct = round(count/sum(count) * 100,3))
+
+location_list_2019 = c("Address Unknown",
+                       "Homeless Shelter",
+                       "Lot",
+                       "Park/Playground",
+                       "Park",
+                       "Parking Lot/Garage",
+                       "Public Garden",
+                       "Public/Unfenced Area",
+                       "Street and Sidewalk",
+                       "Street/Sidewalk",
+                       "Vacant Land",
+                       "Vacant Lot",
+                       "NA")
 
 ```
+
+#### Cross Reference Locations with Complaints and Descriptors
+
+* Address Unknown does not relate to any relevant complaint types or descriptors, nor do the ones listed for Address Unknown seem to relate to homelessness
+* Can eliminate the following locations:
+  * Club/Bar/Restaurant (listed as a location for urinating in public)
+  * Golf (for Maintenance or Facility: Structure - Outdoors)
+  * Lot with complaint type Broken Muni Meter, Broken parking Meter, or descriptor Snow Removal, Sign Defect - Lot, Parking Card Stuck in Meter, General Maintenance
+  * Park: complaint types include Animal in a Park, Damaged Tree, Dead Tree, Illegal Tree Damage, and other non-relevant types
+  * Parking Lot/Garage - only complaint type is "Rodent"
+  * Pool
+  * Public Garden
+  * Public/Unfenced Area
+  * Recreation Center
+  * Senior Address
+  * Street and Sidewalk
+  * Street/Curbside
+  * Street Sidewalk (relevant one already included in descriptor and/or complaint lists)
+  * Vacant Land
+  * Vacant Lot
+  
+Conclusion: useful to see where complaints are happening, but not useful to sort based on locations, except homeless shelter sepecifically
+
+```{r}
+filtered_location_calls_2019 <- calls_2019 %>%
+  filter(complaint_type %in% complaint_list_2019 |
+           descriptor %in% descriptor_list_2019 |
+           location_type %in% location_list_2019) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n()) 
+```
+
+#### View Resolution Descriptions
+
+Filter data for relevant complaint types and return the resolution descriptions to see if we can learn more about the complaints. 
+
+Ultimately, there are too many kinds of resolution_descriptions per complaint type and descriptor, so I will not be filtering the calls based on resolution descriptions.
+
+```{r}
+#see all resolution calls 
+resolution_calls_2019 <- calls_2019 %>%
+  select(complaint_type, descriptor, resolution_description) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+
+#see resolution calls related to relevant complaint types and descriptors
+filtered_resolution_calls_2019 <- calls_2019 %>%
+  filter(complaint_type %in% complaint_list |
+           descriptor %in% descriptor_list) %>%
+  group_by(complaint_type, descriptor, resolution_description) %>%
+  summarize(count = n())
+```
+
+#### Only Calls Relating to Homelessness
+
+Take the year-by-year dataframes and only return mention of values related to homelessness, as identified above
+  
+  * RESULT: 81505 calls related to homelessness based on filtered variables 
+  * Out of 1961228 total calls, 4.16% related to homelessness
+```{r}
+descriptor_list_2019 = c("Payment Not Received from DHS",
+                    "E1 Improper Disposal",
+                    "E11 Litter Surveillance",
+                    "E12 Illegal Dumping Surveillance",
+                    "E13 Throw-Out", 
+                    "E1A Litter Basket / Improper Use",
+                    "E3 Dirty Sidewalk",
+                    "E3A Dirty Area/Alleyway",
+                    "E5 Loose Rubbish",
+                    "Sidewalk Violation",
+                    "Structure - Outdoors",
+                    "Other Housing Options",
+                    "Trespassing",
+                    "Dirt, Debris, Litter Complaint",
+                    "Dirt, Litter, Debris - Lot",
+                    "Homeless Issue",
+                    "15 Street Cond/Dump-Out/Drop-Off",
+                    "Sidewalk Violation"
+                    )
+
+complaint_list_2019 = c("Homeless Encampment",
+               "Panhandling",
+               "DHS Advantage - Tenant",
+               "DHS Advantage -Landlord/Broker", 
+               "DHS Advantage - Third Party",
+               "DHS Income Savings Requirement",
+               "Urinating in Public")
+
+#Locations we do not want to include
+not_location_list_2019 = c("Pool",
+                           "Club/Bar/Restaurant",
+                           "Golf",
+                           "Senior Address",
+                           "Address Unknown")
+
+homeless_2019 <- calls_2019 %>%
+  filter(!location_type %in% not_location_list_2019,
+         location_type =="Homeless Shelter" |
+           descriptor %in% descriptor_list_2019 |
+           complaint_type %in% complaint_list_2019) %>%
+  group_by(location_type, complaint_type, descriptor) %>%
+  summarize(count = n())
+
+total_homeless_calls_2019 <- homeless_2019 %>%
+  ungroup %>%
+  summarize(total = sum(count))
+
+#saveRDS(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-HOMELESS-NYC-Service-Requests.Rds")
+
+```
+
