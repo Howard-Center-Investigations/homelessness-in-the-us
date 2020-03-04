@@ -68,3 +68,19 @@ Temporary Items
 .apdisk
 .Rproj.user
 *.icloud
+
+
+# Files that are too dang big
+/new-york-311/NYC_311_Service_Requests_from_2010_to_Present.csv
+/new-york-311/ALL-NYC-311-Service-Requests.Rds
+/new-york-311/2019-NYC-Service-Requests.Rds
+/new-york-311/2018-NYC-Service-Requests.Rds
+/new-york-311/2017-NYC-Service-Requests.Rds
+/new-york-311/2016-NYC-Service-Requests.Rds
+/new-york-311/2015-NYC-Service-Requests.Rds
+/new-york-311/2014-NYC-Service-Requests.Rds
+/new-york-311/2013-NYC-Service-Requests.Rds
+/new-york-311/2012-NYC-Service-Requests.Rds
+/new-york-311/2011-NYC-Service-Requests.Rds
+/new-york-311/2010-NYC-Service-Requests.Rds
+/new-york-311/2010-HOMELESS-NYC-Service-Requests.Rds

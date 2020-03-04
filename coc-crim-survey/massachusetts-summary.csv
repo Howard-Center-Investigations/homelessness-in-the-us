@@ -1,0 +1,7 @@
+"","coc","city","state","citywide","particular_places","none","unclear","percent_possible_citywide","percent_possible_particular_places","percent_possible_none","percent_possible_unclear","c3","meet_definition","sleeping_in_public","camping_in_public","sitting_laying_in_public","lodging_living_sleeping_in_vehicles_or_parking_a_vehicle_used_as_a_lodging","loitering_vagrancy","begging","food_sharing_ban","public_urination","public_intoxication"
+"1","ma-cambridge coc","cambridge","ma",0,0,0,0,0,0,0,0,NA,NA,"select type","select type","select type","select type","select type","select type","select type","select type","select type"
+"2","ma-boston coc","boston","ma",7,0,0,0,77.7777777777778,0,0,0,NA,NA,"citywide","citywide","citywide","select type","citywide","citywide","select type","citywide","citywide"
+"3","ma-cambridge coc","cambridge","ma",4,0,0,0,44.4444444444444,0,0,0,NA,NA,"select type","select type","citywide","select type","citywide","select type","select type","citywide","citywide"
+"4","ma-springfield coc","springfield","ma",4,0,0,0,44.4444444444444,0,0,0,NA,NA,"select type","select type","select type","select type","citywide","citywide","select type","citywide","citywide"
+"5","ma-new bedford coc","new bedford","ma",3,0,0,0,33.3333333333333,0,0,0,NA,NA,"select type","select type","select type","select type","citywide","citywide","select type","select type","citywide"
+"6","ma-lowell coc","lowell","ma",6,0,0,0,66.6666666666667,0,0,0,NA,NA,"citywide","select type","citywide","select type","citywide","citywide","select type","citywide","citywide"
