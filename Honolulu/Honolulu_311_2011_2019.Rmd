@@ -85,7 +85,13 @@ library(plotly)
 library(lubridate)
 library(ggmap)
 library(tidyr)
+library(tigris)
 library(revgeo)
+library(sf)
+library(tidyverse)
+
+census_api_key ("eca10bc32a0b2c31610123ac74938aecd2228af6")
+install = TRUE
 ```
 
 
@@ -295,15 +301,13 @@ x <- Honolulu_Edit %>%
 
 ``` 
 
+From the analysis above,terms that popped up were the following: 
 
-
-from the breakdown of counts per word pulled from the description column, terms that popped up were the following: 
-
-- Homeless - common report type was homeless and a significant amount of other / some people spelled homeless wrong. They typed homless, categorized as other 
-- Urinating/ feces- includes homeless/ camping- many are categorized as other 
-- Congregating - homeless people, homeless campers, homeless squatters (2 are categorized as other report type )
-- Encampment/ camping/ campsite/ campsites- many are categorized as homeless, some are categorized as other 
-- (women/men/woman/women/sleeps/ sleeping - many are referring to homeless individuals, most are categorized as homeless or other 
+- Homeless:  Homeless was utlized often in descriptions, it was generally categorized as "homeless" and sometimes "other". This means that when I run the analysis to map out all homeless report types, some of them might not be captured. Furthermore, some people spelled homeless (homless) wrong. 
+- Urinating/feces: These terms were utlized often in the descriptions, oten in reference to homeless individuals. They were often in conjunction with other tems like  homeless and camping. Many were categorized as "other".
+- Congregating: Congregating was used to describe homeless individuals, sometimes with other terms such as campers and squatters. 
+- Encampment/ camping/ campsite/ campsites: Most are often categorized as "homeless". A few are categorized as "other". 
+- sleeps/sleeping - Sleep and sleeping often refer to homeless individuals. They are often categorized as "homeless" and are in sentences in conjunction with women,men,woman and women. 
 
  
  
@@ -346,4 +350,29 @@ leaflet(honolulu_2011) %>% addTiles() %>%
   clusterOptions = markerClusterOptions(freezeAtZoom = ),
 )
 ```
+
+
+```{r}
+
+
+HI_tracts <- tracts("HI", class = "sf") %>%
+  select(GEOID, TRACTCE)
+
+bbox <- st_bbox(HI_tracts)
+
+my_points <- data.frame(
+  x = runif(200000, bbox[1], bbox[3]),
+  y = runif(200000, bbox[2], bbox[4])
+) %>%
+  # convert the points to same CRS
+  st_as_sf(coords = c("x", "y"),
+           crs = st_crs(HI_tracts))
+
+my_points_tract <- st_join(my_points, HI_tracts)
+
+
+```
+
+
+
 

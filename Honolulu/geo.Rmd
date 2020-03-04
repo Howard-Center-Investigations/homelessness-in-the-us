@@ -1,0 +1,123 @@
+---
+title: "d"
+author: "Luciana"
+date: "2/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+```{r}
+rm(list = ls())
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+
+library(tidyverse) 
+Honolulu_2011_2019 <-read_csv ("data/Honolulu_311_2011_2019.csv") 
+library(tigris)
+options(tigris_use_cache = TRUE)
+```
+
+
+```{r}
+Honolulu_geo <- Honolulu_2011_2019 %>% 
+  filter(!str_detect(YEAR, '1899')) %>%
+  separate( location, into = c("latitude","longitude"), sep = ",", extra = "merge") %>% 
+  print()
+
+
+```
+
+```{r}
+Honolulu_geo$latitude = substring(Honolulu_geo$latitude, 2,11) 
+Honolulu_geo$longitude = substring(Honolulu_geo$longitude, 1,13)
+
+```
+
+```{r}
+print(Honolulu_geo)
+```
+
+
+
+```{r}
+
+geo<-  tracts(state = 15, county = NULL, cb = FALSE, year = NULL)
+
+
+``` 
+
+```{r}
+
+#geo <- st_as_sf(geo)
+
+```
+
+```{r}
+
+geo <- geo %>% select( TRACTCE,INTPTLAT,INTPTLON) %>% 
+print()
+
+
+
+``` 
+
+
+```{r}
+geo$INTPTLAT = substring(geo$INTPTLAT, 2,13) 
+
+```
+
+
+```{r}
+
+geo <- geo %>% 
+mutate(latitude = INTPTLAT) %>% 
+mutate(longitude = INTPTLON) 
+
+
+``` 
+
+
+
+```{r}
+
+geo <- geo %>% select(TRACTCE, latitude, longitude) %>% print()
+
+
+``` 
+
+```{r}
+join <- merge(geo, Honolulu_geo,by=c("latitude","longitude"))
+
+```
+
+
+
+
+
+
