@@ -30,6 +30,8 @@ library(tigris)
 
 ```{r}
 
+# Pulling in the 311 calls from 2010-2020 via Open Data DC.
+
 DC_311_2019 <- read.csv("Data/311_City_Service_Requests_in_2019.csv")
 DC_311_2018 <- read.csv("Data/311_City_Service_Requests_in_2018.csv")
 DC_311_2017 <- read.csv("Data/311_City_Service_Requests_in_2017.csv")
@@ -42,6 +44,16 @@ DC_311_2011 <- read.csv("Data/311_City_Service_Requests_in_2011.csv")
 catchment_area <- read_csv("Data/Human_Services_Catchment_Area.csv")
 DC_311_2015 <- read_csv("Data/311_City_Service_Requests_in_2015.csv")
 DC_311_2010 <- read_csv("Data/311_City_Service_Requests_in_2010.csv")
+
+```
+
+```{r}
+
+# Census key
+
+key <- "uO4EK6I"
+
+census_api_key("366af81ca42273ae67ad0729766f54f041bd300d")
 
 ```
 
@@ -150,6 +162,8 @@ breakdown_2019 <- DC_311_2019 %>%
 ```
 
 ```{r}
+
+# Adding a new column with the year for when I later combine all years.
 
 breakdown_2019$new_column <- "2019"
 
@@ -583,8 +597,6 @@ breakdown_2010 <- breakdown_2010 %>%
 
 ```{r}
 
-# After combining all of the years together, I realized it would be useful to be able to sort the master sheet by year, so I went back and created a new column for each dataset that includes the year.
-
 breakdown_2010$new_column <- "2010"
 
 ```
@@ -748,7 +760,7 @@ breakdown_all_years%>%
 
 ```{r}
 
-# Attempting to use TIGRIS to turn the location data into census data.
+# Using TIGRIS, I turned all of the latitude and longitude coordinates into the GEOID. 
 
 coord <- breakdown_2010 %>%
   select(LATITUDE, LONGITUDE)
@@ -858,14 +870,120 @@ coord_2019 <- coord_2019 %>%
 
 ```
 
+```{r}
+
+v17 <- load_variables(2018, "acs5", cache = TRUE)
+
+View(v17)
+
+```
+
+```{r}
+
+# There is only one county GEOID that cooresponds with DC, which is 11001.
+
+DC_black <- get_acs(geography = "county", variables = c("B02001_003"), year = 2010)
 
 
+```
 
+```{r}
 
+# Using census data to see the comparrisson of white residents and black residents in the tracts where the 311 calls came from.
 
+DC_black_tract <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_003"), year = 2010)
 
+DC_black_tract$new_column <- "black"
 
+DC_black_tract <- DC_black_tract %>%
+  rename("RACE" = "new_column")
 
+```
+
+```{r}
+
+DC_white_tract <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_002"), year = 2010)
+
+DC_white_tract$new_column <- "white"
+
+DC_white_tract <- DC_white_tract %>%
+  rename("RACE" = "new_column")
+
+```
+
+```{r}
+
+# Census tract data from 2006-2010
+
+DC_race_tract_2010 <- DC_black_tract %>%
+  rbind(DC_white_tract)
+
+```
+
+```{r}
+
+DC_black_tract_2011 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_003"), year = 2011)
+
+DC_black_tract_2011$new_column <- "black"
+
+DC_black_tract_2011 <- DC_black_tract_2011 %>%
+  rename("RACE" = "new_column")
+
+```
+
+```{r}
+
+DC_white_tract_2011 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_002"), year = 2011)
+
+DC_white_tract_2011$new_column <- "white"
+
+DC_white_tract_2011 <- DC_white_tract_2011 %>%
+  rename("RACE" = "new_column")
+
+```
+
+```{r}
+
+# Census tract data from 2007-2011.
+
+# Just based on these last two groups, I'm not sure there is anything definitive to say about the racial breakdown of where the calls are coming from.
+
+DC_race_tract_2011 <- DC_black_tract_2011 %>%
+  rbind(DC_white_tract_2011)
+
+```
+
+```{r}
+
+# Going based off median household income, there was more of a pattern than with race. Most of these came up with a median household income of more than $50,000. 
+
+median_household_income_tract_2010 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2010)
+
+```
+
+```{r}
+
+# The pattern is mostly consistent in 2011. The range here was from $37,000 to more than $100,000. 
+
+median_household_income_tract_2011 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2011)
+
+```
+
+```{r}
+
+# Mostly the pattern stays the same. This year had roughly three times more reports than the previous two, so there is a little more variation.
+
+median_household_income_tract_2012 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2012)
+
+```
+
+```{r}
+
+# Again, the pattern mostly holds.
+
+median_household_income_tract_2013 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2013)
+
+```
 
 
 
