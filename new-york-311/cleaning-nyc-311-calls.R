@@ -653,18 +653,14 @@ saveRDS(nyc_calls_22, "~/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Serv
 #create object with file names and full paths
 #f <- file.path("~/GitHub/homelessness-in-the-us/new-york-311", c("NYC-311-Service-Requests_01.Rds", "NYC-311-Service-Requests_02.Rds", "NYC-311-Service-Requests_03.Rds", "NYC-311-Service-Requests_04.Rds", "NYC-311-Service-Requests_05.Rds", "NYC-311-Service-Requests_06.Rds", "NYC-311-Service-Requests_07.Rds", "NYC-311-Service-Requests_08.Rds", "NYC-311-Service-Requests_09.Rds", "NYC-311-Service-Requests_10.Rds", "NYC-311-Service-Requests_11.Rds", "NYC-311-Service-Requests_12.Rds", "NYC-311-Service-Requests_13.Rds", "NYC-311-Service-Requests_14.Rds", "NYC-311-Service-Requests_15.Rds", "NYC-311-Service-Requests_16.Rds", "NYC-311-Service-Requests_17.Rds", "NYC-311-Service-Requests_18.Rds", "NYC-311-Service-Requests_19.Rds", "NYC-311-Service-Requests_20.Rds", "NYC-311-Service-Requests_21.Rds", "NYC-311-Service-Requests_22.Rds", "NYC-311-Service-Requests_23.Rds"))
 
-install.packages("devtools", dependencies = TRUE)
-devtools::install_github("krlmlr/ulimit")
-ulimit::memory_limit(2000)
-
 #bind RDS files to an all in one
-all_nyc_calls <- rbind(calls_01, calls_02, calls_03, calls_04, calls_05, calls_06, calls_07, calls_08, calls_09, calls_10, calls_11, calls_12, calls_13, calls_14, calls_15, calls_16, calls_17, calls_18, calls_19, calls_20, calls_21, calls_22) 
+all_nyc_calls <- list(calls_01, calls_02, calls_03, calls_04, calls_05, calls_06, calls_07, calls_08, calls_09, calls_10, calls_11, calls_12, calls_13, calls_14, calls_15, calls_16, calls_17, calls_18, calls_19, calls_20, calls_21, calls_22) 
 
-saveRDS(all_nyc_calls, "~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
+#saveRDS(all_nyc_calls, "~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
 
 
 ### Load all NYC call sheet
-all_nyc_calls <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
+#all_nyc_calls <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
 
 
 ### Create RDS sheet with each year, filtered from all NYC calls
@@ -672,10 +668,15 @@ all_nyc_calls <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-3
 #Filter all calls for each year and save RDS
 
 #2010
-calls_2010 <- all_nyc_calls %>%
-   filter(year == 2010) 
-calls_2010[order(calls_2010$month, calls_2010$day, calls_2010$time),]
-saveRDS(calls_2010, "~/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds")
+for (i in all_nyc_calls) 
+   {
+   for (year in i$year) 
+      {
+         calls_2010[order(calls_2010$month, calls_2010$day, calls_2010$time),]
+   }
+   
+   saveRDS(i, "~/GitHub/homelessness-in-the-us/new-york-311/" + i$year + "-NYC-Service-Requests.Rds")
+   }
 
 #2011
 calls_2011 <- all_nyc_calls %>%
