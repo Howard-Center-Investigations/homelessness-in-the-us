@@ -2,6 +2,7 @@
 
 library(tidyverse)
 library(janitor)
+library(data.table)
 library(lubridate)
 library(ggplot2)
 library(dplyr)
@@ -651,32 +652,95 @@ while(nn_max < 1e6) {
 saveRDS(nyc_calls_22, "~/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_22.Rds")
 
 #create object with file names and full paths
-#f <- file.path("~/GitHub/homelessness-in-the-us/new-york-311", c("NYC-311-Service-Requests_01.Rds", "NYC-311-Service-Requests_02.Rds", "NYC-311-Service-Requests_03.Rds", "NYC-311-Service-Requests_04.Rds", "NYC-311-Service-Requests_05.Rds", "NYC-311-Service-Requests_06.Rds", "NYC-311-Service-Requests_07.Rds", "NYC-311-Service-Requests_08.Rds", "NYC-311-Service-Requests_09.Rds", "NYC-311-Service-Requests_10.Rds", "NYC-311-Service-Requests_11.Rds", "NYC-311-Service-Requests_12.Rds", "NYC-311-Service-Requests_13.Rds", "NYC-311-Service-Requests_14.Rds", "NYC-311-Service-Requests_15.Rds", "NYC-311-Service-Requests_16.Rds", "NYC-311-Service-Requests_17.Rds", "NYC-311-Service-Requests_18.Rds", "NYC-311-Service-Requests_19.Rds", "NYC-311-Service-Requests_20.Rds", "NYC-311-Service-Requests_21.Rds", "NYC-311-Service-Requests_22.Rds", "NYC-311-Service-Requests_23.Rds"))
-
-#bind RDS files to an all in one
-all_nyc_calls <- list(calls_01, calls_02, calls_03, calls_04, calls_05, calls_06, calls_07, calls_08, calls_09, calls_10, calls_11, calls_12, calls_13, calls_14, calls_15, calls_16, calls_17, calls_18, calls_19, calls_20, calls_21, calls_22) 
+#f <- file.path("~/GitHub/homelessness-in-the-us/new-york-311/", c("NYC-311-Service-Requests_01.Rds", "NYC-311-Service-Requests_02.Rds", "NYC-311-Service-Requests_03.Rds", "NYC-311-Service-Requests_04.Rds", "NYC-311-Service-Requests_05.Rds", "NYC-311-Service-Requests_06.Rds", "NYC-311-Service-Requests_07.Rds", "NYC-311-Service-Requests_08.Rds", "NYC-311-Service-Requests_09.Rds", "NYC-311-Service-Requests_10.Rds", "NYC-311-Service-Requests_11.Rds", "NYC-311-Service-Requests_12.Rds", "NYC-311-Service-Requests_13.Rds", "NYC-311-Service-Requests_14.Rds", "NYC-311-Service-Requests_15.Rds", "NYC-311-Service-Requests_16.Rds", "NYC-311-Service-Requests_17.Rds", "NYC-311-Service-Requests_18.Rds", "NYC-311-Service-Requests_19.Rds", "NYC-311-Service-Requests_20.Rds", "NYC-311-Service-Requests_21.Rds", "NYC-311-Service-Requests_22.Rds", "NYC-311-Service-Requests_23.Rds"))
 
 #saveRDS(all_nyc_calls, "~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
 
 
 ### Load all NYC call sheet
 #all_nyc_calls <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
+getwd()
 
+##load all call sheets
+require(data.table)
+folder <- "C:/Users/TDiff/Documents/GitHub/homelessness-in-the-us/new-york-311/"
+files = list.files(path = folder, pattern = 'NYC-311-Service-Requests_[0-9]{2}.Rds$')
+all_calls_list <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
+all_nyc_calls = rbindlist(all_calls_list, fill = TRUE)
+
+all_nyc_calls <- list.files(path = '~/GitHub/homelessness-in-the-us/new-york-311/', pattern = 'NYC-311-Service-Requests_[0-9]{2}') %>%
+   map_dfr(readRDS)
+
+view(files)
+
+#bind RDS files to an all in one list
+all_nyc_calls <- mget(ls(pattern = "calls_[0-9]{2}"))
 
 ### Create RDS sheet with each year, filtered from all NYC calls
-
 #Filter all calls for each year and save RDS
+ccolumns2 <- colnames(all_calls_list[[1]])
+ccolumns2
 
-#2010
-for (i in all_nyc_calls) 
-   {
-   for (year in i$year) 
-      {
-         calls_2010[order(calls_2010$month, calls_2010$day, calls_2010$time),]
+all_calls_list[[1]]
+
+length(ccolumns)
+
+unique(all_nyc_calls(year))
+
+years = 
+   
+filter_for_year <- function(filter_year) {
+      
+   empty_frame <- data.frame(matrix(ncol=length(ccolumns), nrow=0))
+   colnames(empty_frame) <- ccolumns2
+   
+   for (sheet in all_calls_list) {
+     subset <- sheet[which(year == filter_year)]
+     subset[order(subset$month, subset$day, subset$time),]
+     empty_frame <- rbind(empty_frame, subset)
    }
    
-   saveRDS(i, "~/GitHub/homelessness-in-the-us/new-york-311/" + i$year + "-NYC-Service-Requests.Rds")
+   #assign filtered rows to dataframes named for each year
+   saveRDS(empty_frame, paste0("~/GitHub/homelessness-in-the-us/new-york-311/", filter_year, "-NYC-Service-Requests.Rds"))
+   return(assign(paste0("calls_", filter_year), empty_frame))
+   return(empty_frame)
+}
+
+filter_for_year("2016")
+
+filter_for_year(2010)
+
+#i want to look at each sheet in turn
+for (sheet in all_nyc_calls) 
+   {
+   #find out what years are included in sheet
+   all_years = paste0("20", 10:20)
+   for (year1 in all_years) 
+      {
+      empty_frame <- data.frame(matrix(ncol=length(ccolumns), nrow=0))
+      colnames(empty_frame) <- ccolumns
+      }
+   years_list = unique(sheet$year)
+   #for each year included I want to:
+   for (year2 in years_list) 
+      {
+      #filter the sheet based on the year
+      x <- sheet %>%
+         filter(year == year2)
+      x[order(x$month, x$day, x$time),]
+      #assign filtered rows to dataframes named for each year
+      rbind(paste0("calls_", year1==year2), x)
+      }
    }
+
+
+   saveRDS(sheet, paste0("~/GitHub/homelessness-in-the-us/new-york-311/", year, "-NYC-Service-Requests.Rds"))
+   }
+
+
+#############################
+####Filter based on Year#####
+#############################
 
 #2011
 calls_2011 <- all_nyc_calls %>%
