@@ -648,18 +648,23 @@ while(nn_max < 1e6) {
    sskip = sskip + 100000
 }
 
+######################
+######Bind Em#########
+######################
+
 #save as Rds(for faster processing)
 saveRDS(nyc_calls_22, "~/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_22.Rds")
 
-#create object with file names and full paths
-#f <- file.path("~/GitHub/homelessness-in-the-us/new-york-311/", c("NYC-311-Service-Requests_01.Rds", "NYC-311-Service-Requests_02.Rds", "NYC-311-Service-Requests_03.Rds", "NYC-311-Service-Requests_04.Rds", "NYC-311-Service-Requests_05.Rds", "NYC-311-Service-Requests_06.Rds", "NYC-311-Service-Requests_07.Rds", "NYC-311-Service-Requests_08.Rds", "NYC-311-Service-Requests_09.Rds", "NYC-311-Service-Requests_10.Rds", "NYC-311-Service-Requests_11.Rds", "NYC-311-Service-Requests_12.Rds", "NYC-311-Service-Requests_13.Rds", "NYC-311-Service-Requests_14.Rds", "NYC-311-Service-Requests_15.Rds", "NYC-311-Service-Requests_16.Rds", "NYC-311-Service-Requests_17.Rds", "NYC-311-Service-Requests_18.Rds", "NYC-311-Service-Requests_19.Rds", "NYC-311-Service-Requests_20.Rds", "NYC-311-Service-Requests_21.Rds", "NYC-311-Service-Requests_22.Rds", "NYC-311-Service-Requests_23.Rds"))
-
 #saveRDS(all_nyc_calls, "~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
-
 
 ### Load all NYC call sheet
 #all_nyc_calls <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
 getwd()
+#bind RDS files to an all in one list
+all_nyc_calls <- mget(ls(pattern = "calls_[0-9]{2}"))
+
+memory.size(max=NA)
+memory.limit(size = 40000)
 
 ##load all call sheets
 require(data.table)
@@ -668,42 +673,36 @@ files = list.files(path = folder, pattern = 'NYC-311-Service-Requests_[0-9]{2}.R
 all_calls_list <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
 all_nyc_calls = rbindlist(all_calls_list, fill = TRUE)
 
-all_nyc_calls <- list.files(path = '~/GitHub/homelessness-in-the-us/new-york-311/', pattern = 'NYC-311-Service-Requests_[0-9]{2}') %>%
-   map_dfr(readRDS)
-
-view(files)
-
-#bind RDS files to an all in one list
-all_nyc_calls <- mget(ls(pattern = "calls_[0-9]{2}"))
+empty_frame <- c(all_calls_list[[1]][0])
 
 ### Create RDS sheet with each year, filtered from all NYC calls
 #Filter all calls for each year and save RDS
 ccolumns2 <- colnames(all_calls_list[[1]])
-ccolumns2
 
-all_calls_list[[1]]
-
-length(ccolumns)
-
-unique(all_nyc_calls(year))
-
-years = 
-   
 filter_for_year <- function(filter_year) {
-      
-   empty_frame <- data.frame(matrix(ncol=length(ccolumns), nrow=0))
-   colnames(empty_frame) <- ccolumns2
+   require(data.table)
+   folder <- "C:/Users/TDiff/Documents/GitHub/homelessness-in-the-us/new-york-311/"
+   files = list.files(path = folder, pattern = 'NYC-311-Service-Requests_[0-9]{2}.Rds$')
+   all_calls_list <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
+   #create empty dataframe with same column numbers as sheets in all_calls_list
+   empty_frame <- all_calls_list[[1]][0]
    
    for (sheet in all_calls_list) {
-     subset <- sheet[which(year == filter_year)]
-     subset[order(subset$month, subset$day, subset$time),]
-     empty_frame <- rbind(empty_frame, subset)
+      #filter sheet based on filter year
+      subset <- sheet %>%
+         filter(year == filter_year)
+      #order sheet
+      subset[order(subset$month, subset$day, subset$time),]
+      #assign filtered rows to empty dataframe
+      empty_frame <- bind_rows(empty_frame, subset)
    }
    
-   #assign filtered rows to dataframes named for each year
+   #save dataframe with filtered rows as RDS
    saveRDS(empty_frame, paste0("~/GitHub/homelessness-in-the-us/new-york-311/", filter_year, "-NYC-Service-Requests.Rds"))
+   #return the created data frame 
    return(assign(paste0("calls_", filter_year), empty_frame))
    return(empty_frame)
+   print(empty_frame)
 }
 
 filter_for_year("2016")
@@ -740,6 +739,7 @@ for (sheet in all_nyc_calls)
 
 #############################
 ####Filter based on Year#####
+#########Long Form###########
 #############################
 
 #2011
