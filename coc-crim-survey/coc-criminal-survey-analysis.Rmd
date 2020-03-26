@@ -1,7 +1,7 @@
 ---
 title: "CoC Criminal Survey Analysis"
 author: "Theresa Diffendal"
-date: "2/17/2020"
+updated: "3/25/2020"
 output:
   html_document:
     df_print: paged
@@ -41,11 +41,10 @@ library(stringr)
 library(kableExtra)
 
 ## Set working directory
-setwd("~/Documents/GitHub/homelessness-in-the-us/coc-crim-survey")
+setwd("~/GitHub/homelessness-in-the-us/coc-crim-survey")
 
 crim_survey <- read_csv("coc-crim-survey.csv") %>%
   ##only select rows with data
-  slice(1:59) %>%
   
   ##rename the columns
   rename("name" = "coc-crim-",
@@ -86,7 +85,8 @@ crim_survey <- crim_survey %>%
          unclear = rowSums(crim_survey == "unclear", na.rm=TRUE)) %>%
   
   ##get rid of columns we don't need to analyze
-  filter(complete == "yes") %>%
+  filter(complete == "yes",
+         coc != "state") %>%
   select(-name, -complete, -new_reporting_or_nlchp_fact_check, -c3, -meet_definition, -contains ("link"), -contains("law")) %>%
   ##reorder columns with mutated columns first
   select(3,1,2,13:16,4:12)
@@ -94,7 +94,7 @@ crim_survey <- crim_survey %>%
 
 ## Overall Law Information
 
-Most of the laws examined are applicable across the city (162), which is only slightly greater than the amount of laws that are not on the books (153). Together, "citywide" and "none" account for over 70% of the laws examined, with 36.65% and 34.62%, respectively. 21.49% of laws are only applicable in particular places while about 7% of the laws were unclear.
+Most of the laws examined are applicable across the city (195), which is only slightly greater than the amount of laws that are not on the books (174). Together, "citywide" and "none" account for over 70% of the laws examined, with 38.1% and 39%, respectively. 20% of laws are only applicable in particular places while 7.6% of the laws were unclear.
 
 While laws applicable in particular places represent a fifth of the laws examined, the majority of the time it appears that laws either apply citywide or do not exist.
 
@@ -119,12 +119,14 @@ print(overall_laws)
   + Alaska - 1
   + California - 20
   + The District of Columbia - 1
-  + Florida - 18
+  + Florida - 17
   + Hawaii - 2
   + Kentucky - 1
-  + Louisiana - analysis not complete yet
-  + Massachusetts - analysis not complete yet
+  + Louisiana - 1
+  + Massachusetts - 5
   + Maryland - 3
+  + Missouri - 1
+  + Nevada - 1
   + New York - 1
   + North Carolina - 1
   + Oregon - 3
@@ -136,7 +138,7 @@ print(unique(states))
 ```
 
 ```{r}
-# See how many states there are; answer: 11 + D.C.
+# See how many states there are; answer: 13 + D.C.
 length(unique(states))
 ```
 
@@ -164,8 +166,9 @@ kable(crim_survey_cities) %>%
 
 ## Continuum of Care Analysis
 
-* CoCs in California and Florida are tied for the greatest number of laws. Both Oakland/Alameda CoC in California and Fort Walton Beach/Okaloosa/Walton CoC in Florida have 17 total laws. Florida's CoC consisting of Fort Pierce/St. Lucie/Indian River/Martin Counties is a close second with 16 laws.
-* CoCs in California and Florida also have the fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa CoC in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.
+* California CoC Oakland/Alameda has the greatest number of laws that disproportionately affect homeless individuals with 19. Florida's CoC consisting of Fort Pierce/St. Lucie/Indian River/Martin Counties is a close second with 17 laws.
+* CoCs in California and Florida also have the second fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa and Humboldt County CoCs in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.
+* A Massachusettes CoC, Worcester, has only 1 law. It outlaws begging citywide.
 
 ```{r}
 ## create new data set
@@ -191,9 +194,9 @@ kable(coc_totals) %>%
 
 ## City Analysis
 
-* The city of Waldorf has the fewest laws with only 1. Lake City and Ione round out the bottom three with two laws each.
+* The cities of Waldorf, Md. and Worcester, Mass. have the fewest laws with only 1. Lake City, Ione and Eureka round out the bottom five with two laws each.
 * Oakland has the most with 9 laws. This means that Oakland has every possible examined law on the books.
-* No state has 8 laws, but seven states have 7 laws.
+* No state has eight laws, but 10 states have seven laws.
 
 ```{r}
 ## create new data set
@@ -220,9 +223,9 @@ kable(city_totals) %>%
 
 ## Which state has the most laws?
 
-* California comes in first with 122 laws
+* California comes in first with 110 laws and is the only examined state with over 100 laws.
 * Alaska and Kentucky have the fewest laws with only 4
-* In the four states with the fewest laws (Kentucky, North Carolina, New York and Alaska) and D.C, only one city was examined.
+* The top six states - California, Florida, Massachusetts, Oregon, Hawaii and Maryland - were the only states in which more than one CoC was examined.
 
 ```{r}
 ## create new data set
@@ -250,15 +253,15 @@ kable(state_totals) %>%
 
 **Notes:**
 
-* There are more citywide laws than any other kind (184), followed by none (157), particular places (95) and unclear(38)
-* Fewer than 45% of the laws in 9 of the 12 states/DC analyzed are citywide
-* California and Florida had the most citywide laws with 72 and 46, respectively
+* There are more citywide laws than any other kind (195), followed by no law (174), particular places (104) and unclear (39)
+* Fifity percent of less of the laws in 10 of the 14 states (and DC) analyzed are citywide.
+* California and Florida had the most citywide laws with 77 and 44, respectively
   + Note that California and Florida had more analyzed cities than other states
-* A quarter (25%) of all citywide laws examined are in Florida
-* All the included Massachusetts laws are citywide, the only state to have all citywide laws
-* Hawaii had the fewest citywide laws, accounting for only 16.67% of the 18 HI laws recorded
-  + Hawaii also had the most "unclear" laws, accounting for 27.78% of its examined laws, followed by D.C. with 22.22%
-* Over half (55.56%) of the examined laws in New York and Louisiana are only applicable in particular places
+* Almost 40% of all citywide laws examined are in California
+* Hawaii had the lowest percentage citywide laws, accounting for only 3 (16.7%) of the 18 HI laws recorded
+  + Hawaii also had the most "unclear" laws, accounting for seven (27.8%) of its examined laws
+* Over half (55.56%) of the examined laws in New York are only applicable in particular places. Over in Louisiana, 44.4% of the laws cover a particular place.
+* Massachusetts has no laws only applicable in particular places. The state's laws are citywide or non-existant. 
 
 ```{r}
 

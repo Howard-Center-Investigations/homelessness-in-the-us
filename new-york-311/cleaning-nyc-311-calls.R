@@ -648,22 +648,18 @@ while(nn_max < 1e6) {
    sskip = sskip + 100000
 }
 
-######################
-######Bind Em#########
-######################
-
 #save as Rds(for faster processing)
 saveRDS(nyc_calls_22, "~/GitHub/homelessness-in-the-us/new-york-311/NYC-311-Service-Requests_22.Rds")
 
+
+########################
+########Bind Em#########
+########################
+
+#bind RDS files to an all in one list
+#all_nyc_calls <- mget(ls(pattern = "calls_[0-9]{2}"))
 #saveRDS(all_nyc_calls, "~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
 
-### Load all NYC call sheet
-#all_nyc_calls <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/ALL-NYC-311-Service-Requests.Rds")
-getwd()
-#bind RDS files to an all in one list
-all_nyc_calls <- mget(ls(pattern = "calls_[0-9]{2}"))
-
-memory.size(max=NA)
 memory.limit(size = 40000)
 
 ##load all call sheets
@@ -671,22 +667,21 @@ require(data.table)
 folder <- "C:/Users/TDiff/Documents/GitHub/homelessness-in-the-us/new-york-311/"
 files = list.files(path = folder, pattern = 'NYC-311-Service-Requests_[0-9]{2}.Rds$')
 all_calls_list <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
-all_nyc_calls = rbindlist(all_calls_list, fill = TRUE)
 
+#if want to bind all
+#all_nyc_calls = rbindlist(all_calls_list, fill = TRUE)
+
+#
 empty_frame <- c(all_calls_list[[1]][0])
 
-### Create RDS sheet with each year, filtered from all NYC calls
-#Filter all calls for each year and save RDS
+#get column names
 ccolumns2 <- colnames(all_calls_list[[1]])
 
 filter_for_year <- function(filter_year) {
-   require(data.table)
-   folder <- "C:/Users/TDiff/Documents/GitHub/homelessness-in-the-us/new-york-311/"
-   files = list.files(path = folder, pattern = 'NYC-311-Service-Requests_[0-9]{2}.Rds$')
-   all_calls_list <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
-   #create empty dataframe with same column numbers as sheets in all_calls_list
-   empty_frame <- all_calls_list[[1]][0]
-   
+  
+  #create empty df with appropriate column names
+  empty_frame <- c(all_calls_list[[1]][0])
+  
    for (sheet in all_calls_list) {
       #filter sheet based on filter year
       subset <- sheet %>%
@@ -700,14 +695,17 @@ filter_for_year <- function(filter_year) {
    #save dataframe with filtered rows as RDS
    saveRDS(empty_frame, paste0("~/GitHub/homelessness-in-the-us/new-york-311/", filter_year, "-NYC-Service-Requests.Rds"))
    #return the created data frame 
-   return(assign(paste0("calls_", filter_year), empty_frame))
-   return(empty_frame)
-   print(empty_frame)
+   return(assign(paste0("calls_", filter_year), empty_frame, envir = parent.frame()))
 }
 
-filter_for_year("2016")
+all_years = paste0("20", 10:20)
+for (year in all_years) {
+  filter_for_year(year)
+}
 
-filter_for_year(2010)
+##########################
+###For Loops to Read In###
+##########################
 
 #i want to look at each sheet in turn
 for (sheet in all_nyc_calls) 
@@ -731,11 +729,6 @@ for (sheet in all_nyc_calls)
       rbind(paste0("calls_", year1==year2), x)
       }
    }
-
-
-   saveRDS(sheet, paste0("~/GitHub/homelessness-in-the-us/new-york-311/", year, "-NYC-Service-Requests.Rds"))
-   }
-
 
 #############################
 ####Filter based on Year#####

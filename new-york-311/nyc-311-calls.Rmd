@@ -35,14 +35,14 @@ library(dplyr)
 ```{r}
 #Can I make a function to analyze each year?
 
-#load in all year-by-year files
+#load in all year-by-year files and put in list
 require(data.table)
 folder <- "C:/Users/TDiff/Documents/GitHub/homelessness-in-the-us/new-york-311/"
 files = list.files(path = folder, pattern = '20[0-9]{2}-NYC-311-Service-Requests.Rds$')
-all_calls_list <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
+all_calls_years <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
 
 #go through each year and analyze following info
-for (sheet in all_calls_list) {
+for (sheet in all_calls_years) {
   #Figure out the year
   year = sheet.Substring(0,4)
   print("The following are for ", year)
@@ -53,7 +53,7 @@ for (sheet in all_calls_list) {
     summarize(count = n()) %>%
     arrange(desc(count))
   print(agency_calls)
-  assign(paste0("agency_calls_", year),agency_calls)
+  assign(paste0("agency_calls", year),agency_calls)
   
 #Get an overall view of what agencies handle what complaint_types
   agency_complaints <- sheet %>%
@@ -61,7 +61,7 @@ for (sheet in all_calls_list) {
     group_by(agency, complaint_type) %>%
     summarize(count = n())
   print(agency_complaints)
-  assign(paste0("agency_complaints_", year),agency_complaints)
+  assign(paste0("agency_complaints", year),agency_complaints)
   
   #Get all complaint types and arrange from most to least
   complaints <- sheet %>%
@@ -69,8 +69,8 @@ for (sheet in all_calls_list) {
     summarize(count = n()) %>%
     mutate(pct = round(count/(sum(count)) * 100,3)) %>%
     arrange(desc(count))
-  print(agency_calls)
-  assign(paste0("agency_calls_", year),agency_calls)
+  print(complaints)
+  assign(paste0("complaints", year),complaints)
 
 #get a count of all descriptor values
   descriptors <- sheet %>%
@@ -78,54 +78,52 @@ for (sheet in all_calls_list) {
     summarize(count = n()) %>%
     mutate(pct = count/sum(count) * 100) %>%
     arrange(desc(count))
-  print(agency_calls)
-  assign(paste0("agency_calls_", year),agency_calls)
+  print(descriptors)
+  assign(paste0("descriptors", year),descriptors)
 
 #Check pairings of complaints and descriptors
-  complaint_and_descriptor <- sheet %>%
+  complaint_descriptor <- sheet %>%
     select(complaint_type, descriptor) %>%
     group_by(complaint_type, descriptor) %>%
     summarize(count = n())
-  print(agency_calls)
-  assign(paste0("agency_calls_", year),agency_calls)
+  assign(paste0("complaint_descriptor", year),complaint_descriptor)
   
   #see all resolution calls paired with complaints, descriptors
   resolutions <- sheet %>%
     select(complaint_type, descriptor, resolution_description) %>%
     group_by(complaint_type, descriptor, resolution_description) %>%
     summarize(count = n())
-  print(resolutions)
-  assign(paste0("resolutions_", year),resolutions)
+  assign(paste0("resolutions", year),resolutions)
   
 #look only at resolutions pertaining to homelessness
   homeless_resolutions <- sheet %>%
     filter(str_detect(complaint_type, "Panhandling|Homeless|DHS")) %>%
     group_by(complaint_type, resolution_description) %>%
     summarize(count = n())
-  print(agency_calls)
-  assign(paste0("agency_calls_", year),agency_calls)
+  assign(paste0("homeless_resolutions", year),homeless_resolutions)
   
   #from what locations did calls come
    locations <- sheet %>%
     group_by(location_type) %>%
     summarize(count = n()) %>%
     mutate(pct = round(count/sum(count) * 100,3))
-   print(agency_calls)
-  assign(paste0("agency_calls_", year),agency_calls)
+  assign(paste0("locations", year),locations)
   
   #how many different locations were called
   total_locations <- locations %>%
     summarize(total = sum(count))
-  print(agency_calls)
-  assign(paste0("agency_calls_", year),agency_calls)
+  assign(paste0("total_locations", year),total_locations)
   
 #rough overall count of homeless calls
   total_homeless_calls <- sheet %>%
     filter(location =="Homeless Shelter" |
             agency == "DHS" |
             str_detect(complaint_type, "Panhandling|Homeless|DHS"))
-  print(total_homeless_calls)
-  assign(paste0("total_homeless_calls_", year),total_homeless_calls)
+  assign(paste0("total_homeless_calls", year),total_homeless_calls)
+  
+  #then get a list of all the data tables for each year
+  year_all_sheets <- mget(ls(pattern = year))
+  assign(paste0("all_", year, "_tables"), year_all_sheets, envir = parent.frame)
 }
 
 ```

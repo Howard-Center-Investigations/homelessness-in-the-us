@@ -2815,10 +2815,10 @@ div.tocify {
 
 print(overall_laws)</code></pre>
 <pre><code>##             rowname count       pct
-## 1          citywide   162 36.651584
-## 2 particular_places    95 21.493213
-## 3           unclear    32  7.239819
-## 4              none   153 34.615385</code></pre>
+## 1          citywide   198 37.358491
+## 2 particular_places   106 20.000000
+## 3           unclear    42  7.924528
+## 4              none   184 34.716981</code></pre>
 <pre class="r"><code>#YOURE BEAUTIFUL</code></pre>
 </div>
 <div id="state-and-city-information" class="section level2">
@@ -2844,16 +2844,16 @@ print(overall_laws)</code></pre>
 <pre class="r"><code>#Get the abbreviations of all examined states
 states &lt;- as.vector(crim_survey$state)
 print(unique(states))</code></pre>
-<pre><code>##  [1] &quot;ak&quot; &quot;md&quot; &quot;or&quot; &quot;ca&quot; &quot;fl&quot; &quot;hi&quot; &quot;ky&quot; &quot;ny&quot; &quot;nc&quot; &quot;dc&quot;</code></pre>
+<pre><code>##  [1] &quot;nc&quot; &quot;fl&quot; &quot;or&quot; &quot;md&quot; &quot;hi&quot; &quot;ky&quot; &quot;ca&quot; &quot;ny&quot; &quot;ak&quot; &quot;dc&quot; &quot;ma&quot; &quot;la&quot; &quot;nv&quot; &quot;mo&quot;</code></pre>
 <pre class="r"><code># See how many states there are; answer: 11 + D.C.
 length(unique(states))</code></pre>
-<pre><code>## [1] 10</code></pre>
+<pre><code>## [1] 14</code></pre>
 <pre class="r"><code>#How many cities were analyzed in each state
 crim_survey_states &lt;- crim_survey %&gt;%
   group_by(state) %&gt;%
   summarise(city_count=n())
 print(crim_survey_states)</code></pre>
-<pre><code>## # A tibble: 10 x 2
+<pre><code>## # A tibble: 14 x 2
 ##    state city_count
 ##    &lt;chr&gt;      &lt;int&gt;
 ##  1 ak             1
@@ -2862,10 +2862,14 @@ print(crim_survey_states)</code></pre>
 ##  4 fl            18
 ##  5 hi             2
 ##  6 ky             1
-##  7 md             3
-##  8 nc             1
-##  9 ny             1
-## 10 or             3</code></pre>
+##  7 la             1
+##  8 ma             6
+##  9 md             3
+## 10 mo             1
+## 11 nc             1
+## 12 nv             1
+## 13 ny             1
+## 14 or             3</code></pre>
 <pre class="r"><code># See each city examined in each state
 crim_survey_cities &lt;- crim_survey %&gt;%
   group_by(state) %&gt;%
@@ -2903,7 +2907,15 @@ anchorage
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-berkeley
+eureka
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+pasadena
 </td>
 </tr>
 <tr>
@@ -2919,31 +2931,7 @@ chico
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-concord
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
 el cajon
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-eureka
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-ione
 </td>
 </tr>
 <tr>
@@ -2967,23 +2955,7 @@ marysville
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-oakland
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
 orland (glenn)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-pasadena
 </td>
 </tr>
 <tr>
@@ -2999,7 +2971,7 @@ redondo beach
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-salinas
+san diego
 </td>
 </tr>
 <tr>
@@ -3007,7 +2979,7 @@ salinas
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-san diego
+santa cruz
 </td>
 </tr>
 <tr>
@@ -3031,7 +3003,39 @@ san luis obispo
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-santa cruz
+berkeley
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+concord
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+ione
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+oakland
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+salinas
 </td>
 </tr>
 <tr>
@@ -3087,7 +3091,39 @@ daytona beach
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-destin
+gainesville
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+key west
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+lake city
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+port charlotte (census designated place)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+st. augustine
 </td>
 </tr>
 <tr>
@@ -3103,7 +3139,7 @@ fort pierce
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-fort walton beach
+port st. lucie
 </td>
 </tr>
 <tr>
@@ -3111,7 +3147,7 @@ fort walton beach
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-gainesville
+stuart
 </td>
 </tr>
 <tr>
@@ -3143,23 +3179,23 @@ highlands county
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-key west
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-lake city
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
 new port richey
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+destin
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+fort walton beach
 </td>
 </tr>
 <tr>
@@ -3175,39 +3211,7 @@ okaloosa county
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-port charlotte (census designated place)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-port st. lucie
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-st. augustine
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
 state of florida
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-stuart
 </td>
 </tr>
 <tr>
@@ -3236,6 +3240,62 @@ lexington
 </tr>
 <tr>
 <td style="text-align:left;">
+la
+</td>
+<td style="text-align:left;border-left:1px solid;">
+new orleans
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:left;border-left:1px solid;">
+boston
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:left;border-left:1px solid;">
+lowell
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:left;border-left:1px solid;">
+new bedford
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:left;border-left:1px solid;">
+springfield
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:left;border-left:1px solid;">
+worcester
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:left;border-left:1px solid;">
+state of massachusetts
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 md
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -3260,6 +3320,14 @@ waldorf (laws are from charles county)
 </tr>
 <tr>
 <td style="text-align:left;">
+mo
+</td>
+<td style="text-align:left;border-left:1px solid;">
+st. louis
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 nc
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -3268,10 +3336,26 @@ town of boone (watauga county seat)
 </tr>
 <tr>
 <td style="text-align:left;">
+nv
+</td>
+<td style="text-align:left;border-left:1px solid;">
+las vegas
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 ny
 </td>
 <td style="text-align:left;border-left:1px solid;">
 nyc
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+or
+</td>
+<td style="text-align:left;border-left:1px solid;">
+medford
 </td>
 </tr>
 <tr>
@@ -3288,14 +3372,6 @@ or
 </td>
 <td style="text-align:left;border-left:1px solid;">
 corvallis
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:left;border-left:1px solid;">
-medford
 </td>
 </tr>
 </tbody>
@@ -3345,6 +3421,14 @@ total_laws
 ca-oakland/alameda county coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
+19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl-fort pierce/st. lucie, indian river, martin counties coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
 17
 </td>
 </tr>
@@ -3353,15 +3437,7 @@ ca-oakland/alameda county coc
 fl-fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
-17
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl-fort pierce/st. lucie, indian river, martin counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-16
+14
 </td>
 </tr>
 <tr>
@@ -3369,7 +3445,7 @@ fl-fort pierce/st. lucie, indian river, martin counties coc
 ca-san diego city and county coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
-10
+12
 </td>
 </tr>
 <tr>
@@ -3415,6 +3491,22 @@ dc-district of columbia coc
 <tr>
 <td style="text-align:left;">
 fl-daytona beach/daytona/volusia, flagler counties coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+la-new orleans/jefferson parish coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma-boston coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 7
@@ -3478,6 +3570,14 @@ ca-santa rosa/petaluma/sonoma county coc
 </tr>
 <tr>
 <td style="text-align:left;">
+ca-yuba city &amp; county/sutter county coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 fl-punta gorda/charlotte county coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -3502,7 +3602,7 @@ fl-st. petersburg/clearwater/largo/pinellas county coc
 </tr>
 <tr>
 <td style="text-align:left;">
-or-medford/ashland/jackson county coc
+ma-lowell coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -3510,10 +3610,18 @@ or-medford/ashland/jackson county coc
 </tr>
 <tr>
 <td style="text-align:left;">
-ca-humboldt county coc
+nv-las vegas/clark county coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+or-medford/ashland/jackson county coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
 </td>
 </tr>
 <tr>
@@ -3535,14 +3643,6 @@ ca-san jose/santa clara city &amp; county coc
 <tr>
 <td style="text-align:left;">
 ca-watsonville/santa cruz city &amp; county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca-yuba city &amp; county/sutter county coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -3590,7 +3690,31 @@ hi-honolulu coc
 </tr>
 <tr>
 <td style="text-align:left;">
+ma-new bedford coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma-springfield coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 md-charles, calvert, st.mary’s counties coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mo-st.louis city coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -3607,6 +3731,14 @@ nc-northwest north carolina coc
 <tr>
 <td style="text-align:left;">
 or-central oregon coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+state
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
@@ -3654,10 +3786,26 @@ ca-amador, calaveras, tuolumne and mariposa counties coc
 </tr>
 <tr>
 <td style="text-align:left;">
+ca-humboldt county coc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 fl-columbia, hamilton, lafayette, suwannee counties coc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma-worcester
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 </tr>
 </tbody>
@@ -3738,6 +3886,26 @@ oakland
 </tr>
 <tr>
 <td style="text-align:left;">
+boston
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 corvallis
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -3778,7 +3946,47 @@ daytona beach
 </tr>
 <tr>
 <td style="text-align:left;">
+el cajon
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 long beach
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+new orleans
 </td>
 <td style="text-align:right;border-left:1px solid;">
 7
@@ -3830,7 +4038,7 @@ pasadena
 3
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+2
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -3958,6 +4166,66 @@ fort pierce
 </tr>
 <tr>
 <td style="text-align:left;">
+las vegas
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lowell
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+marysville
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 medford
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -4078,6 +4346,26 @@ st. augustine
 </tr>
 <tr>
 <td style="text-align:left;">
+stuart
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 bend
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -4098,6 +4386,26 @@ bend
 </tr>
 <tr>
 <td style="text-align:left;">
+berkeley
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 destin
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -4114,46 +4422,6 @@ destin
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-el cajon
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-eureka
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
 </td>
 </tr>
 <tr>
@@ -4238,26 +4506,6 @@ key west
 </tr>
 <tr>
 <td style="text-align:left;">
-marysville
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 maui co.
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -4274,6 +4522,26 @@ maui co.
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+new bedford
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
 </td>
 </tr>
 <tr>
@@ -4350,7 +4618,7 @@ san diego
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 3
@@ -4390,7 +4658,7 @@ santa cruz
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+3
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -4398,22 +4666,42 @@ santa cruz
 </tr>
 <tr>
 <td style="text-align:left;">
-stuart
+springfield
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
 </td>
 <td style="text-align:right;border-left:1px solid;">
-2
+5
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-2
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+st. louis
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
 </td>
 </tr>
 <tr>
@@ -4578,26 +4866,6 @@ okaloosa county
 </tr>
 <tr>
 <td style="text-align:left;">
-berkeley
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 hendry county, clewiston
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -4673,7 +4941,27 @@ state of florida
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-4
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eureka
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 </tr>
 <tr>
@@ -4718,6 +5006,26 @@ lake city
 </tr>
 <tr>
 <td style="text-align:left;">
+state of massachusetts
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 waldorf (laws are from charles county)
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -4734,6 +5042,26 @@ waldorf (laws are from charles county)
 </td>
 <td style="text-align:right;border-left:1px solid;">
 7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+worcester
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+8
 </td>
 </tr>
 </tbody>
@@ -4784,7 +5112,7 @@ total_laws
 ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
-108
+110
 </td>
 </tr>
 <tr>
@@ -4792,7 +5120,15 @@ ca
 fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
-85
+86
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:right;border-left:1px solid;">
+26
 </td>
 </tr>
 <tr>
@@ -4829,10 +5165,34 @@ dc
 </tr>
 <tr>
 <td style="text-align:left;">
+la
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 ny
 </td>
 <td style="text-align:right;border-left:1px solid;">
 7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nv
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mo
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
 </td>
 </tr>
 <tr>
@@ -4900,13 +5260,13 @@ all_state &lt;- crim_survey %&gt;%
 
 all_state &lt;- all_state %&gt;%
   
-  #calculate what percentage of the state's laws are citywide, particular, none, unclear
+  #calculate what percentage of the state&#39;s laws are citywide, particular, none, unclear
   mutate(percent_state_citywide = (sum_state_citywide / rowSums(all_state[,c(2:5)]) * 100),
          percent_state_particular_places = (sum_state_particular_places / rowSums(all_state[,c(2:5)]) * 100),
          percent_state_none = (sum_state_none / rowSums(all_state[,c(2:5)]) * 100),
          percent_state_unclear = (sum_state_unclear / rowSums(all_state[,c(2:5)]) * 100)) %&gt;%
   
-  #calculate each state's share of the total citywide, particular, unclear, none laws in the sheet
+  #calculate each state&#39;s share of the total citywide, particular, unclear, none laws in the sheet
   mutate(percent_all_citywide = (sum_state_citywide / sum(sum_state_citywide) * 100),
          percent_all_particular_places = (sum_state_particular_places / sum(sum_state_particular_places) * 100),
          percent_all_none = (sum_state_none / sum(sum_state_none) * 100),
@@ -4994,16 +5354,16 @@ ak
 0.000000
 </td>
 <td style="text-align:right;border-left:1px solid;">
-2.469136
+2.020202
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.0000000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2.1739130
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.000000
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2.6143791
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0.000
 </td>
 </tr>
 <tr>
@@ -5011,40 +5371,40 @@ ak
 ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
-76
+77
 </td>
 <td style="text-align:right;border-left:1px solid;">
-32
+33
 </td>
 <td style="text-align:right;border-left:1px solid;">
-47
+45
 </td>
 <td style="text-align:right;border-left:1px solid;">
-14
+18
 </td>
 <td style="text-align:right;border-left:1px solid;">
-44.97041
+44.50867
 </td>
 <td style="text-align:right;border-left:1px solid;">
-18.934911
+19.075145
 </td>
 <td style="text-align:right;border-left:1px solid;">
-27.81065
+26.01156
 </td>
 <td style="text-align:right;border-left:1px solid;">
-8.284024
+10.404624
 </td>
 <td style="text-align:right;border-left:1px solid;">
-46.913580
+38.888889
 </td>
 <td style="text-align:right;border-left:1px solid;">
-33.684210
+31.1320755
 </td>
 <td style="text-align:right;border-left:1px solid;">
-30.7189542
+24.4565217
 </td>
 <td style="text-align:right;border-left:1px solid;">
-43.750
+42.857143
 </td>
 </tr>
 <tr>
@@ -5076,16 +5436,16 @@ dc
 22.222222
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3.703704
+3.030303
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.052632
+0.9433962
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0.0000000
 </td>
 <td style="text-align:right;border-left:1px solid;">
-6.250
+4.761905
 </td>
 </tr>
 <tr>
@@ -5096,37 +5456,37 @@ fl
 47
 </td>
 <td style="text-align:right;border-left:1px solid;">
-38
+39
 </td>
 <td style="text-align:right;border-left:1px solid;">
-65
+67
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
 </td>
 <td style="text-align:right;border-left:1px solid;">
-30.12821
+29.55975
 </td>
 <td style="text-align:right;border-left:1px solid;">
-24.358974
+24.528302
 </td>
 <td style="text-align:right;border-left:1px solid;">
-41.66667
+42.13836
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3.846154
+3.773585
 </td>
 <td style="text-align:right;border-left:1px solid;">
-29.012346
+23.737374
 </td>
 <td style="text-align:right;border-left:1px solid;">
-40.000000
+36.7924528
 </td>
 <td style="text-align:right;border-left:1px solid;">
-42.4836601
+36.4130435
 </td>
 <td style="text-align:right;border-left:1px solid;">
-18.750
+14.285714
 </td>
 </tr>
 <tr>
@@ -5158,16 +5518,16 @@ hi
 27.777778
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.851852
+1.515151
 </td>
 <td style="text-align:right;border-left:1px solid;">
-7.368421
+6.6037736
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.9607843
+1.6304348
 </td>
 <td style="text-align:right;border-left:1px solid;">
-15.625
+11.904762
 </td>
 </tr>
 <tr>
@@ -5199,16 +5559,98 @@ ky
 0.000000
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.851852
+1.515151
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.052632
+0.9433962
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3.2679739
+2.7173913
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0.000
+0.000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+la
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+33.33333
+</td>
+<td style="text-align:right;border-left:1px solid;">
+44.444444
+</td>
+<td style="text-align:right;border-left:1px solid;">
+22.22222
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.000000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1.515151
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3.7735849
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1.0869565
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ma
+</td>
+<td style="text-align:right;border-left:1px solid;">
+24
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+23
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+44.44444
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3.703704
+</td>
+<td style="text-align:right;border-left:1px solid;">
+42.59259
+</td>
+<td style="text-align:right;border-left:1px solid;">
+9.259259
+</td>
+<td style="text-align:right;border-left:1px solid;">
+12.121212
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1.8867925
+</td>
+<td style="text-align:right;border-left:1px solid;">
+12.5000000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+11.904762
 </td>
 </tr>
 <tr>
@@ -5240,16 +5682,57 @@ md
 7.407407
 </td>
 <td style="text-align:right;border-left:1px solid;">
-4.938272
+4.040404
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.052632
+0.9433962
 </td>
 <td style="text-align:right;border-left:1px solid;">
-10.4575163
+8.6956522
 </td>
 <td style="text-align:right;border-left:1px solid;">
-6.250
+4.761905
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mo
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+55.55556
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.000000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+44.44444
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.000000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2.525253
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.0000000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2.1739130
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0.000000
 </td>
 </tr>
 <tr>
@@ -5281,16 +5764,57 @@ nc
 11.111111
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.234568
+1.010101
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3.157895
+2.8301887
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.9607843
+1.6304348
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3.125
+2.380952
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nv
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+33.33333
+</td>
+<td style="text-align:right;border-left:1px solid;">
+33.333333
+</td>
+<td style="text-align:right;border-left:1px solid;">
+22.22222
+</td>
+<td style="text-align:right;border-left:1px solid;">
+11.111111
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1.515151
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2.8301887
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1.0869565
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2.380952
 </td>
 </tr>
 <tr>
@@ -5322,16 +5846,16 @@ ny
 11.111111
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.234568
+1.010101
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5.263158
+4.7169811
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0.6535948
+0.5434783
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3.125
+2.380952
 </td>
 </tr>
 <tr>
@@ -5363,16 +5887,16 @@ or
 3.571429
 </td>
 <td style="text-align:right;border-left:1px solid;">
-6.790123
+5.555556
 </td>
 <td style="text-align:right;border-left:1px solid;">
-7.368421
+6.6037736
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5.8823529
+4.8913043
 </td>
 <td style="text-align:right;border-left:1px solid;">
-3.125
+2.380952
 </td>
 </tr>
 <tr>
@@ -5380,31 +5904,28 @@ or
 Total
 </td>
 <td style="text-align:right;border-left:1px solid;">
-162
+198
 </td>
 <td style="text-align:right;border-left:1px solid;">
-95
+106
 </td>
 <td style="text-align:right;border-left:1px solid;">
-153
+184
 </td>
 <td style="text-align:right;border-left:1px solid;">
-32
+42
 </td>
 <td style="text-align:right;border-left:1px solid;">
-355.12507
+520.76154
 </td>
 <td style="text-align:right;border-left:1px solid;">
-221.997589
+303.788632
 </td>
 <td style="text-align:right;border-left:1px solid;">
-327.54610
+457.70019
 </td>
 <td style="text-align:right;border-left:1px solid;">
-95.331236
-</td>
-<td style="text-align:right;border-left:1px solid;">
-100.000000
+117.749638
 </td>
 <td style="text-align:right;border-left:1px solid;">
 100.000000
@@ -5413,7 +5934,10 @@ Total
 100.0000000
 </td>
 <td style="text-align:right;border-left:1px solid;">
-100.000
+100.0000000
+</td>
+<td style="text-align:right;border-left:1px solid;">
+100.000000
 </td>
 </tr>
 </tbody>
