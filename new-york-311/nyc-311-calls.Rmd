@@ -1,15 +1,16 @@
+---
 title: "NYC 311 Calls"
 author: "Theresa Diffendal"
-date: "1/27/2020"
+updated: "3/25/2020"
 output: 
   html_document:
-      toc: true
-      toc_depth: 3
-      toc_float: true
-    md_document:
-      variant: markdown_github
-      toc: true
-      toc_depth: 3
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  md_document:
+    variant: markdown_github
+    toc: yes
+    toc_depth: 3
 ---
 
 An analysis of New YOrk City's 311 call data from 2010-present. Data found on New York's [open data site](https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9/data).

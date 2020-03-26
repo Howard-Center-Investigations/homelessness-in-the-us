@@ -1,7 +1,7 @@
 ---
 title: "CoC Criminal Survey Analysis"
 author: "Theresa Diffendal"
-updated: "3/25/2020"
+date: "3/25/2020"
 output:
   html_document:
     df_print: paged
@@ -168,7 +168,7 @@ kable(crim_survey_cities) %>%
 
 * California CoC Oakland/Alameda has the greatest number of laws that disproportionately affect homeless individuals with 19. Florida's CoC consisting of Fort Pierce/St. Lucie/Indian River/Martin Counties is a close second with 17 laws.
 * CoCs in California and Florida also have the second fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa and Humboldt County CoCs in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.
-* A Massachusettes CoC, Worcester, has only 1 law. It outlaws begging citywide.
+* A Massachusetts CoC, Worcester, has only 1 law. It outlaws begging citywide.
 
 ```{r}
 ## create new data set
@@ -254,14 +254,14 @@ kable(state_totals) %>%
 **Notes:**
 
 * There are more citywide laws than any other kind (195), followed by no law (174), particular places (104) and unclear (39)
-* Fifity percent of less of the laws in 10 of the 14 states (and DC) analyzed are citywide.
+* Fifty percent of less of the laws in 10 of the 14 states (and DC) analyzed are citywide.
 * California and Florida had the most citywide laws with 77 and 44, respectively
   + Note that California and Florida had more analyzed cities than other states
 * Almost 40% of all citywide laws examined are in California
 * Hawaii had the lowest percentage citywide laws, accounting for only 3 (16.7%) of the 18 HI laws recorded
   + Hawaii also had the most "unclear" laws, accounting for seven (27.8%) of its examined laws
 * Over half (55.56%) of the examined laws in New York are only applicable in particular places. Over in Louisiana, 44.4% of the laws cover a particular place.
-* Massachusetts has no laws only applicable in particular places. The state's laws are citywide or non-existant. 
+* Massachusetts has no laws only applicable in particular places. The state's laws are citywide or non-existent. 
 
 ```{r}
 
