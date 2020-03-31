@@ -119,7 +119,7 @@ Based on pre-reporting, the following laws were examined as they disproportionat
 colnames(crim_survey[9:17])
 ```
 
-34 of the 41 laws against begging apply citywide, the most citywide-applicable laws for any crime. Public intoxication and urination follow with 32 and 30, respectively.
+34 of the 41 laws against begging apply citywide, the most citywide-applicable laws beside public intoxication for any crime. 
 ```{r}
 law_type_totals <- crim_survey %>%
   select(9:17) %>%
@@ -231,7 +231,7 @@ kable(cocs) %>%
   scroll_box(height = "250px")
 ```
 
-### **Analysis:**
+### **Location of laws in CoCs:**
 
 * California CoC Oakland/Alameda has the greatest number of laws that disproportionately affect homeless individuals with 19. Florida's CoC consisting of Fort Pierce/St. Lucie/Indian River/Martin Counties is a close second with 17 laws.
 * CoCs in California and Florida also have the second fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa and Humboldt County CoCs in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.
@@ -239,21 +239,43 @@ kable(cocs) %>%
 ```{r}
 ## create new data set
 coc_totals <- crim_survey %>%
-  
+  select(coc, citywide, particular_places, unclear, none) %>%
   ## group by coc so totals are by coc
+  group_by(coc)
+  
+coc_totals <- aggregate(coc_totals[,2:5], by=list(coc_totals$coc), FUN=sum, na.rm=TRUE) %>%
+  rename("coc" = "Group.1") %>%
   group_by(coc) %>%
-  
-  ## sum all indications that a law exists (so not including none or unclear)
-  summarise(total_laws = sum(citywide + particular_places)) %>%
-  
-  ## get rid of other columns
-  select(coc, total_laws) %>%
-  
-  ## put the coc with the most laws first
+  mutate(total_laws = sum(citywide + particular_places)) %>%
+  select(1, 6, 2:5) %>%
+  ## put the state with the most laws first
   arrange(desc(total_laws))
 
 kable(coc_totals) %>%
-  column_spec (2:ncol(coc_totals),border_left = T, border_right = F) %>%
+  column_spec (1:ncol(coc_totals),border_left = T, border_right = F) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "300px")
+```
+  
+### Type of laws by CoC
+```{r}
+type_by_coc <- crim_survey %>%
+  select(2,9:17) %>%
+  group_by(coc) %>%
+  naniar::replace_with_na_all(condition = ~.x == "unclear") %>%
+  naniar::replace_with_na_all(condition = ~.x == "none")
+
+type_by_coc[type_by_coc == "citywide"] <- 1
+type_by_coc[type_by_coc == "only in particular places"] <- 1
+type_by_coc[type_by_coc == "county"] <- 1
+
+type_by_coc[,2:10] <- sapply(type_by_coc[,2:10], as.numeric)
+
+type_by_coc <- aggregate(type_by_coc[,2:10], by=list(type_by_coc$coc), FUN=sum, na.rm=TRUE) %>%
+  rename("coc" = "Group.1")
+
+kable(type_by_coc) %>%
+  column_spec(2:ncol(type_by_coc),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "300px")
 ```
@@ -268,7 +290,7 @@ kable(coc_totals) %>%
 city_totals <- crim_survey %>%
   
   ## group by state so totals are by state
-  group_by(city) %>%
+  group_by(state, city) %>%
   
   ## sum all indications that a law exists (so not including none or unclear)
   summarise(total_laws = sum(citywide + particular_places),
