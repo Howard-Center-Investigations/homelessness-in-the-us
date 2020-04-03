@@ -985,6 +985,414 @@ median_household_income_tract_2013 <- get_acs(state = "District of Columbia", ge
 
 ```
 
+```{r}
 
+coord_2013 <- coord_2013 %>%
+  group_by(GEOID) %>%
+  summarise(n())
 
+```
+
+```{r}
+
+coord_2013$GEOID2 <- substr(coord_2013$GEOID, 0, 11)
+
+glimpse(coord_2013)
+
+glimpse(median_household_income_tract_2013)
+
+```
+
+```{r}
+
+coord_2013 <- coord_2013 %>%
+  rename("total" = "number")
+
+```
+
+```{r}
+
+coord_2013 <- coord_2013 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2013, more than half of the 46 homeless-related 311 calls came from demographics where the median household income is higher than $70,000. 
+
+demos_2013 <- coord_2013 %>%
+  inner_join(median_household_income_tract_2013, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+coord_2010 <- coord_2010 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2010$GEOID2 <- substr(coord_2010$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2010 <- coord_2010 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2010 <- coord_2010 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2010, four out of eight of the calls had a MHI in the $50k range, and two were above $98k.
+
+demos_2010 <- coord_2010 %>%
+  inner_join(median_household_income_tract_2010, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+coord_2011 <- coord_2011 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2011$GEOID2 <- substr(coord_2011$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2011 <- coord_2011 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2011 <- coord_2011 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2011, two calls came from an area with a MHI of $120k, and the other three were below $45k.
+
+demos_2011 <- coord_2011 %>%
+  inner_join(median_household_income_tract_2011, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+median_household_income_tract_2014 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2014)
+
+```
+
+```{r}
+
+coord_2014 <- coord_2014 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2014$GEOID2 <- substr(coord_2014$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2014 <- coord_2014 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2014 <- coord_2014 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2014, more than half of the calls had a MHI of more than $70k.
+
+demos_2014 <- coord_2014 %>%
+  inner_join(median_household_income_tract_2014, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+median_household_income_tract_2015 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2015)
+
+```
+
+```{r}
+
+coord_2015 <- coord_2015 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2015$GEOID2 <- substr(coord_2015$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2015 <- coord_2015 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2015 <- coord_2015 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2015, more than half of the calls had a MHI of more than $70k.
+
+demos_2015 <- coord_2015 %>%
+  inner_join(median_household_income_tract_2015, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+median_household_income_tract_2016 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2016)
+
+```
+
+```{r}
+
+coord_2016 <- coord_2016 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2016$GEOID2 <- substr(coord_2016$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2016 <- coord_2016 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2016 <- coord_2016 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2016, more than half of the calls had a MHI of more than $70k.
+
+demos_2016 <- coord_2016 %>%
+  inner_join(median_household_income_tract_2016, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+median_household_income_tract_2017 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2017)
+
+```
+
+```{r}
+
+coord_2017 <- coord_2017 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2017$GEOID2 <- substr(coord_2017$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2017 <- coord_2017 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2017 <- coord_2017 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2017, nearly all of the calls had a MHI of more than $70k.
+
+demos_2017 <- coord_2017 %>%
+  inner_join(median_household_income_tract_2017, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+median_household_income_tract_2018 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2018)
+
+```
+
+```{r}
+
+coord_2018 <- coord_2018 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2018$GEOID2 <- substr(coord_2018$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2018 <- coord_2018 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2018 <- coord_2018 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2018, nearly all of the calls had a MHI of more than $70k.
+
+demos_2018 <- coord_2018 %>%
+  inner_join(median_household_income_tract_2018, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
+
+```{r}
+
+# Read online that block data is not available after 2019, so I will use the median household income from 2018.
+
+# median_household_income_tract_2019 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2019)
+
+```
+
+```{r}
+
+coord_2019 <- coord_2019 %>%
+  group_by(GEOID) %>%
+  summarise(n())
+
+```
+
+```{r}
+
+coord_2019$GEOID2 <- substr(coord_2019$GEOID, 0, 11)
+
+```
+
+```{r}
+
+coord_2019 <- coord_2019 %>%
+  rename("total" = "n()")
+
+```
+
+```{r}
+
+coord_2019 <- coord_2019 %>%
+  select(GEOID2, total) %>%
+  rename("GEOID" = "GEOID2")
+
+```
+
+```{r}
+
+# In 2019, all but three of the calls had a MHI of more than $70k.
+
+demos_2019 <- coord_2019 %>%
+  inner_join(median_household_income_tract_2018, by=("GEOID")) %>%
+  rename("MHI" = "estimate") %>%
+  select(GEOID, MHI, total, NAME) %>%
+  arrange(desc(MHI))
+
+```
 
