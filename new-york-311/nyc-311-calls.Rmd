@@ -1,15 +1,16 @@
+---
 title: "NYC 311 Calls"
 author: "Theresa Diffendal"
-date: "1/27/2020"
+updated: "3/25/2020"
 output: 
   html_document:
-      toc: true
-      toc_depth: 3
-      toc_float: true
-    md_document:
-      variant: markdown_github
-      toc: true
-      toc_depth: 3
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  md_document:
+    variant: markdown_github
+    toc: yes
+    toc_depth: 3
 ---
 
 An analysis of New YOrk City's 311 call data from 2010-present. Data found on New York's [open data site](https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9/data).
@@ -32,13 +33,109 @@ library(dplyr)
 #library(bit64)
 ```
 
+```{r}
+#Can I make a function to analyze each year?
+
+#load in all year-by-year files and put in list
+require(data.table)
+folder <- "C:/Users/TDiff/GitHub/homelessness-in-the-us/new-york-311/"
+files = list.files(path = folder, pattern = '20[0-9]{2}-NYC-311-Service-Requests.Rds$')
+all_calls_years <- lapply(file.path(folder, files), function (x) data.table(readRDS(x)))
+
+#go through each year and analyze following info
+for (sheet in all_calls_years) {
+  #Figure out the year
+  year = sheet.Substring(0,4)
+  print("The following are for ", year)
+  
+#analyze agencies
+  agency_calls <- sheet %>%
+    group_by(agency) %>%
+    summarize(count = n()) %>%
+    arrange(desc(count))
+  print(agency_calls)
+  assign(paste0("agency_calls", year),agency_calls)
+  
+#Get an overall view of what agencies handle what complaint_types
+  agency_complaints <- sheet %>%
+    select(agency, complaint_type) %>%
+    group_by(agency, complaint_type) %>%
+    summarize(count = n())
+  print(agency_complaints)
+  assign(paste0("agency_complaints", year),agency_complaints)
+  
+  #Get all complaint types and arrange from most to least
+  complaints <- sheet %>%
+    group_by(complaint_type) %>%
+    summarize(count = n()) %>%
+    mutate(pct = round(count/(sum(count)) * 100,3)) %>%
+    arrange(desc(count))
+  print(complaints)
+  assign(paste0("complaints", year),complaints)
+
+#get a count of all descriptor values
+  descriptors <- sheet %>%
+    group_by(descriptor) %>%
+    summarize(count = n()) %>%
+    mutate(pct = count/sum(count) * 100) %>%
+    arrange(desc(count))
+  print(descriptors)
+  assign(paste0("descriptors", year),descriptors)
+
+#Check pairings of complaints and descriptors
+  complaint_descriptor <- sheet %>%
+    select(complaint_type, descriptor) %>%
+    group_by(complaint_type, descriptor) %>%
+    summarize(count = n())
+  assign(paste0("complaint_descriptor", year),complaint_descriptor)
+  
+  #see all resolution calls paired with complaints, descriptors
+  resolutions <- sheet %>%
+    select(complaint_type, descriptor, resolution_description) %>%
+    group_by(complaint_type, descriptor, resolution_description) %>%
+    summarize(count = n())
+  assign(paste0("resolutions", year),resolutions)
+  
+#look only at resolutions pertaining to homelessness
+  homeless_resolutions <- sheet %>%
+    filter(str_detect(complaint_type, "Panhandling|Homeless|DHS")) %>%
+    group_by(complaint_type, resolution_description) %>%
+    summarize(count = n())
+  assign(paste0("homeless_resolutions", year),homeless_resolutions)
+  
+  #from what locations did calls come
+   locations <- sheet %>%
+    group_by(location_type) %>%
+    summarize(count = n()) %>%
+    mutate(pct = round(count/sum(count) * 100,3))
+  assign(paste0("locations", year),locations)
+  
+  #how many different locations were called
+  total_locations <- locations %>%
+    summarize(total = sum(count))
+  assign(paste0("total_locations", year),total_locations)
+  
+#rough overall count of homeless calls
+  total_homeless_calls <- sheet %>%
+    filter(location =="Homeless Shelter" |
+            agency == "DHS" |
+            str_detect(complaint_type, "Panhandling|Homeless|DHS"))
+  assign(paste0("total_homeless_calls", year),total_homeless_calls)
+  
+  #then get a list of all the data tables for each year
+  year_all_sheets <- mget(ls(pattern = year))
+  assign(paste0("all_", year, "_tables"), year_all_sheets, envir = parent.frame)
+}
+
+```
+
 ## Analyze each year {.tabset}
 
 ### 2010
 
 ```{r}
 #Load data
-calls_2010 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds") 
+calls_2010 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2010-NYC-Service-Requests.Rds") 
 ```
 
 #### Agencies
@@ -248,7 +345,7 @@ homeless_2010 <- calls_2010 %>%
           agency == "DHS" |
            str_detect(complaint_type, "Panhandling|Homeless|DHS"))
 
-#saveRDS(homeless_2010, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2010-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(homeless_2010, "~/GitHub/homelessness-in-the-us/new-york-311/2010-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -260,7 +357,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2011 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.Rds")
+calls_2011 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2011-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -326,7 +423,7 @@ complaint_list_2011 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2011 <- complaints_2011 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2011)
 ```
 
 #### Relevant Descriptors 
@@ -394,14 +491,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2011 <- calls_2011 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2011) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2011 <- calls_2011 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2011) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -471,8 +568,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2011 <- calls_2011 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2011 |
+           descriptor %in% descriptor_list_2011) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -564,8 +661,8 @@ resolution_calls_2011 <- calls_2011 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2011 <- calls_2011 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2011 |
+           descriptor %in% descriptor_list_2011) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -624,7 +721,7 @@ total_homeless_calls_2011 <- homeless_2011 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2011, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2011-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2011, "~/GitHub/homelessness-in-the-us/new-york-311/2011-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -636,7 +733,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2012 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.Rds")
+calls_2012 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2012-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -702,7 +799,7 @@ complaint_list_2012 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2012 <- complaints_2012 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2012)
 ```
 
 #### Relevant Descriptors 
@@ -770,14 +867,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2012 <- calls_2012 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2012) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2012 <- calls_2012 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2012) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -847,8 +944,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2012 <- calls_2012 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2012 |
+           descriptor %in% descriptor_list_2012) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -940,8 +1037,8 @@ resolution_calls_2012 <- calls_2012 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2012 <- calls_2012 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2012 |
+           descriptor %in% descriptor_list_2012) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -1000,7 +1097,7 @@ total_homeless_calls_2012 <- homeless_2012 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2012, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2012-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2012, "~/GitHub/homelessness-in-the-us/new-york-311/2012-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -1012,7 +1109,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2013 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.Rds")
+calls_2013 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2013-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -1078,7 +1175,7 @@ complaint_list_2013 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2013 <- complaints_2013 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2013)
 ```
 
 #### Relevant Descriptors 
@@ -1146,14 +1243,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2013 <- calls_2013 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2013) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2013 <- calls_2013 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2013) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -1223,8 +1320,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2013 <- calls_2013 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2013 |
+           descriptor %in% descriptor_list_2013) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -1316,8 +1413,8 @@ resolution_calls_2013 <- calls_2013 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2013 <- calls_2013 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2013 |
+           descriptor %in% descriptor_list_2013) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -1376,7 +1473,7 @@ total_homeless_calls_2013 <- homeless_2013 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2013, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2013-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2013, "~/GitHub/homelessness-in-the-us/new-york-311/2013-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -1388,7 +1485,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2014 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.Rds")
+calls_2014 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2014-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -1457,7 +1554,7 @@ complaint_list_2014 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2014 <- complaints_2014 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2014)
 ```
 
 #### Relevant Descriptors 
@@ -1525,14 +1622,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2014 <- calls_2014 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2014) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2014 <- calls_2014 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2014) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -1602,8 +1699,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2014 <- calls_2014 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2014 |
+           descriptor %in% descriptor_list_2014) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -1695,8 +1792,8 @@ resolution_calls_2014 <- calls_2014 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2014 <- calls_2014 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2014 |
+           descriptor %in% descriptor_list_2014) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -1755,7 +1852,7 @@ total_homeless_calls_2014 <- homeless_2014 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2014, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2014-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2014, "~/GitHub/homelessness-in-the-us/new-york-311/2014-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -1767,7 +1864,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2015 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.Rds")
+calls_2015 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2015-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -1833,7 +1930,7 @@ complaint_list_2015 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2015 <- complaints_2015 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2015)
 ```
 
 #### Relevant Descriptors 
@@ -1901,14 +1998,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2015 <- calls_2015 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2015) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2015 <- calls_2015 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2015) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -1978,8 +2075,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2015 <- calls_2015 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2015 |
+           descriptor %in% descriptor_list_2015) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -2071,8 +2168,8 @@ resolution_calls_2015 <- calls_2015 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2015 <- calls_2015 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2015 |
+           descriptor %in% descriptor_list_2015) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -2131,7 +2228,7 @@ total_homeless_calls_2015 <- homeless_2015 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2015, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2015-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2015, "~/GitHub/homelessness-in-the-us/new-york-311/2015-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -2143,7 +2240,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2016 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.Rds")
+calls_2016 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2016-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -2209,7 +2306,7 @@ complaint_list_2016 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2016 <- complaints_2016 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2016)
 ```
 
 #### Relevant Descriptors 
@@ -2277,14 +2374,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2016 <- calls_2016 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2016) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2016 <- calls_2016 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2016) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -2354,8 +2451,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2016 <- calls_2016 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2016 |
+           descriptor %in% descriptor_list_2016) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -2447,8 +2544,8 @@ resolution_calls_2016 <- calls_2016 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2016 <- calls_2016 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2016 |
+           descriptor %in% descriptor_list_2016) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -2507,7 +2604,7 @@ total_homeless_calls_2016 <- homeless_2016 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2016, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2016-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2016, "~/GitHub/homelessness-in-the-us/new-york-311/2016-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -2521,7 +2618,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2017 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.Rds")
+calls_2017 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2017-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -2587,7 +2684,7 @@ complaint_list_2017 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2017 <- complaints_2017 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2017)
 ```
 
 #### Relevant Descriptors 
@@ -2655,14 +2752,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2017 <- calls_2017 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2017) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2017 <- calls_2017 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2017) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -2732,8 +2829,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2017 <- calls_2017 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2017 |
+           descriptor %in% descriptor_list_2017) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -2825,8 +2922,8 @@ resolution_calls_2017 <- calls_2017 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2017 <- calls_2017 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2017 |
+           descriptor %in% descriptor_list_2017) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -2885,7 +2982,7 @@ total_homeless_calls_2017 <- homeless_2017 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2017, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2017-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2017, "~/GitHub/homelessness-in-the-us/new-york-311/2017-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -2900,7 +2997,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2018 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.Rds")
+calls_2018 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2018-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -2966,7 +3063,7 @@ complaint_list_2018 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2018 <- complaints_2018 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2018)
 ```
 
 #### Relevant Descriptors 
@@ -3034,14 +3131,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2018 <- calls_2018 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2018) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2018 <- calls_2018 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2018) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -3111,8 +3208,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2018 <- calls_2018 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2018 |
+           descriptor %in% descriptor_list_2018) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -3204,8 +3301,8 @@ resolution_calls_2018 <- calls_2018 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2018 <- calls_2018 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2018 |
+           descriptor %in% descriptor_list_2018) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -3264,7 +3361,7 @@ total_homeless_calls_2018 <- homeless_2018 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2018, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2018-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2018, "~/GitHub/homelessness-in-the-us/new-york-311/2018-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
@@ -3279,7 +3376,7 @@ In the code below I will examine different fields in the dataset to identify and
 
 ```{r}
 #Load data
-calls_2019 <- readRDS("~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.Rds")
+calls_2019 <- readRDS("~/GitHub/homelessness-in-the-us/new-york-311/2019-NYC-Service-Requests.Rds")
 ```
 
 #### Relevant Complaints
@@ -3345,7 +3442,7 @@ complaint_list_2019 = c("Homeless Encampment",
                "Miscellaneous Categories")
 
 filtered_complaints_2019 <- complaints_2019 %>%
-  filter(complaint_type %in% complaint_list)
+  filter(complaint_type %in% complaint_list_2019)
 ```
 
 #### Relevant Descriptors 
@@ -3413,14 +3510,14 @@ Descriptors:
 ```{r}
 complaint_and_descriptor_2019 <- calls_2019 %>%
   select(complaint_type, descriptor) %>%
-  filter(complaint_type %in% complaint_list) %>%
+  filter(complaint_type %in% complaint_list_2019) %>%
   group_by(complaint_type, descriptor) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
 
 descriptor_and_complaint_2019 <- calls_2019 %>%
   select(complaint_type, descriptor) %>%
-  filter(descriptor %in% descriptor_list) %>%
+  filter(descriptor %in% descriptor_list_2019) %>%
   group_by(descriptor, complaint_type) %>%
   summarize(count = n()) %>%
   mutate(pct = round(count/sum(count) * 100,3)) 
@@ -3490,8 +3587,8 @@ What agencies cover the complaints identified above?
 ```{r}
 #Get number of calls pertaining to filtered complaints and descriptors; DHS is Department of Homeless Services
 filtered_agency_complaint_2019 <- calls_2019 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2019 |
+           descriptor %in% descriptor_list_2019) %>%
   group_by(agency, complaint_type, descriptor) %>%
   summarize(count = n())
 ```
@@ -3583,8 +3680,8 @@ resolution_calls_2019 <- calls_2019 %>%
 
 #see resolution calls related to relevant complaint types and descriptors
 filtered_resolution_calls_2019 <- calls_2019 %>%
-  filter(complaint_type %in% complaint_list |
-           descriptor %in% descriptor_list) %>%
+  filter(complaint_type %in% complaint_list_2019 |
+           descriptor %in% descriptor_list_2019) %>%
   group_by(complaint_type, descriptor, resolution_description) %>%
   summarize(count = n())
 ```
@@ -3643,7 +3740,7 @@ total_homeless_calls_2019 <- homeless_2019 %>%
   ungroup %>%
   summarize(total = sum(count))
 
-#saveRDS(calls_2019, "~/Documents/GitHub/homelessness-in-the-us/new-york-311/2019-HOMELESS-NYC-Service-Requests.Rds")
+#saveRDS(calls_2019, "~/GitHub/homelessness-in-the-us/new-york-311/2019-HOMELESS-NYC-Service-Requests.Rds")
 
 ```
 
