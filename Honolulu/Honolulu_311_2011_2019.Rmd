@@ -583,6 +583,7 @@ drop_na(longitude)
 
 coord_2019 <- coord_2019 %>% 
 mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+
 ```
 
 
@@ -601,10 +602,15 @@ Latitude and Longitude converted to census tracts and then joined with database 
 # all geolocated homeless data joined 
 #checked- 10870 rows which is what the original he_data_cleaned dataset had
 
-hawaii_homeless_geoid <- rbind(coord_2012, coord_2013, coord_2014, coord_2015, coord_2016, coord_2017, coord_2018, coord_2019) %>% select("Description", "YEAR", "GEOID")
+hawaii_homeless_geoid <- rbind(coord_2012, coord_2013, coord_2014, coord_2015, coord_2016, coord_2017, coord_2018, coord_2019) %>% select("Description", "YEAR", "GEOID") 
 
 #get rid of the last four digits so it matches the gentrification data
 hawaii_homeless_geoid$GEOID  <- substring(hawaii_homeless_geoid$GEOID , 1,11)
+
+hawaii_homeless_geoid <- hawaii_homeless_geoid %>% 
+group_by(YEAR, GEOID) %>%
+summarise(count = n()) 
+
 
 ``` 
 
@@ -638,20 +644,41 @@ rename(low_income_loss_gain = strong_expansion_decline) %>%
 
 
 
-Hawaii_gentrification<- Hawaii_gentrification %>% 
-drop_na(low_income_pct_loss_gain)   
-
 
 hawaii_gentrification_geoid<- hawaii_homeless_geoid %>%
   inner_join(Hawaii_gentrification, by=c("GEOID"))
 
+
+
+#Hawaii_gentrification<- Hawaii_gentrification %>% 
+#drop_na(low_income_pct_loss_gain)   
+
+
 ``` 
 
 
+```{r}
+
+Y2012 <-hawaii_gentrification_geoid %>%
+filter(YEAR == "2012") %>% 
+mutate(Y2012 = count) %>% 
+select(GEOID, Y2012, low_income_loss_gain, tot_pop16, low_income_pct_loss_gain) %>% print()
+
+
+Y2019 <-hawaii_gentrification_geoid %>%
+filter(YEAR == "2019") %>% 
+mutate(Y2019 = count) %>% 
+select(GEOID, Y2019, low_income_loss_gain, tot_pop16, low_income_pct_loss_gain) %>% print()
+
+Y2012_Y2019 <- Y2012 %>% full_join(Y2019, by = c("GEOID")) %>% 
+select(GEOID, Y2012, Y2019, low_income_loss_gain.x, tot_pop16.x, low_income_pct_loss_gain.x) %>% print()
 
 
 
+#make NA values 0
+#count_09_19[is.na(count_09_19)] <- 0
 
+``` 
 
 
 
@@ -745,5 +772,6 @@ median_household_income_tract_2018 <- get_acs(state = "Hawaii", geography = "tra
 median_household_income_tract_2019 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2019)
 
 ``` 
+
 
 
