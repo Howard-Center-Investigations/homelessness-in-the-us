@@ -436,63 +436,29 @@ leaflet(Honolulu_2019) %>% addTiles() %>%
 
 
 
-Latitude and Longitude converted to census tracts and joined with database from the American Neighbourhood Change:
-
-- https://www.law.umn.edu/institute-metropolitan-opportunity/gentrification 
-
-- Honolulu_2011 does not work as there is only one homeless case. 
 
 # Using TIGRIS, I turned all of the latitude and longitude coordinates into the GEOID. 
 
 
 2011 does not work as there is only one case, with missing longitude 
 
-```{r}
-
-# read Honolulu data 
-Hawaii_gentrification <- read_excel("data/Hawaii_gentrification.xlsx") 
-
-```
-
-
-```{r}
-
-Hawaii_gentrification <- Hawaii_gentrification %>% clean_names() %>% filter(state_name == 'Hawaii') %>% rename("GEOID" = "geoid") %>%  select(-'state_name')
-
-```
-
-
-```{r}
-
-Hawaii_gentrification <- Hawaii_gentrification %>% select( - 'county_name')
-
-``` 
 
 
 2012 - 
 
+
 ```{r}
 
-coord_2012 <- Honolulu_2012 %>% 
- drop_na(longitude)   
+coord_2012 <- Honolulu_2012  %>% 
+drop_na(longitude)   
 
 ``` 
+
 
 ```{r}
 coord_2012 <- coord_2012 %>% 
   mutate(census_tract = apply(coord_2012, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
 ```
-
-```{r}
-
-coord_2012$GEOID <- substr(coord_2012$GEOID, 0, 11)
-
-```
-
-```{r}
-Hawaii_gentrification_2012 <- coord_2012 %>% 
-inner_join(Hawaii_gentrification, by=c('GEOID')) 
-``` 
 
 
 2013- 
@@ -504,24 +470,11 @@ drop_na(longitude)
 
 ``` 
 
-
-
 ```{r} 
 
 coord_2013 <- coord_2013 %>% 
 mutate(census_tract = apply(coord_2013, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
 ```
-
-```{r}
-
-coord_2013$GEOID <- substr(coord_2013$GEOID, 0, 11)
-
-```
-
-```{r}
-Hawaii_gentrification_2013 <- coord_2013 %>% 
-inner_join(Hawaii_gentrification, by=c('GEOID')) 
-``` 
 
 
 
@@ -541,17 +494,6 @@ coord_2014 <- coord_2014 %>%
 mutate(census_tract = apply(coord_2014, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
 ```
 
-```{r}
-
-coord_2014$GEOID <- substr(coord_2014$GEOID, 0, 11)
-
-```
-
-
-```{r}
-Hawaii_gentrification_2014 <- coord_2014 %>% 
-inner_join(Hawaii_gentrification, by=c('GEOID')) 
-``` 
 
 
 2015
@@ -571,17 +513,6 @@ mutate(census_tract = apply(coord_2015, 1, function(row) call_geolocator_latlon(
 ```
 
 
-```{r}
-
-coord_2015$GEOID <- substr(coord_2015$GEOID, 0, 11)
-
-```
-
-```{r}
-Hawaii_gentrification_2015 <- Hawaii_gentrification %>% 
-inner_join( coord_2015, by=c('GEOID')) 
-``` 
-
 
 2016
 
@@ -600,17 +531,6 @@ mutate(census_tract = apply(coord_2016, 1, function(row) call_geolocator_latlon(
 ```
 
 
-```{r}
-
-coord_2016$GEOID <- substr(coord_2016$GEOID, 0, 11)
-
-```
-
-```{r}
-Hawaii_gentrification_2016 <- Hawaii_gentrification %>% 
-inner_join( coord_2016, by=c('GEOID')) 
-``` 
-
 
 2017
 
@@ -626,18 +546,6 @@ drop_na(longitude)
 coord_2017 <- coord_2017 %>% 
 mutate(census_tract = apply(coord_2017, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
 ```
-
-```{r}
-
-coord_2017$GEOID <- substr(coord_2017$GEOID, 0, 11)
-
-```
-
-```{r}
-Hawaii_gentrification_2017 <- Hawaii_gentrification %>% 
-inner_join( coord_2017, by=c('GEOID')) 
-``` 
-
 
 
 
@@ -659,19 +567,6 @@ mutate(census_tract = apply(coord_2018, 1, function(row) call_geolocator_latlon(
 ```
 
 
-```{r}
-
-coord_2018$GEOID <- substr(coord_2018$GEOID, 0, 11)
-
-```
-
-```{r}
-Hawaii_gentrification_2018 <- Hawaii_gentrification %>% 
-inner_join( coord_2018, by=c('GEOID')) 
-``` 
-
-
-
 
 2019 - 
 
@@ -684,26 +579,146 @@ drop_na(longitude)
 ``` 
 
 
+
 ```{r} 
+coord_2019 <- coord_2019 %>% 
+mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract") 
+```
+
+
+
+
+```{r}
 
 coord_2019 <- coord_2019 %>% 
-mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+select("Description", "YEAR", "GEOID")
+
+
+
+coord_2019 %>% 
+count(GEOID) %>% 
+print()
+
 ```
 
 
-```{r}
 
-coord_2019$GEOID <- substr(coord_2019$GEOID, 0, 11)
+Latitude and Longitude converted to census tracts and then joined with database from the American Neighbourhood Change:
 
-```
+- neighborhood population change between 2000 and 2016. 
 
-```{r}
-Hawaii_gentrification_2019 <- Hawaii_gentrification %>% 
-inner_join( coord_2019, by=c('GEOID')) 
+- https://www.law.umn.edu/institute-metropolitan-opportunity/gentrification 
+
+- Honolulu_2011 does not work as there is only one homeless case. 
+
+
+````{r}
+
+
+# all geolocated homeless data joined 
+
+
+#hawaii_homeless_geoid <- hawaii_homeless_geoid %>%
+ 
+# inner_join(Hawaii_gentrification, by=c("GEOID"))
+
+
+
+A <- coord_2012 %>%
+  inner_join(coord_2013, by=c("GEOID")) %>% 
+ print(A)
+
+
+``` 
+
+arkansas_pills_c <- arkansas_pills %>% inner_join(arkansas_pills_per_zip_arcos_2010, by=c("buyer_zip")) %>% mutate(A2010 = pills_per_person) %>% select(buyer_zip, A2008, A2009, A2010) %>% print(arkansas_pills_c)
+
+
+arkansas_pills_b <- arkansas_pills_c %>% inner_join(arkansas_pills_per_zip_arcos_2011, by=c("buyer_zip"))%>%
+mutate(A2011 = pills_per_person) %>% select(buyer_zip, A2008, A2009, A2010,A2011) %>%
+print(arkansas_pills_b)
+
+
+arkansas_arcos_pills <- arkansas_pills_b %>% inner_join(arkansas_pills_per_zip_arcos_2012, by=c("buyer_zip")) %>%
+mutate(A2012 = pills_per_person) %>% 
+select(buyer_zip, A2008, A2009, A2010,A2011,A2012) %>% mutate(percentage_change_2008_2012 = (A2012-A2008)/A2012 *100) %>%
+rename(buyer_state = buyer_state.x) %>% arrange(desc(A2012)) %>% print(arkansas_pills_a)
+
 ``` 
 
 
 
+
+
+``` 
+
+
+
+```{r}
+
+
+#checked- 10870 rows which is what the original he_data_cleaned dataset had
+
+hawaii_homeless_geoid <- rbind(coord_2012, coord_2013, coord_2014, coord_2015, coord_2016, coord_2017, coord_2018, coord_2019) %>% select("Description", "YEAR", "GEOID")
+
+#get rid of the last four digits so it matches the gentrification data
+hawaii_homeless_geoid$GEOID  <- substring(hawaii_homeless_geoid$GEOID , 1,11)
+
+``` 
+
+
+```{r}
+ 
+# read Honolulu  gentrification data 
+Hawaii_gentrification <- read_excel("data/Hawaii_gentrification.xlsx")  %>%
+clean_names() %>%
+filter(state_name == "Hawaii") %>%
+select(geoid, strong_expansion_decline, tot_pop16) %>%
+rename(low_income_loss_gain = strong_expansion_decline) %>%
+ mutate(low_income_pct_loss_gain = low_income_loss_gain/tot_pop16)%>% rename("GEOID" = "geoid") 
+
+
+
+# strong_expansion_decline is now low_income_loss_gain
+
+``` 
+
+
+```{r}
+
+#all homeless encampment data matched with gentrification data- the rows without lat/long
+
+
+# hawaii_homeless_geoid are all reports from 2012 to 2019 "homeless" that have no missing values 
+# total of 493 
+
+# Hawaii_gentrification total of 316 GEOID's - filtered out Nan values in low_income_pct_loss_gain (before 351)
+
+
+
+Hawaii_gentrification<- Hawaii_gentrification %>% 
+drop_na(low_income_pct_loss_gain)   
+
+
+hawaii_gentrification_geoid<- hawaii_homeless_geoid %>%
+  inner_join(Hawaii_gentrification, by=c("GEOID"))
+
+
+``` 
+
+
+
+
+```{r}
+hawaii_gentrification_geoid<- hawaii_gentrification_geoid %>%
+  arrange(desc(YEAR)) %>%
+  group_by (GEOID, YEAR) %>%
+  print(hawaii_gentrification_geoid)
+ 
+```
+
+
+ %>% group_by( buyer_zip, buyer_state, transaction_year) %>% summarise(shipments = n(), total_pills = sum(dosage_unit)) %>% arrange(desc(total_pills))
 
 
 
