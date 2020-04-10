@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-
 library(tidyverse)
 library(janitor)
 library(arcos)
@@ -25,13 +24,10 @@ library(corrr)
 library(stringr)
 library(leaflet)
 library(tigris)
-
 ```
 
 ```{r}
-
 # Pulling in the 311 calls from 2010-2020 via Open Data DC.
-
 DC_311_2019 <- read.csv("Data/311_City_Service_Requests_in_2019.csv")
 DC_311_2018 <- read.csv("Data/311_City_Service_Requests_in_2018.csv")
 DC_311_2017 <- read.csv("Data/311_City_Service_Requests_in_2017.csv")
@@ -44,112 +40,88 @@ DC_311_2011 <- read.csv("Data/311_City_Service_Requests_in_2011.csv")
 catchment_area <- read_csv("Data/Human_Services_Catchment_Area.csv")
 DC_311_2015 <- read_csv("Data/311_City_Service_Requests_in_2015.csv")
 DC_311_2010 <- read_csv("Data/311_City_Service_Requests_in_2010.csv")
-
 ```
 
 ```{r}
-
 # Census key
-
 key <- "uO4EK6I"
-
 census_api_key("366af81ca42273ae67ad0729766f54f041bd300d")
-
 ```
 
 ```{r}
-
 # To start, I was exploring the data to see what were the most common service codes and roughly how many cases were reported each year.
-
 DC_311_2019 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 DC_311_2018 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 DC_311_2017 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 DC_311_2016 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 DC_311_2014 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 DC_311_2013 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 DC_311_2012 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 DC_311_2011 %>%
   filter(str_detect(DETAILS, "homeless")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, SERVICETYPECODEDESCRIPTION, ORGANIZATIONACRONYM) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 # Here, I start to create new objects for each year based on my search terms in the DETAILS category: homeless, sleeping, homless, congregate and urinat (this is to get any itteration of the word). 
-
 breakdown_2019 <- DC_311_2019 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -158,36 +130,26 @@ breakdown_2019 <- DC_311_2019 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 # Adding a new column with the year for when I later combine all years.
-
 breakdown_2019$new_column <- "2019"
-
 ```
 
 ```{r}
-
 breakdown_2019 <- breakdown_2019 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 # After creating a breakdown for each year, I mapped out the incidents and used the service code as the marker.
-
 leaflet(breakdown_2019) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2018 <- DC_311_2018 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -196,32 +158,24 @@ breakdown_2018 <- DC_311_2018 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2018$new_column <- "2018"
-
 ```
 
 ```{r}
-
 breakdown_2018 <- breakdown_2018 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2018) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2017 <- DC_311_2017 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -230,33 +184,25 @@ breakdown_2017 <- DC_311_2017 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2017$new_column <- "2017"
-
 ```
 
 ```{r}
-
 breakdown_2017 <- breakdown_2017 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 
 ```{r}
-
 leaflet(breakdown_2017) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2016 <- DC_311_2016 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -265,32 +211,24 @@ breakdown_2016 <- DC_311_2016 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2016$new_column <- "2016"
-
 ```
 
 ```{r}
-
 breakdown_2016 <- breakdown_2016 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2016) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2014_details <- DC_311_2014 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -299,51 +237,37 @@ breakdown_2014_details <- DC_311_2014 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 # From 2010-2015, there was a specific service code for homelessness: HOMEENCA. For these five years, I did two separate breakdowns before merging them into one: one search through DETAILS, one search for the SERVICECODE.
-
 breakdown_2014_service <- DC_311_2014 %>%
   filter(str_detect(SERVICECODE, "HOME")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 # Here is where I bound the two breakdowns together. These steps are applicable for 2010-2015.
-
 breakdown_2014 <- breakdown_2014_details %>%
   rbind(breakdown_2014_service)
-
 ```
 
 ```{r}
-
 breakdown_2014$new_column <- "2014"
-
 ```
 
 ```{r}
-
 breakdown_2014 <- breakdown_2014 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2014) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2013_details <- DC_311_2013 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -352,47 +276,35 @@ breakdown_2013_details <- DC_311_2013 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2013_service <- DC_311_2013 %>%
   filter(str_detect(SERVICECODE, "HOME")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2013 <- breakdown_2013_details %>%
   rbind(breakdown_2013_service)
-
 ```
 
 ```{r}
-
 breakdown_2013$new_column <- "2013"
-
 ```
 
 ```{r}
-
 breakdown_2013 <- breakdown_2013 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2013) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2012_details <- DC_311_2012 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -401,47 +313,35 @@ breakdown_2012_details <- DC_311_2012 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2012_service <- DC_311_2012 %>%
   filter(str_detect(SERVICECODE, "HOME")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2012 <- breakdown_2012_details %>%
   rbind(breakdown_2012_service)
-
 ```
 
 ```{r}
-
 breakdown_2012$new_column <- "2012"
-
 ```
 
 ```{r}
-
 breakdown_2012 <- breakdown_2012 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2012) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2011_details <- DC_311_2011 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -450,48 +350,36 @@ breakdown_2011_details <- DC_311_2011 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 
 ```{r}
-
 breakdown_2011_service <- DC_311_2011 %>%
   filter(str_detect(SERVICECODE, "HOME")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2011 <- breakdown_2011_details %>%
   rbind(breakdown_2011_service)
-
 ```
 
 ```{r}
-
 breakdown_2011$new_column <- "2011"
-
 ```
 
 ```{r}
-
 breakdown_2011 <- breakdown_2011 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2011) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2020 <- DC_311_2020 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -500,27 +388,21 @@ breakdown_2020 <- DC_311_2020 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2020) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2015_service <- DC_311_2015 %>%
   filter(str_detect(SERVICECODE, "HOME")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2015_details <- DC_311_2015 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -529,47 +411,35 @@ breakdown_2015_details <- DC_311_2015 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2015 <- breakdown_2015_details %>%
   rbind(breakdown_2015_service)
-
 ```
 
 ```{r}
-
 breakdown_2015$new_column <- "2015"
-
 ```
 
 ```{r}
-
 breakdown_2015 <- breakdown_2015 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2015) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 breakdown_2010_service <- DC_311_2010 %>%
   filter(str_detect(SERVICECODE, "HOME")) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2010_details <- DC_311_2010 %>%
   filter(str_detect(DETAILS, "homeless")|
            (str_detect(DETAILS, "sleeping"))|
@@ -578,61 +448,45 @@ breakdown_2010_details <- DC_311_2010 %>%
            (str_detect(DETAILS, "urinat"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2010 <- breakdown_2010_details %>%
   rbind(breakdown_2010_service)
-
 ```
 
 ```{r}
-
 breakdown_2010 <- breakdown_2010 %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
-
 ```
 
 ```{r}
-
 breakdown_2010$new_column <- "2010"
-
 ```
 
 ```{r}
-
 breakdown_2010 <- breakdown_2010 %>%
   rename("YEAR" = "new_column")
-
 ```
 
 ```{r}
-
 leaflet(breakdown_2010) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 # To give Brenda, Julia and Bryan an idea of what was happening, I ran each year through this to give them the number of incidents.
-
 breakdown_2014 %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 
 ```{r}
-
 # I put all years together for further analysis.
-
 breakdown_all_years <- breakdown_2010 %>%
   rbind(breakdown_2011) %>%
   rbind(breakdown_2012) %>%
@@ -644,755 +498,538 @@ breakdown_all_years <- breakdown_2010 %>%
   rbind(breakdown_2018) %>%
   rbind(breakdown_2019) %>%
   rbind(breakdown_2020)
-
 ```
 
 ```{r}
-
 # All the years plotted with the service code description as the popup marker.
-
 leaflet(breakdown_all_years) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
-
 ```
 
 ```{r}
-
 # All the years plotted with the year as the popup marker.
-
 leaflet(breakdown_all_years) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(YEAR))
-
 ```
 
 ```{r}
-
 # This shows which service codes were most common from 2010-2020.
-
 breakdown_all_years %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 # This shows which zip codes had the most incidents from 2010-2020.
-
 breakdown_all_years %>%
   select(SERVICECODE, ZIPCODE) %>%
   group_by(ZIPCODE) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 # I wanted to see how many specific points had multiple reports and if that meant anything. Many are duplicate cases.
-
 breakdown_all_years %>%
   select(SERVICECODE, LATITUDE, LONGITUDE) %>%
   group_by(LATITUDE) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 breakdown_all_years %>%
   select(SERVICECODE, LATITUDE, LONGITUDE) %>%
   group_by(LONGITUDE) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 # I wanted to look into the cases that specifically had "encampment" in the service code description. 
-
 encampment_data <- breakdown_all_years %>%
   filter(str_detect(SERVICECODEDESCRIPTION, "Encampment"))
-
 ```
 
 ```{r}
-
 # Through this, I found there were two types of classification for HOMEENCA: Homeless Encampment and Deputy Mayor for Health and Human Services Homeless Encampment. 
-
 encampment_data %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, ZIPCODE, DETAILS) %>%
   group_by(SERVICECODEDESCRIPTION) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 # I wanted to see if there are any differences between these two codes. They were pretty evenly spread out across the zip codes. I also ran the data to see if there was any difference in the years used, and there isn't anything significant.
-
 encampment_data %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, ZIPCODE, DETAILS) %>%
   group_by(SERVICECODEDESCRIPTION, ZIPCODE) %>%
   summarise(total = n()) %>%
   arrange(desc(total))
-
 ```
 
 ```{r}
-
 # Here, we can see the number of cases peaked in 2014 but never quite fell all the way back down. A quick Google search: The Washington Post heavily covered the homeless crisis in 2014, saying the numbers were surging. Mayor Vincent Gray said he couldn't "explain fully or fix quickly" the crisis.
-
 breakdown_all_years%>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, ZIPCODE, DETAILS, YEAR) %>%
   group_by(YEAR) %>%
   summarise(total = n())
   
-
 ```
 
 ```{r}
-
 # Using TIGRIS, I turned all of the latitude and longitude coordinates into the GEOID. 
-
 coord <- breakdown_2010 %>%
   select(LATITUDE, LONGITUDE)
  
 coord_2010 <- coord %>%
   mutate(census_tract = apply(coord, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2011 <- breakdown_2011 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2011 <- coord_2011 %>%
   mutate(census_tract = apply(coord_2011, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2012 <- breakdown_2012 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2012 <- coord_2012 %>%
   mutate(census_tract = apply(coord_2012, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2013 <- breakdown_2013 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2013 <- coord_2013 %>%
   mutate(census_tract = apply(coord_2013, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2014 <- breakdown_2014 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2014 <- coord_2014 %>%
   mutate(census_tract = apply(coord_2014, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2015 <- breakdown_2015 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2015 <- coord_2015 %>%
   mutate(census_tract = apply(coord_2015, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2016 <- breakdown_2016 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2016 <- coord_2016 %>%
   mutate(census_tract = apply(coord_2016, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2017 <- breakdown_2017 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2017 <- coord_2017 %>%
   mutate(census_tract = apply(coord_2017, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2018 <- breakdown_2018 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2018 <- coord_2018 %>%
   mutate(census_tract = apply(coord_2018, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 coord_2019 <- breakdown_2019 %>%
   select(LATITUDE, LONGITUDE)
-
 coord_2019 <- coord_2019 %>%
   mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
   rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
-
 v17 <- load_variables(2018, "acs5", cache = TRUE)
-
 View(v17)
-
 ```
 
 ```{r}
-
 # There is only one county GEOID that cooresponds with DC, which is 11001.
-
 DC_black <- get_acs(geography = "county", variables = c("B02001_003"), year = 2010)
-
-
 ```
 
 ```{r}
-
 # Using census data to see the comparrisson of white residents and black residents in the tracts where the 311 calls came from.
-
 DC_black_tract <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_003"), year = 2010)
-
 DC_black_tract$new_column <- "black"
-
 DC_black_tract <- DC_black_tract %>%
   rename("RACE" = "new_column")
-
 ```
 
 ```{r}
-
 DC_white_tract <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_002"), year = 2010)
-
 DC_white_tract$new_column <- "white"
-
 DC_white_tract <- DC_white_tract %>%
   rename("RACE" = "new_column")
-
 ```
 
 ```{r}
-
 # Census tract data from 2006-2010
-
 DC_race_tract_2010 <- DC_black_tract %>%
   rbind(DC_white_tract)
-
 ```
 
 ```{r}
-
 DC_black_tract_2011 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_003"), year = 2011)
-
 DC_black_tract_2011$new_column <- "black"
-
 DC_black_tract_2011 <- DC_black_tract_2011 %>%
   rename("RACE" = "new_column")
-
 ```
 
 ```{r}
-
 DC_white_tract_2011 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B02001_002"), year = 2011)
-
 DC_white_tract_2011$new_column <- "white"
-
 DC_white_tract_2011 <- DC_white_tract_2011 %>%
   rename("RACE" = "new_column")
-
 ```
 
 ```{r}
-
 # Census tract data from 2007-2011.
-
 # Just based on these last two groups, I'm not sure there is anything definitive to say about the racial breakdown of where the calls are coming from.
-
 DC_race_tract_2011 <- DC_black_tract_2011 %>%
   rbind(DC_white_tract_2011)
-
 ```
 
 ```{r}
-
 # Going based off median household income, there was more of a pattern than with race. Most of these came up with a median household income of more than $50,000. 
-
 median_household_income_tract_2010 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2010)
-
 ```
 
 ```{r}
-
 # The pattern is mostly consistent in 2011. The range here was from $37,000 to more than $100,000. 
-
 median_household_income_tract_2011 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2011)
-
 ```
 
 ```{r}
-
 # Mostly the pattern stays the same. This year had roughly three times more reports than the previous two, so there is a little more variation.
-
 median_household_income_tract_2012 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2012)
-
 ```
 
 ```{r}
-
 # Again, the pattern mostly holds.
-
 median_household_income_tract_2013 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2013)
-
 ```
 
 ```{r}
-
 coord_2013 <- coord_2013 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2013$GEOID2 <- substr(coord_2013$GEOID, 0, 11)
-
 glimpse(coord_2013)
-
 glimpse(median_household_income_tract_2013)
-
 ```
 
 ```{r}
-
 coord_2013 <- coord_2013 %>%
   rename("total" = "number")
-
 ```
 
 ```{r}
-
 coord_2013 <- coord_2013 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2013, more than half of the 46 homeless-related 311 calls came from demographics where the median household income is higher than $70,000. 
-
 demos_2013 <- coord_2013 %>%
   inner_join(median_household_income_tract_2013, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 coord_2010 <- coord_2010 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2010$GEOID2 <- substr(coord_2010$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2010 <- coord_2010 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2010 <- coord_2010 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2010, four out of eight of the calls had a MHI in the $50k range, and two were above $98k.
-
 demos_2010 <- coord_2010 %>%
   inner_join(median_household_income_tract_2010, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 coord_2011 <- coord_2011 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2011$GEOID2 <- substr(coord_2011$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2011 <- coord_2011 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2011 <- coord_2011 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2011, two calls came from an area with a MHI of $120k, and the other three were below $45k.
-
 demos_2011 <- coord_2011 %>%
   inner_join(median_household_income_tract_2011, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 median_household_income_tract_2014 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2014)
-
 ```
 
 ```{r}
-
 coord_2014 <- coord_2014 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2014$GEOID2 <- substr(coord_2014$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2014 <- coord_2014 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2014 <- coord_2014 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2014, more than half of the calls had a MHI of more than $70k.
-
 demos_2014 <- coord_2014 %>%
   inner_join(median_household_income_tract_2014, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 median_household_income_tract_2015 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2015)
-
 ```
 
 ```{r}
-
 coord_2015 <- coord_2015 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2015$GEOID2 <- substr(coord_2015$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2015 <- coord_2015 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2015 <- coord_2015 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2015, more than half of the calls had a MHI of more than $70k.
-
 demos_2015 <- coord_2015 %>%
   inner_join(median_household_income_tract_2015, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 median_household_income_tract_2016 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2016)
-
 ```
 
 ```{r}
-
 coord_2016 <- coord_2016 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2016$GEOID2 <- substr(coord_2016$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2016 <- coord_2016 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2016 <- coord_2016 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2016, more than half of the calls had a MHI of more than $70k.
-
 demos_2016 <- coord_2016 %>%
   inner_join(median_household_income_tract_2016, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 median_household_income_tract_2017 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2017)
-
 ```
 
 ```{r}
-
 coord_2017 <- coord_2017 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2017$GEOID2 <- substr(coord_2017$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2017 <- coord_2017 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2017 <- coord_2017 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2017, nearly all of the calls had a MHI of more than $70k.
-
 demos_2017 <- coord_2017 %>%
   inner_join(median_household_income_tract_2017, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 median_household_income_tract_2018 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2018)
-
 ```
 
 ```{r}
-
 coord_2018 <- coord_2018 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2018$GEOID2 <- substr(coord_2018$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2018 <- coord_2018 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2018 <- coord_2018 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2018, nearly all of the calls had a MHI of more than $70k.
-
 demos_2018 <- coord_2018 %>%
   inner_join(median_household_income_tract_2018, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
 ```{r}
-
 # Read online that block data is not available after 2019, so I will use the median household income from 2018.
-
 # median_household_income_tract_2019 <- get_acs(state = "District of Columbia", geography = "tract", variables = c("B19013_001"), year = 2019)
-
 ```
 
 ```{r}
-
 coord_2019 <- coord_2019 %>%
   group_by(GEOID) %>%
   summarise(n())
-
 ```
 
 ```{r}
-
 coord_2019$GEOID2 <- substr(coord_2019$GEOID, 0, 11)
-
 ```
 
 ```{r}
-
 coord_2019 <- coord_2019 %>%
   rename("total" = "n()")
-
 ```
 
 ```{r}
-
 coord_2019 <- coord_2019 %>%
   select(GEOID2, total) %>%
   rename("GEOID" = "GEOID2")
-
 ```
 
 ```{r}
-
 # In 2019, all but three of the calls had a MHI of more than $70k.
-
 demos_2019 <- coord_2019 %>%
   inner_join(median_household_income_tract_2018, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
   select(GEOID, MHI, total, NAME) %>%
   arrange(desc(MHI))
-
 ```
 
