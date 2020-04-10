@@ -25,6 +25,7 @@ library(corrr)
 library(stringr)
 library(leaflet)
 library(tigris)
+library(readxl)
 
 ```
 
@@ -44,6 +45,7 @@ DC_311_2011 <- read.csv("Data/311_City_Service_Requests_in_2011.csv")
 catchment_area <- read_csv("Data/Human_Services_Catchment_Area.csv")
 DC_311_2015 <- read_csv("Data/311_City_Service_Requests_in_2015.csv")
 DC_311_2010 <- read_csv("Data/311_City_Service_Requests_in_2010.csv")
+GentDecline_DC <- read_excel("Data/GentDecline_DC.xlsx")
 
 ```
 
@@ -861,12 +863,12 @@ coord_2018 <- coord_2018 %>%
 
 ```{r}
 
-coord_2019 <- breakdown_2019 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2019 <- breakdown_2019
 
 coord_2019 <- coord_2019 %>%
   mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11))
 
 ```
 
@@ -1357,30 +1359,32 @@ demos_2018 <- coord_2018 %>%
 
 ```{r}
 
-coord_2019 <- coord_2019 %>%
-  group_by(GEOID) %>%
-  summarise(n())
+# Fixed this higher up
+
+# coord_2019 <- coord_2019 %>%
+#  group_by(GEOID) %>%
+#  summarise(n())
 
 ```
 
 ```{r}
 
-coord_2019$GEOID2 <- substr(coord_2019$GEOID, 0, 11)
+# coord_2019$GEOID2 <- substr(coord_2019$GEOID, 0, 11)
 
 ```
 
 ```{r}
 
-coord_2019 <- coord_2019 %>%
-  rename("total" = "n()")
+# coord_2019 <- coord_2019 %>%
+#  rename("total" = "n()")
 
 ```
 
 ```{r}
 
-coord_2019 <- coord_2019 %>%
-  select(GEOID2, total) %>%
-  rename("GEOID" = "GEOID2")
+#coord_2019 <- coord_2019 %>%
+#  select(GEOID2, total) %>%
+#  rename("GEOID" = "GEOID2")
 
 ```
 
@@ -1395,4 +1399,32 @@ demos_2019 <- coord_2019 %>%
   arrange(desc(MHI))
 
 ```
+
+```{r}
+
+DCGentDecline_2019 <- GentDecline_DC %>%
+  inner_join(coord_2019, by=("GEOID")) %>%
+  select(GEOID, StrongExpansionDecline, TotPop16)
+
+```
+
+```{r}
+
+DCGentDecline_2019$'%expansion'<- DCGentDecline_2019$StrongExpansionDecline/DCGentDecline_2019$TotPop16
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
