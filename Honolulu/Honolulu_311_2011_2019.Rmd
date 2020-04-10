@@ -579,26 +579,10 @@ drop_na(longitude)
 ``` 
 
 
-
 ```{r} 
-coord_2019 <- coord_2019 %>% 
-mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract") 
-```
-
-
-
-
-```{r}
 
 coord_2019 <- coord_2019 %>% 
-select("Description", "YEAR", "GEOID")
-
-
-
-coord_2019 %>% 
-count(GEOID) %>% 
-print()
-
+mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
 ```
 
 
@@ -612,51 +596,9 @@ Latitude and Longitude converted to census tracts and then joined with database 
 - Honolulu_2011 does not work as there is only one homeless case. 
 
 
-````{r}
-
-
-# all geolocated homeless data joined 
-
-
-#hawaii_homeless_geoid <- hawaii_homeless_geoid %>%
- 
-# inner_join(Hawaii_gentrification, by=c("GEOID"))
-
-
-
-A <- coord_2012 %>%
-  inner_join(coord_2013, by=c("GEOID")) %>% 
- print(A)
-
-
-``` 
-
-arkansas_pills_c <- arkansas_pills %>% inner_join(arkansas_pills_per_zip_arcos_2010, by=c("buyer_zip")) %>% mutate(A2010 = pills_per_person) %>% select(buyer_zip, A2008, A2009, A2010) %>% print(arkansas_pills_c)
-
-
-arkansas_pills_b <- arkansas_pills_c %>% inner_join(arkansas_pills_per_zip_arcos_2011, by=c("buyer_zip"))%>%
-mutate(A2011 = pills_per_person) %>% select(buyer_zip, A2008, A2009, A2010,A2011) %>%
-print(arkansas_pills_b)
-
-
-arkansas_arcos_pills <- arkansas_pills_b %>% inner_join(arkansas_pills_per_zip_arcos_2012, by=c("buyer_zip")) %>%
-mutate(A2012 = pills_per_person) %>% 
-select(buyer_zip, A2008, A2009, A2010,A2011,A2012) %>% mutate(percentage_change_2008_2012 = (A2012-A2008)/A2012 *100) %>%
-rename(buyer_state = buyer_state.x) %>% arrange(desc(A2012)) %>% print(arkansas_pills_a)
-
-``` 
-
-
-
-
-
-``` 
-
-
-
 ```{r}
 
-
+# all geolocated homeless data joined 
 #checked- 10870 rows which is what the original he_data_cleaned dataset had
 
 hawaii_homeless_geoid <- rbind(coord_2012, coord_2013, coord_2014, coord_2015, coord_2016, coord_2017, coord_2018, coord_2019) %>% select("Description", "YEAR", "GEOID")
@@ -679,7 +621,7 @@ rename(low_income_loss_gain = strong_expansion_decline) %>%
 
 
 
-# strong_expansion_decline is now low_income_loss_gain
+# strong_expansion_decline is no low_income_loss_gain
 
 ``` 
 
@@ -692,7 +634,7 @@ rename(low_income_loss_gain = strong_expansion_decline) %>%
 # hawaii_homeless_geoid are all reports from 2012 to 2019 "homeless" that have no missing values 
 # total of 493 
 
-# Hawaii_gentrification total of 316 GEOID's - filtered out Nan values in low_income_pct_loss_gain (before 351)
+# Hawaii_gentrification total of 316 GEOID's - filtered out Nan values in low_income_pct_loss_gain (before 3)
 
 
 
@@ -703,22 +645,9 @@ drop_na(low_income_pct_loss_gain)
 hawaii_gentrification_geoid<- hawaii_homeless_geoid %>%
   inner_join(Hawaii_gentrification, by=c("GEOID"))
 
-
 ``` 
 
 
-
-
-```{r}
-hawaii_gentrification_geoid<- hawaii_gentrification_geoid %>%
-  arrange(desc(YEAR)) %>%
-  group_by (GEOID, YEAR) %>%
-  print(hawaii_gentrification_geoid)
- 
-```
-
-
- %>% group_by( buyer_zip, buyer_state, transaction_year) %>% summarise(shipments = n(), total_pills = sum(dosage_unit)) %>% arrange(desc(total_pills))
 
 
 
@@ -816,6 +745,5 @@ median_household_income_tract_2018 <- get_acs(state = "Hawaii", geography = "tra
 median_household_income_tract_2019 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2019)
 
 ``` 
-
 
 
