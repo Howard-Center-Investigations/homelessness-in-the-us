@@ -692,6 +692,11 @@ print(Y2012_Y2019)
 
 # so the table despite full join is leaving values for 2019 empty when there is not a match 
 
+plot(Y2012_Y2019$`percentage_change`, Y2012_Y2019$`low_income_pct_loss_gain`, xlab =
+       "% Change in Homeless Encampment Calls 2012-2019", ylab =
+       "% Change in Low Income Pop 2000-2016")
+
+
 
 
 
@@ -789,7 +794,5 @@ median_household_income_tract_2018 <- get_acs(state = "Hawaii", geography = "tra
 median_household_income_tract_2019 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2019)
 
 ``` 
-
-
 
 
