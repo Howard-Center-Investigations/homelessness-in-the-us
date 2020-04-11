@@ -22,7 +22,7 @@ The year with most calls (as a percentage of the whole and excluding 2011) relat
  - 2013 - 179 out of 3106 reports (5.76 %) are categorized under homeless. 
  - 2014 - 124 out of 2324 reports (3.07 %) are categorized under homeless. 
  - 2015 - 71 out of 2310 (3.07 %) observations in 2015 are filed under Report Type Homeless. 
- - 2016 - 100 out of 3182 observations (5.71 %) are filed under Report Type Homeless. Current Status of some of the reports start showing "Referred to Department". This was not the case in the prior years.   
+ - 2016 - 100 out of 3182 observations (5.71 %) are filed under Report Type Homeless.Current Status of some of the reports start showing "Referred to Department". This was not the case in the prior years.   
  - 2017 - 152 out of 4231 (3.59%) observations are filed under Report Type Homeless. More "Referred to Department".   
  - 2018 - 123 out of 2840 (4.33%) observations are filed under Report Type Homeless. More "Referred to Department".  
  -2019 - 61 out of 1358 (4.49%) observations are filed under Report Type Homeless. More "Referred to Department".  
@@ -46,11 +46,6 @@ knitr::opts_chunk$set(echo = TRUE)
 rm(list = ls())
 ```
 
-```{r}
-install.packages("tokenizers")
-
-```
-
 
 ```{r}
 # load libraries for leaflet - map 
@@ -69,6 +64,7 @@ options(stringsAsFactors = FALSE)
 library(tokenizers)
 # install.packages('tm')
 library(tm)
+library(readxl)
 library(tidyverse)
 library(janitor)
 library(arcos)
@@ -89,6 +85,7 @@ library(tigris)
 library(revgeo)
 library(sf)
 library(tidyverse)
+library(tokenizers)
 
 census_api_key ("eca10bc32a0b2c31610123ac74938aecd2228af6")
 install = TRUE
@@ -102,19 +99,45 @@ install = TRUE
 
 Honolulu_2011_2019 <-read_csv ("data/Honolulu_311_2011_2019.csv")
 
-# need to eliminate year 1899 as it marks fields without year 
+```
 
-Honolulu_Edit <- Honolulu_2011_2019 %>%
+
+```{r}
+
+# need to eliminate year 1899 as it marks fields without year 
+Honolulu_Edit <- Honolulu_2011_2019 %>% 
   filter(!str_detect(YEAR, '1899')) %>%
   separate( location, into = c("latitude","longitude"), sep = ",", extra = "merge") %>% 
   print()
 
 
- # eliminate parathenses signs
-Honolulu_Edit$latitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$latitude))
-Honolulu_Edit$longitude = as.numeric(gsub("[\\(),]", "", Honolulu_Edit$longitude))
-
 ```
+
+```{r}
+
+ # eliminate parathenses signs 
+Honolulu_Edit$latitude = substring(Honolulu_Edit$latitude, 2,11) 
+Honolulu_Edit$longitude = substring(Honolulu_Edit$longitude, 1,13)
+
+
+print(Honolulu_Edit)
+```
+
+
+```{r}
+
+
+Honolulu_Edit$latitude= as.numeric(as.character(Honolulu_Edit$latitude)) 
+
+Honolulu_Edit$longitude = as.numeric(as.character(Honolulu_Edit$longitude)) 
+
+print(Honolulu_Edit)
+
+
+``` 
+
+
+
 
 ```{r}
 
@@ -147,7 +170,7 @@ Honolulu_2011 <-  Honolulu_Edit  %>%
   filter(YEAR =='2011') %>% 
   print()
 
-Honolulu_2011 %>% filter(ReportType == 'Homeless')
+Honolulu_2011 <- Honolulu_2011 %>% filter(ReportType == 'Homeless') %>% print(Honolulu_2011)
 
 ``` 
 
@@ -160,7 +183,7 @@ Honolulu_2012 <-  Honolulu_Edit  %>%
   filter(YEAR =='2012') %>% 
   print()
 
-Honolulu_2012 %>% filter(ReportType == 'Homeless')
+Honolulu_2012 <- Honolulu_2012 %>% filter(ReportType == 'Homeless')
 ``` 
 
 2013 -
@@ -175,7 +198,7 @@ Honolulu_2013 <-  Honolulu_Edit  %>%
   print()
 
 
-Honolulu_2013 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2013 <- Honolulu_2013  %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
 
 
@@ -188,7 +211,7 @@ Honolulu_2014 <-  Honolulu_Edit  %>%
   filter(YEAR =='2014') %>% 
   print()
 
-Honolulu_2014 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2014 <- Honolulu_2014 %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
 
 
@@ -202,7 +225,7 @@ Honolulu_2015 <-  Honolulu_Edit  %>%
   filter(YEAR =='2015') %>% 
   print()
 
-Honolulu_2015  %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2015 <- Honolulu_2015 %>% filter(ReportType == 'Homeless') %>% print()
 ``` 
 
 
@@ -216,7 +239,7 @@ Honolulu_2016 <-  Honolulu_Edit  %>%
   filter(YEAR =='2016') %>% 
   print()
 
-Honolulu_2016 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2016  <- Honolulu_2016 %>% filter(ReportType == 'Homeless') %>% print()
 ```
 
 
@@ -227,7 +250,7 @@ Honolulu_2017 <-  Honolulu_Edit  %>%
   filter(YEAR =='2017') %>% 
   print()
 
-Honolulu_2017 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2017 <- Honolulu_2017  %>% filter(ReportType == 'Homeless') %>% print()
 
 ```
 
@@ -240,7 +263,7 @@ Honolulu_2018 <-  Honolulu_Edit  %>%
   filter(YEAR =='2018') %>% 
   print()
 
-Honolulu_2018 %>% filter(ReportType == 'Homeless') %>% print()
+Honolulu_2018 <-  Honolulu_2018 %>% filter(ReportType == 'Homeless') %>% print()
 
 ```
 
@@ -251,10 +274,9 @@ Honolulu_2019 <-  Honolulu_Edit  %>%
   filter(YEAR =='2019') %>% 
   print()
 
-Honolulu_2018 %>% filter(ReportType == 'Homeless') %>% print() 
+Honolulu_2019 <- Honolulu_2019  %>% filter(ReportType == 'Homeless') %>% print() 
 
 ``` 
-
 
 
 
@@ -301,7 +323,7 @@ x <- Honolulu_Edit %>%
 
 ``` 
 
-From the analysis above,terms that popped up were the following: 
+From the analysis above,terms that stood out were the following: 
 
 - Homeless:  Homeless was utlized often in descriptions, it was generally categorized as "homeless" and sometimes "other". This means that when I run the analysis to map out all homeless report types, some of them might not be captured. Furthermore, some people spelled homeless (homless) wrong. 
 - Urinating/feces: These terms were utlized often in the descriptions, oten in reference to homeless individuals. They were often in conjunction with other tems like  homeless and camping. Many were categorized as "other".
@@ -309,14 +331,9 @@ From the analysis above,terms that popped up were the following:
 - Encampment/ camping/ campsite/ campsites: Most are often categorized as "homeless". A few are categorized as "other". 
 - sleeps/sleeping - Sleep and sleeping often refer to homeless individuals. They are often categorized as "homeless" and are in sentences in conjunction with women,men,woman and women. 
 
+
  
- 
- tokenize by two words - 
- 
- 
- 
- 
- 
+future analysis :  tokenize by two words - *** pending/ focusing on census tracts first as suggested by team. 
  
  
 
@@ -345,33 +362,433 @@ MAPS BY YEAR TO SEE PROGRESSION IN LOCATIONS
 
 
 ```{r}
-leaflet(honolulu_2011) %>% addTiles() %>%
+# 2011 does not pull a map because there is only 1 reported homeless type case, in which the latitude and longitude values are missing. 
+leaflet(Honolulu_2011) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2011 does not pull a map because there is only 1 reported homeless type case, in which the latitude and longitude values are missing. 
+leaflet(Honolulu_2012) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2013 
+
+leaflet(Honolulu_2013) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2014 
+leaflet(Honolulu_2014) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2015 does not pull a map because there is only 1 reported homeless type case, in which the latitude and longitude values are missing. 
+leaflet(Honolulu_2015) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2016 
+leaflet(Honolulu_2016) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2017 
+leaflet(Honolulu_2017) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2018 
+leaflet(Honolulu_2018) %>% addTiles() %>%
+  addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
+  clusterOptions = markerClusterOptions(freezeAtZoom = ),
+)
+```
+
+```{r}
+# 2019 
+leaflet(Honolulu_2019) %>% addTiles() %>%
   addMarkers( ~longitude, ~latitude, , popup = ~as.character(YEAR), label = ~as.character(YEAR),
   clusterOptions = markerClusterOptions(freezeAtZoom = ),
 )
 ```
 
 
+
+
+# Using TIGRIS, I turned all of the latitude and longitude coordinates into the GEOID. 
+
+
+2011 does not work as there is only one case, with missing longitude 
+
+
+
+2012 - 
+
+
 ```{r}
 
+coord_2012 <- Honolulu_2012  %>% 
+drop_na(longitude)   
 
-HI_tracts <- tracts("HI", class = "sf") %>%
-  select(GEOID, TRACTCE)
+``` 
 
-bbox <- st_bbox(HI_tracts)
 
-my_points <- data.frame(
-  x = runif(200000, bbox[1], bbox[3]),
-  y = runif(200000, bbox[2], bbox[4])
-) %>%
-  # convert the points to same CRS
-  st_as_sf(coords = c("x", "y"),
-           crs = st_crs(HI_tracts))
+```{r}
+coord_2012 <- coord_2012 %>% 
+  mutate(census_tract = apply(coord_2012, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+```
 
-my_points_tract <- st_join(my_points, HI_tracts)
 
+2013- 
+
+```{r}
+
+coord_2013 <- Honolulu_2013  %>% 
+drop_na(longitude)   
+
+``` 
+
+```{r} 
+
+coord_2013 <- coord_2013 %>% 
+mutate(census_tract = apply(coord_2013, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+```
+
+
+
+2014 
+
+```{r}
+
+coord_2014 <- Honolulu_2014  %>% 
+drop_na(longitude)   
+
+``` 
+
+
+```{r} 
+
+coord_2014 <- coord_2014 %>% 
+mutate(census_tract = apply(coord_2014, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+```
+
+
+
+2015
+
+```{r}
+
+coord_2015 <- Honolulu_2015  %>% 
+drop_na(longitude)  
+
+``` 
+
+
+```{r} 
+
+coord_2015 <- coord_2015 %>% 
+mutate(census_tract = apply(coord_2015, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+```
+
+
+
+2016
+
+```{r}
+
+coord_2016 <- Honolulu_2016 %>% 
+drop_na(longitude)  
+
+``` 
+
+
+```{r} 
+
+coord_2016 <- coord_2016 %>% 
+mutate(census_tract = apply(coord_2016, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude'])))%>% rename("GEOID" = "census_tract")
+```
+
+
+
+2017
+
+```{r}
+
+coord_2017 <- Honolulu_2017 %>% 
+drop_na(longitude)  
+
+``` 
+
+```{r} 
+
+coord_2017 <- coord_2017 %>% 
+mutate(census_tract = apply(coord_2017, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+```
+
+
+
+2018
+
+```{r}
+
+coord_2018 <- Honolulu_2018 %>% 
+drop_na(longitude)  
+  
+
+``` 
+
+
+```{r} 
+
+coord_2018 <- coord_2018 %>% 
+mutate(census_tract = apply(coord_2018, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
+```
+
+
+
+2019 - 
+
+```{r}
+
+coord_2019 <- Honolulu_2019  %>%  
+drop_na(longitude)  
+  
+
+``` 
+
+
+```{r} 
+
+coord_2019 <- coord_2019 %>% 
+mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))) %>% rename("GEOID" = "census_tract")
 
 ```
+
+
+
+Latitude and Longitude converted to census tracts and then joined with database from the American Neighbourhood Change:
+
+- neighborhood population change between 2000 and 2016. 
+
+- https://www.law.umn.edu/institute-metropolitan-opportunity/gentrification 
+
+- Honolulu_2011 does not work as there is only one homeless case. 
+
+
+```{r}
+
+# all geolocated homeless data joined 
+#checked- 10870 rows which is what the original he_data_cleaned dataset had
+
+hawaii_homeless_geoid <- rbind(coord_2012, coord_2013, coord_2014, coord_2015, coord_2016, coord_2017, coord_2018, coord_2019) %>% select("Description", "YEAR", "GEOID") 
+
+#get rid of the last four digits so it matches the gentrification data
+hawaii_homeless_geoid$GEOID  <- substring(hawaii_homeless_geoid$GEOID , 1,11)
+
+hawaii_homeless_geoid <- hawaii_homeless_geoid %>% 
+group_by(YEAR, GEOID) %>%
+summarise(count = n()) 
+
+
+``` 
+
+
+```{r}
+ 
+# read Honolulu  gentrification data 
+Hawaii_gentrification <- read_excel("data/Hawaii_gentrification.xlsx")  %>%
+clean_names() %>%
+filter(state_name == "Hawaii") %>%
+select(geoid, strong_expansion_decline, tot_pop16) %>%
+rename(low_income_loss_gain = strong_expansion_decline) %>%
+ mutate(low_income_pct_loss_gain = low_income_loss_gain/tot_pop16)%>% rename("GEOID" = "geoid") 
+
+
+
+# strong_expansion_decline is no low_income_loss_gain
+
+``` 
+
+
+```{r}
+
+#all homeless encampment data matched with gentrification data- the rows without lat/long
+
+
+# hawaii_homeless_geoid are all reports from 2012 to 2019 "homeless" that have no missing values 
+# total of 493 
+
+# Hawaii_gentrification total of 316 GEOID's - filtered out Nan values in low_income_pct_loss_gain (before 3)
+
+
+
+
+hawaii_gentrification_geoid<- hawaii_homeless_geoid %>%
+  inner_join(Hawaii_gentrification, by=c("GEOID"))
+
+
+
+#Hawaii_gentrification<- Hawaii_gentrification %>% 
+#drop_na(low_income_pct_loss_gain)   
+
+
+``` 
+
+
+```{r}
+
+Y2012 <-hawaii_gentrification_geoid %>%
+filter(YEAR == "2012") %>% 
+mutate(Y2012 = count) %>% 
+select(GEOID, Y2012, low_income_loss_gain, tot_pop16, low_income_pct_loss_gain) %>% print()
+
+
+Y2019 <-hawaii_gentrification_geoid %>%
+filter(YEAR == "2019") %>% 
+mutate(Y2019 = count) %>% 
+select(GEOID, Y2019, low_income_loss_gain, tot_pop16, low_income_pct_loss_gain) %>% print()
+
+
+Y2012_Y2019 <- Y2012 %>% full_join(Y2019, by = c("GEOID")) %>% 
+select(GEOID, Y2012, Y2019, low_income_loss_gain.x, tot_pop16.x, low_income_pct_loss_gain.x) %>%
+mutate(percentage_change = (((Y2019 - Y2012) / Y2012) * 100)) %>%
+arrange(desc(percentage_change)) %>%
+mutate(low_income_loss_gain = low_income_loss_gain.x) %>% 
+mutate(tot_pop16 = tot_pop16.x) %>% 
+mutate(low_income_pct_loss_gain = low_income_pct_loss_gain.x) %>% 
+select(GEOID, Y2012, Y2019, percentage_change, low_income_loss_gain, tot_pop16, low_income_pct_loss_gain) %>% 
+print(Y2012_Y2019)
+
+  
+
+
+#make NA values 0
+
+Y2012_Y2019[is.na(Y2012_Y2019)] <- 0
+
+print(Y2012_Y2019)
+
+# so the table despite full join is leaving values for 2019 empty when there is not a match 
+
+
+
+
+``` 
+
+
+
+Pulling up American Community Survey data to analyze on other variables
+
+
+```{r}
+v17 <- load_variables(2018, "acs5", cache = TRUE)
+View(v17)
+``` 
+
+
+Median Household Income Analysis  - Pulling ACS data on median household income to then join by tract on Coords 
+ 
+ 
+- 2011 - Not analyzing on 2011- not enough data. 
+
+
+
+2012 join with median household income data - 
+
+```{r}
+median_household_income_tract_2012 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2012)
+
+
+``` 
+
+```{r}
+median_household_income_coord_2012 <- median_household_income_tract_2012 %>% 
+inner_join(coord_2012  , by=c('GEOID')) 
+``` 
+
+
+2013 join with median household income data - 
+
+```{r}
+median_household_income_tract_2013 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2013)
+
+```  
+
+
+```{r}
+median_household_income_coord_2013 <- median_household_income_tract_2013 %>% 
+inner_join(coord_2013 , by=c('GEOID')) 
+``` 
+
+
+
+2014 join with median household income data - 
+
+
+```{r}
+median_household_income_tract_2014 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2014)
+
+```  
+
+
+2015 join with median household income data - 
+
+
+
+```{r}
+median_household_income_tract_2015 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2015)
+
+``` 
+
+
+2016 join with median household income data - 
+
+
+
+```{r}
+median_household_income_tract_2016 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2016)
+
+``` 
+
+
+```{r}
+median_household_income_tract_2017 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2017)
+
+``` 
+
+
+```{r}
+median_household_income_tract_2018 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2018)
+
+```  
+
+
+```{r}
+median_household_income_tract_2019 <- get_acs(state = "Hawaii", geography = "tract", variables = c("B19013_001"), year = 2019)
+
+``` 
 
 
 
