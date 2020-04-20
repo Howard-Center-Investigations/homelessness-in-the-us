@@ -1,7 +1,7 @@
 ---
 title: "CoC Criminal Survey Analysis"
 author: "Theresa Diffendal"
-date: "3/25/2020"
+date: "4/3/2020"
 output:
   html_document:
     df_print:  paged
@@ -119,7 +119,7 @@ Based on pre-reporting, the following laws were examined as they disproportionat
 colnames(crim_survey[9:17])
 ```
 
-34 of the 41 laws against begging apply citywide, the most citywide-applicable laws beside public intoxication for any crime. 
+37 of the 45 laws against begging apply citywide, the most citywide-applicable laws beside public intoxication for any crime. 
 ```{r}
 law_type_totals <- crim_survey %>%
   select(9:17) %>%
@@ -135,7 +135,7 @@ kable(law_type_totals) %>%
   scroll_box(height = "350px")
 ```
   
-Public intoxication just tops camping in public for the dubious record of most criminalized. Food sharing bans are the least popular, only existing in five cities. 
+Public intoxication ties with camping in public for the dubious record of most criminalized. Food sharing bans are the least popular, only existing in five cities. 
 ```{r}
 law_totals <- law_type_totals %>%
   group_by(key) %>%
@@ -144,7 +144,7 @@ law_totals <- law_type_totals %>%
 print(law_totals)
 ```
   
-Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, "citywide" and "none" account for over 70% of the laws examined. 20% of laws are only applicable in particular places while 8% of the laws were unclear.
+Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, "citywide" and "none" account for over 70% of the laws examined. 20% of laws are only applicable in particular places while 9% of the laws were unclear.
 
 While laws applicable in particular places represent a fifth of the laws examined, the majority of the time it appears that laws either apply citywide or do not exist.
 ```{r}
@@ -161,7 +161,7 @@ print(overall_laws)
 
 ## State and City Information
 
-* 13 states are examined: Alaska, California, Florida, Hawaii, Kentucky, Louisiana, Massachusetts, Maryland, Missouri, Nevada, New York, North Carolina, and Oregon; as well as the District of Columbia.
+* 15 states are examined: Alaska, California, Florida, Georgia, Hawaii, Kentucky, Louisiana, Massachusetts, Maryland, Missouri, Nevada, New York, North Carolina, Oregon and Washington; as well as the District of Columbia.
   
 Abbreviations of every state:
 ```{r}
@@ -171,7 +171,7 @@ print(unique(states))
 ```
 Number of states + D.C.:
 ```{r}
-# See how many states there are; answer: 13 + D.C.
+# See how many states there are; answer: 15 + D.C.
 length(unique(states))
 ```
 
@@ -183,7 +183,13 @@ crim_survey_states <- crim_survey %>%
   summarise(city_count=n())
 print(crim_survey_states)
 ```
-  
+
+Total cities examined
+
+```{r}
+print(sum(crim_survey_states$city_count))
+```
+
 Names of cities examined in each state
 ```{r}
 # See each city examined in each state
@@ -282,9 +288,9 @@ kable(type_by_coc) %>%
   
 ## City Analysis
 
-* The cities of Waldorf, Md. and Worcester, Mass. have the fewest laws with only 1. Lake City, Ione and Eureka round out the bottom five with two laws each.
+* The cities of Waldorf, Md., Sparta, N.C. and Worcester, Mass. have the fewest laws with only 1. Lake City, Fla. and Ione, Calif. and round out the bottom five with two laws each.
 * Oakland has the most with 9 laws. This means that Oakland has every possible examined law on the books.
-* No state has eight laws, but 10 states have seven laws.
+* Atlanta, Ga. is the only city with eight laws, but 11 cities have seven laws.
 ```{r}
 ## create new data set
 city_totals <- crim_survey %>%
@@ -312,7 +318,8 @@ kable(city_totals) %>%
 
 * California comes in first with 115 laws and is the only examined state with over 100 laws.
 * Kentucky has the fewest laws with only 4
-* The top six states - California, Florida, Oregon, Massachusetts, Hawaii and Maryland - were the only states in which more than one CoC was examined.
+* North Carolina is the only state in which more than one city was examined but, due to the total number of laws, fell behind a state with only one city. 
+* The top eight states - California, Florida, Oregon, Massachusetts, Georgia, Washington, Hawaii and Maryland - were the only states (besides N.C.) in which more than one CoC was examined.
 ```{r}
 ## create new data set
 state_totals <- crim_survey %>%
@@ -365,11 +372,11 @@ kable(type_by_state) %>%
 **Notes:**
 
 * There are more citywide laws than any other kind , followed by no law, particular places  and unclear.
-* In 10 of the 14 states (and DC), fifty percent or less of the laws analyzed are citywide.
-* Hawaii had the lowest percentage citywide laws, accounting for only 3 (16.7%) of the 18 HI laws recorded
-  + Hawaii also had the most "unclear" laws, accounting for seven (27.8%) of its examined laws
-* Over half (55.56%) of the examined laws in New York City are only applicable in particular places. Over in New Orleans, 44.4% of the laws cover a particular place.
-* Massachusetts has no laws only applicable in particular places. 
+* In 12 of the 15 states (and DC), fifty percent or less of the laws analyzed are citywide.
+* Hawaii, N.C. and Ga. had the lowest percentage of citywide laws with only 16.7% 
+  + Hawaii also had the greatest share of "unclear" laws, accounting for seven (27.8%) of its examined laws
+* Over half  of the examined laws in New York City (55.56%) and Georgia (61.1%) are only applicable in particular places. Over in New Orleans, 44.4% of the laws cover a particular place.
+* Missouri, Alaska and Massachusetts have no laws only applicable in particular places. 
 
 ```{r}
 all_state <- crim_survey %>%
@@ -410,8 +417,7 @@ kable(all_state) %>%
 
 Overview: 
 
-* Alaska has one law against sleeping in public that is county-wide, the only county law in this criminal survey analysis
-+ However, sitting, laying or camping in public is not allowed citywide
+* While Alaska will allow people to use their vehicles as lodging, there are citywide laws against sitting or laying in public, sleeping in public, and camping in public.
 * There is no food sharing ban but there is a citywide law against begging
 ```{r}
 alaska <- crim_survey %>%
@@ -462,7 +468,11 @@ kable(dc) %>%
 ```
 
 ### Florida
-
+* Journalists examined the laws in 11 continuums of care in Florida,  encompassing 17 cities such as Daytona Beach, Gainesville, Fort Walton Beach and Okaloosa County.  In a survey analyzing the criminalization of homelessness in 49 CoCs across the country, three of the top five CoCs with the most laws criminalizing homeless acts are in Florida.
+* Camping in public and living in a vehicle are each criminalized in 15 Florida cities. The only other act outlawed in over 10 cities is begging, which is illegal in 11 cities. But despite their frequency, Gainesville Florida opts not to ban public intoxication and is instead the only examined city in Florida to criminalize food sharing.
+* The CoC including Fort Piece, St. Lucie and Martin counties had the most laws of any CoC in Florida. While there are no laws against food sharing and public intoxication, all three examined cities in these counties banned camping in public, sitting or laying in public and living in a vehicle. In these cities, essentially, individuals who can’t or don’t want to find room in a homeless shelter are breaking the law.
+* The city of Daytona Beach criminalizes seven of the nine acts identified as disproportionately targeting homeless individuals and acts of homelessness. All the laws are citywide except for one, camping in public. The ban on camping in public iis only applicable in particular places, suggesting that some areas in the city are purposefully reserved for public camping, though whether those campers are intended to be tourists or homeless individuals is unknown. Daytona does permit sitting and laying in public, but the lack of allowance for sleeping either in public or a car leaves no exception for those who remain homeless when night falls.
+* Lake City in the Columbia CoC is the most lenient, with citywide laws only against public intoxication and vagrancy and loitering. Though an encampment might violate the loitering and vagrancy law, both of these acts are also committed by vast swaths of the population and thus target homeless populations less than a ban on sleeping in public or sharing food.
 ```{r}
 florida <- type_by_state %>%
   filter(state == "fl") 
@@ -644,6 +654,13 @@ kable(oregon_cities) %>%
 The following is an analysis of laws only related to homeless encampments: sleeping in public, camping in public, sitting/laying in public, and lodging/living/sleeping in vehicles or parking a vehicle used as a lodging.
 
 ### Encampment Law Overview
+
+* Individuals who either cannot or do not want to find room at a homeless shelter will often turn to homeless encampments. Though the lodgings are impermanent, lack utilities and hardly protect against the elements, living in a community engenders feelings of belonging and may seem safer than surviving independently. But even as encampment populations increase nation-wide due to a lack of shelters and beds, so too do the number of laws against camping in public. 
+* Homeless encampments are threatened by laws banning camping, sitting, laying or sleeping in public or living in a vehicle. Yet many cities seek to downsize their homeless populations by enforcing such laws, with the consequence of sending many homeless people into the criminal justice system for commiting necessary acts to survive while homeless.
+* In an analysis of laws in 58 cities across the country that disproportionately impact homeless individuals, only public intoxication was criminalized more than camping in public. A little less than half of cities only banned public camping in particular places, but it’s unknown if there are allowances for homeless encampments. 
+* At least half of all examined cities had bans on some aspect of homeless encampments defined as camping in public, sitting or laying in public, sleeping in public or living in a vehicle. Twelve cities had laws against every aspect, including Marysville and Oakland, California, where all four laws are applicable citywide. 
+* Most states banned either camping or sitting and laying in public, except California and Florida, who are primarily concerned with people living out of vehicles. 
+* Eight cities, however, such as Baltimore City, St. Louis and Lake City, Florida, do not criminalize any basic aspects of residing in a homeless encampment.
 
 ```{r}
 encampment_totals <- law_totals %>%

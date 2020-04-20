@@ -668,11 +668,11 @@ coord_2019 <- coord_2019 %>%
   rename("GEOID" = "census_tract") %>%
   mutate(GEOID = str_sub(GEOID, 1, 11))
 
-coord_2019 <- breakdown_2019 %>%
-  select(LATITUDE, LONGITUDE)
-coord_2019 <- coord_2019 %>%
-  mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+# coord_2019 <- breakdown_2019 %>%
+#  select(LATITUDE, LONGITUDE)
+# coord_2019 <- coord_2019 %>%
+#  mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
+#  rename("GEOID" = "census_tract")
 
 ```
 
@@ -1071,23 +1071,49 @@ demos_2018 <- coord_2018 %>%
 demos_2019 <- coord_2019 %>%
   inner_join(median_household_income_tract_2018, by=("GEOID")) %>%
   rename("MHI" = "estimate") %>%
-  select(GEOID, MHI, total, NAME) %>%
-  arrange(desc(MHI))
+  group_by(GEOID, MHI, NAME) %>%
+  summarise(total_2019 = n()) %>%
+  arrange(desc(total_2019))
 ```
 
 ```{r}
 
-DCGentDecline_2019 <- GentDecline_DC %>%
-  inner_join(coord_2019, by=("GEOID")) %>%
-  select(GEOID, StrongExpansionDecline, TotPop16)
+# Had to change the object name from DCGentDecline_2019 to DCGentrification_2019 because every time I tried to do anything, all 179 census tracts kept showing up.
+
+DCGentrification_2019 <- GentDecline_DC %>%
+  inner_join(demos_2019, by=("GEOID")) %>%
+  select(GEOID, StrongExpansionDecline, TotPop16, total_2019, MHI) %>%
+  rename("MHI_2019" = "MHI")
 
 ```
 
 ```{r}
 
-DCGentDecline_2019$'%expansion'<- DCGentDecline_2019$StrongExpansionDecline/DCGentDecline_2019$TotPop16
+# Calculating the change in population.
+
+DCGentrification_2019$'%expansion'<- DCGentrification_2019$StrongExpansionDecline/DCGentrification_2019$TotPop16
 
 ```
+
+```{r}
+
+# Renaming column
+
+DCGentrification_2019 <- DCGentrification_2019 %>%
+  rename("Gent_Percent" = "%expansion")
+
+```
+
+```{r}
+
+# Reordering the columns
+
+DCGentrification_2019 <- DCGentrification_2019 %>%
+  select(GEOID, StrongExpansionDecline, TotPop16, Gent_Percent, total_2019, MHI_2019)
+
+```
+
+
 
 
 
