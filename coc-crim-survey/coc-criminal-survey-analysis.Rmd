@@ -1,7 +1,7 @@
 ---
 title: "CoC Criminal Survey Analysis"
 author: "Theresa Diffendal"
-date: "3/25/2020"
+date: "4/13/2020"
 output:
   html_document:
     df_print:  paged
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This rMarkdown file analyzes criminal charges related to homelessness in 13 states and the District of Columbia as collected by students in Deborah Nelson's JOUR698I class at the University of Maryland's Philip Merrill College of Journalism's Howard Center for Investigative Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as "citywide"), only applied to particular places ("particular_places"), there was no law ("none"), or the law was unclear ("unclear"). Laws were not examined for every city in each state; cities were examined based on the focus of the class' investigation. 
+This rMarkdown file analyzes criminal charges related to homelessness in 15 states and the District of Columbia as collected by students in Deborah Nelson's JOUR698I class at the University of Maryland's Philip Merrill College of Journalism's Howard Center for Investigative Journalism. Cities in each of the states were examined and codified by whether the law applied to the whole city (written as "citywide"), only applied to particular places ("particular_places"), there was no law ("none"), or the law was unclear ("unclear"). Laws were not examined for every city in each state; cities were examined based on the focus of the class' investigation. 
 
 The acronym CoC will be used to mean Continuum of Care, which are citywide or regional areas across which housing and services for the homeless are coordinated. Read more about CoCs [here](https://www.hudexchange.info/programs/coc/).
 
@@ -76,6 +76,7 @@ crim_survey_initial <- read_csv("coc-crim-survey.csv") %>%
   clean_names() %>%
   ##change all observations to lower case
   mutate_all(funs(tolower)) %>%
+  mutate(coc = str_sub(coc, 4,-1)) %>%
   rename("living_in_vehicle" = "lodging_living_sleeping_in_vehicles_or_parking_a_vehicle_used_as_a_lodging")
 
 crim_survey_initial[crim_survey_initial == "county"] <- "citywide"
@@ -89,7 +90,9 @@ crim_survey <- crim_survey_initial %>%
   
   ##get rid of columns we don't need to analyze
   filter(complete == "yes",
-         coc != "state") %>%
+         coc != "state",
+         c3 == "yes",
+         meet_definition == "yes") %>%
   select(-name, -complete, -new_reporting_or_nlchp_fact_check, -c3, -meet_definition, -contains ("link"), -contains("law")) %>%
   ##reorder columns with mutated columns first
   select(3,1,2,13:16,4:12)
@@ -119,7 +122,7 @@ Based on pre-reporting, the following laws were examined as they disproportionat
 colnames(crim_survey[9:17])
 ```
 
-34 of the 41 laws against begging apply citywide, the most citywide-applicable laws beside public intoxication for any crime. 
+34 of the 41 laws against public intoxication apply citywide, the most citywide-applicable laws for any crime. Public urination is criminalized citywide in 33 cities, while begging is the third act most criminalized citywide with laws in 29 cities.
 ```{r}
 law_type_totals <- crim_survey %>%
   select(9:17) %>%
@@ -135,7 +138,7 @@ kable(law_type_totals) %>%
   scroll_box(height = "350px")
 ```
   
-Public intoxication just tops camping in public for the dubious record of most criminalized. Food sharing bans are the least popular, only existing in five cities. 
+Public intoxication just tops camping in public for the dubious record of most criminalized. Food sharing bans are the least popular, only existing in four cities. 
 ```{r}
 law_totals <- law_type_totals %>%
   group_by(key) %>%
@@ -161,7 +164,7 @@ print(overall_laws)
 
 ## State and City Information
 
-* 13 states are examined: Alaska, California, Florida, Hawaii, Kentucky, Louisiana, Massachusetts, Maryland, Missouri, Nevada, New York, North Carolina, and Oregon; as well as the District of Columbia.
+* 15 states are examined: Alaska, California, Florida, Georgia, Hawaii, Kentucky, Louisiana, Massachusetts, Maryland, Missouri, Nevada, New York, North Carolina, Oregon and Washington; as well as the District of Columbia.
   
 Abbreviations of every state:
 ```{r}
@@ -233,9 +236,9 @@ kable(cocs) %>%
 
 ### **Location of laws in CoCs:**
 
-* California CoC Oakland/Alameda has the greatest number of laws that disproportionately affect homeless individuals with 19. Florida's CoC consisting of Fort Pierce/St. Lucie/Indian River/Martin Counties is a close second with 17 laws.
+* California CoC Oakland/Alameda has the greatest number of laws that disproportionately affect homeless individuals with 9, which means they have a law banning each examined act. California's San Francisco CoC and Atlanta, Georgia's CoC are close seconds with 8 laws.
 * CoCs in California and Florida also have the second fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa and Humboldt County CoCs in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.
-* A Massachusetts CoC, Worcester, has only 1 law. It outlaws begging citywide.
+* A Maryland CoC consisting of Charles, Calvert and St. Mary's counties nq  ` x has only 1 law. It outlaws begging citywide.
 ```{r}
 ## create new data set
 coc_totals <- crim_survey %>%
@@ -717,6 +720,27 @@ kable(encampment_state) %>%
   column_spec (3:ncol(encampment_state),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "400px")
+```
+
+## Cross Examine CoCs with Homeless Counts
+
+Read in HUD PIT counts and join to crim survey
+```{r}
+pit <- read_csv("~/GitHub/homelessness-in-the-us/data/output-data/pit-hic-zillow.csv") %>%
+  rename(coc = coc_name)
+
+homeless_crim <- left_join(crim_survey, pit, by="coc")
+```
+
+```{r, include=FALSE}
+## Write csv files for adam with cocs as rows and Y/N laws as columns
+
+type_by_coc_adam <- type_by_coc
+type_by_coc_adam[type_by_coc_adam == "1"] <- "Y"
+type_by_coc_adam[type_by_coc_adam == "0"] <- "N"
+#view(type_by_coc_adam)
+
+#write.csv(type_by_coc_adam, "crim-survey-adam.csv")
 ```
 
 ```{r, include=FALSE}
