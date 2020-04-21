@@ -17,19 +17,106 @@ library(janitor)
 library(tidycensus)
 library(sf)
 library(leaflet)
-
+library(tigris)
+library(readxl)
 census_api_key("549950d36c22ff16455fe196bbbd01d63cfbe6cf")
-
 ```
 
+### Reading in the data
 ```{r}
-
-dc_encampments <- read_csv("data/dc_encampments.csv") %>%
+# 
+# https://docs.google.com/spreadsheets/d/1Jsh_KUi9Ww5pa2V5swXNx_2G2P7Nv6mf8q7JVJrEJPU/edit
+# Read in encampment locations with lat long, remove for moment those locations with no geocoordinates, create an empty column to hold geocoded census tract. 
+encampment_locations <- read_csv("data/updated_data/encamplent_locations__2015_2019.csv") %>%
   clean_names() %>%
-  select(-notes_questions, -link) %>%
-  filter(!is.na(coordinates))
+  filter(!is.na(coordinates)) %>%
+  mutate(census_block = "") 
+# Geocode locations to census tract.  Really can't figure out tidy way to do this, so this is what we're doing for now. 
+encampment_locations$census_block <- apply(encampment_locations, 1, function(row) call_geolocator_latlon(row['latitude'], row['longitude']))
+# Read in encampment cleaings (one record per clearing, with datetime)
+encampment_clearings <- read_csv("data/updated_data/dc_encampment_clearings_2015_2019_ cleaned_data.csv") %>%
+  select(-notes, -date_full)
+# Join them together
+encampment_clearings_locations <- encampment_clearings %>%
+  inner_join(encampment_locations, by=c("location")) 
+# Write it out so we don't have to geocode all over again. 
+write_csv(encampment_clearings_locations, "data/updated_data/geolocated_clearances.csv")
+# Clean up everything
+rm(list = ls())
+# Read in the csv we just created
+encampment_clearings_locations <- read_csv("data/updated_data/geolocated_clearances.csv") %>%
+  mutate_all(as.character)
+# Convert census blocks columns to census tracts by taking only first 11 characters of 14
+encampment_clearings_locations <- encampment_clearings_locations %>%
+  mutate(census_tract = str_sub(census_block, 1, 11)) %>%
+  select(-census_block)
+# Read in gentrification data
+gentrification <- read_xlsx("data/updated_data/US_tr_GentDecline.xlsx") %>%
+  clean_names() %>%
+  filter(state_name == "District of Columbia") %>%
+  select(geoid, strong_expansion_decline, tot_pop16) %>%
+  rename(low_income_loss_gain = strong_expansion_decline) %>%
+  mutate(low_income_pct_loss_gain = low_income_loss_gain/tot_pop16)
+# Join it to clearances_data
+encampment_clearings_locations <- encampment_clearings_locations %>%
+  inner_join(gentrification, by=c("census_tract" = "geoid"))
+# Get median income by census tract in DC in 2018 and 2011, and then join them together and compute income change over that 8 year period
+dc_income_2018 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2018) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2018 = estimate) %>% 
+  select(-variable, -moe)
+dc_income_2011 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B06011_001", year = 2011) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  rename(median_household_income_2011 = estimate) %>% 
+  select(-variable, -moe)
+dc_income_change <- dc_income_2011 %>%
+  inner_join(dc_income_2018) %>%
+  clean_names() %>%
+  select(-name) %>%
+  mutate(income_change_2011_2018 = round((median_household_income_2018-median_household_income_2011)/median_household_income_2011,2)) %>%
+  select(-median_household_income_2018, -median_household_income_2011)
+# Join it to clearances data
+encampment_clearings_locations <- encampment_clearings_locations %>%
+  inner_join(dc_income_change, by=c("census_tract" = "geoid"))
+# Get population by census tract in DC in 2018 and 2011, and then join them together and compute population total change and percent change
+#acs_variables <- load_variables(2018, "acs5", cache = TRUE)
+dc_population_2018 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B01001_001", year = 2018) %>%
+  mutate(GEOID = as.character(GEOID)) %>% 
+  rename(total_population_2018 = estimate) %>% 
+  select(-variable, -moe) 
+dc_population_2011 <- get_acs(state = "DC", geography = "tract", 
+                  variables = "B01001_001", year = 2011) %>%
+  mutate(GEOID = as.character(GEOID)) %>% 
+  rename(total_population_2011 = estimate) %>% 
+  select(-variable, -moe) 
+dc_population_change <- dc_population_2011 %>%
+  inner_join(dc_population_2018) %>%
+  clean_names() %>%
+  select(-name) %>%
+  mutate(population_change_2011_2018_pct = round((total_population_2018-total_population_2011)/total_population_2011,2)) %>%
+  mutate(total_population_change_2011_2018 = total_population_2018-total_population_2011) %>%
+  select(-total_population_2018, -total_population_2011)
+# Join it to clearances data
+encampment_clearings_locations <- encampment_clearings_locations %>%
+  inner_join(dc_population_change, by=c("census_tract" = "geoid"))
+# Group it by census tract 
+clearings_summary <- encampment_clearings_locations %>%
+  group_by(census_tract) %>%
+  summarise(clearances = n(),
+    low_income_pct_loss_gain = mean(low_income_pct_loss_gain),
+    low_income_loss_gain = mean(low_income_loss_gain),
+    income_change_2011_2018 = mean(income_change_2011_2018),
+    population_change_2011_2018_pct = mean(population_change_2011_2018_pct),
+    total_population_change_2011_2018 = mean(total_population_change_2011_2018)
+            ) %>%
+  arrange(desc(clearances))
+write_csv(clearings_summary, "data/updated_data/clearings_summary.csv")
+```
 
-write.csv(dc_encampments, "data/dc_encampments_cleaned.csv")
+# Remove non-coordinate locations
 
 dc_encampments_sf <- dc_encampments %>%
   st_as_sf(coords=c("longitude","latitude"), crs=4269, remove=FALSE)
@@ -39,6 +126,8 @@ dc_encampments_plus_tracts <- read_csv("data/encampments_dc_plus_tracts.csv") %>
 
 Summary(dc_encampments_plus_tracts)
 
+print(encam)
+
 ```
 ```{r}
 dc_income_2018 <- get_acs(state = "DC", geography = "tract", 
@@ -46,55 +135,46 @@ dc_income_2018 <- get_acs(state = "DC", geography = "tract",
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2018 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2017 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2017) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2017 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2016 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2016) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2016 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2015 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2015) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2015 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2014 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2014) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2014 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2013 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2013) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2013 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2012 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2012) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2012 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2011 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2011) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2011 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income_2010 <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001", year = 2010) %>%
   mutate(GEOID = as.character(GEOID)) %>%
   rename(median_household_income_2010 = estimate) %>% 
   select(-variable, -moe)
-
 dc_income <- dc_income_2018 %>%
   inner_join(dc_income_2017, by=c("GEOID","NAME")) %>%
   inner_join(dc_income_2016, by=c("GEOID","NAME")) %>%
@@ -105,25 +185,19 @@ dc_income <- dc_income_2018 %>%
   inner_join(dc_income_2011, by=c("GEOID","NAME")) %>%
   inner_join(dc_income_2010, by=c("GEOID","NAME")) %>%
   mutate(chg_pct_2010_2018 = (median_household_income_2018-median_household_income_2010)/median_household_income_2010*100)
-
 ```
 
 
 ```{r}
-
 dc_encampments_plus_tracts_income <- dc_encampments_plus_tracts %>%
   left_join(dc_income, by=c("GEOID"))
   
 write.csv(x, "data/dc_encampments_plus_tracts_income.csv")
-
-
 ```
 
 
 ```{r}
-
 # Income in census tracts most recent
-
 x <- dc_encampments_plus_tracts_income %>%
   group_by(NAMELSAD) %>%
   summarise(count = n(),
@@ -132,13 +206,8 @@ x <- dc_encampments_plus_tracts_income %>%
             chg_pct_2010_2018 = mean(chg_pct_2010_2018)
             ) %>%
   arrange(desc(chg_pct_2010_2018))
-
 write.csv(x, "data/dc_encampments_plus_tracts_income_summary_stats.csv")
-
 # Income multiple years
-
-
-
 ```
 
 
@@ -151,28 +220,20 @@ leaflet() %>%
 
 ```{r}
 options(tigris_use_cache = TRUE)
-
-
 acs_variables <- load_variables(2017, "acs5", cache = TRUE)
-
 # Get shapefiles with median income in past 12 months
 dc_income <- get_acs(state = "DC", geography = "tract", 
                   variables = "B06011_001") %>%
   mutate(GEOID = as.character(GEOID))
-
-
 ```
 ```{r}
-
 plot(dc_tracts$geometry)
 plot(dc_encampments_sf$geometry, add=T, pch=16, cex=0.5, col="gray50")
-
 ```
 
 
 ```{r}
 st_join(dc_tracts,dc_encampments_sf) 
-
 ```
 
 a
@@ -181,9 +242,6 @@ df
 
 
 ```{r}
-
 st_crs(dc_encampments_sf)
 st_crs(dc_tracts)
-
-
 ```
