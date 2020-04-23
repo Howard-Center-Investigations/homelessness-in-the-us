@@ -2862,7 +2862,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">CoC Criminal Survey Analysis</h1>
 <h4 class="author">Theresa Diffendal</h4>
-<h4 class="date">4/13/2020</h4>
+<h4 class="date">4/23/2020</h4>
 
 </div>
 
@@ -3268,6 +3268,59 @@ only in particular places
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
+los angeles city &amp; county coc
+</td>
+<td style="text-align:left;border-left:1px solid;">
+los angeles
+</td>
+<td style="text-align:right;border-left:1px solid;">
+8
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+none
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
 mendocino county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -5704,14 +5757,14 @@ citywide
 </tbody>
 </table>
 </div>
-<p>Based on pre-reporting, the following laws were examined as they disproportionately impact homeless individuals. Homeless individuals often end up with multiple criminal charges and exorbitant through the criminalization of necessary acts such as begging, sharing food or camping in public. The list below contains the nine laws</p>
+<p>Based on pre-reporting, the following laws were examined as they disproportionately impact homeless individuals. Homeless individuals often end up with multiple criminal charges and exorbitant through the criminalization of necessary acts such as begging, sharing food or camping in public. The list below contains the nine laws.</p>
 <pre class="r"><code>colnames(crim_survey[9:17])</code></pre>
 <pre><code>## [1] &quot;sleeping_in_public&quot;       &quot;camping_in_public&quot;       
 ## [3] &quot;sitting_laying_in_public&quot; &quot;living_in_vehicle&quot;       
 ## [5] &quot;loitering_vagrancy&quot;       &quot;begging&quot;                 
 ## [7] &quot;food_sharing_ban&quot;         &quot;public_urination&quot;        
 ## [9] &quot;public_intoxication&quot;</code></pre>
-<p>34 of the 41 laws against public intoxication apply citywide, the most citywide-applicable laws for any crime. Public urination is criminalized citywide in 33 cities, while begging is the third act most criminalized citywide with laws in 29 cities.</p>
+<p>There are more citywide laws against public intoxication and public urination than any other crimes, with 34 each. Begging is the third act most criminalized citywide with laws in 30 cities.</p>
 <pre class="r"><code>law_type_totals &lt;- crim_survey %&gt;%
   select(9:17) %&gt;%
   gather() %&gt;%
@@ -5748,7 +5801,7 @@ begging
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-29
+30
 </td>
 </tr>
 <tr>
@@ -5781,7 +5834,7 @@ camping_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-19
+20
 </td>
 </tr>
 <tr>
@@ -5836,7 +5889,7 @@ living_in_vehicle
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-14
+15
 </td>
 </tr>
 <tr>
@@ -5858,7 +5911,7 @@ loitering_vagrancy
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-18
+19
 </td>
 </tr>
 <tr>
@@ -5880,7 +5933,7 @@ public_intoxication
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-7
+8
 </td>
 </tr>
 <tr>
@@ -5891,7 +5944,7 @@ public_urination
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-33
+34
 </td>
 </tr>
 <tr>
@@ -5913,7 +5966,7 @@ sitting_laying_in_public
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-23
+24
 </td>
 </tr>
 <tr>
@@ -5935,7 +5988,7 @@ sleeping_in_public
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-16
+17
 </td>
 </tr>
 <tr>
@@ -5961,16 +6014,16 @@ print(law_totals)</code></pre>
 <pre><code>## # A tibble: 9 x 2
 ##   key                      count
 ##   &lt;chr&gt;                    &lt;int&gt;
-## 1 public_intoxication         41
-## 2 camping_in_public           40
-## 3 public_urination            39
-## 4 loitering_vagrancy          38
-## 5 begging                     37
-## 6 sitting_laying_in_public    35
-## 7 living_in_vehicle           29
-## 8 sleeping_in_public          27
+## 1 public_intoxication         42
+## 2 camping_in_public           41
+## 3 public_urination            40
+## 4 loitering_vagrancy          39
+## 5 begging                     38
+## 6 sitting_laying_in_public    36
+## 7 living_in_vehicle           30
+## 8 sleeping_in_public          28
 ## 9 food_sharing_ban             4</code></pre>
-<p>Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, “citywide” and “none” account for over 70% of the laws examined. 20% of laws are only applicable in particular places while 9% of the laws were unclear.</p>
+<p>Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, “citywide” and “none” account for over 70% of the laws examined. 21% of laws are only applicable in particular places while 9% of the laws were unclear.</p>
 <p>While laws applicable in particular places represent a fifth of the laws examined, the majority of the time it appears that laws either apply citywide or do not exist.</p>
 <pre class="r"><code>overall_laws &lt;- crim_survey %&gt;%
   select(citywide, particular_places, unclear, none) %&gt;%
@@ -5982,10 +6035,10 @@ print(law_totals)</code></pre>
 
 print(overall_laws)</code></pre>
 <pre><code>##             rowname count       pct
-## 1          citywide   193 41.239316
-## 2 particular_places    96 20.512821
-## 3           unclear    39  8.333333
-## 4              none   140 29.914530</code></pre>
+## 1          citywide   197 41.299790
+## 2 particular_places   100 20.964361
+## 3           unclear    39  8.176101
+## 4              none   141 29.559748</code></pre>
 </div>
 </div>
 <div id="state-and-city-information" class="section level2">
@@ -6013,7 +6066,7 @@ print(crim_survey_states)</code></pre>
 ##    state city_count
 ##    &lt;chr&gt;      &lt;int&gt;
 ##  1 ak             1
-##  2 ca            17
+##  2 ca            18
 ##  3 dc             1
 ##  4 fl             9
 ##  5 ga             2
@@ -6028,10 +6081,10 @@ print(crim_survey_states)</code></pre>
 ## 14 ny             1
 ## 15 or             5
 ## 16 wa             1</code></pre>
-<p>Total cities examined</p>
+<p>Total cities examined:</p>
 <pre class="r"><code>print(sum(crim_survey_states$city_count))</code></pre>
-<pre><code>## [1] 52</code></pre>
-<p>Names of cities examined in each state</p>
+<pre><code>## [1] 53</code></pre>
+<p>Names of cities examined in each state:</p>
 <pre class="r"><code># See each city examined in each state
 crim_survey_cities &lt;- crim_survey %&gt;%
   group_by(state) %&gt;%
@@ -6109,6 +6162,14 @@ long beach
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
+los angeles
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
 ukiah
 </td>
 </tr>
@@ -6476,3436 +6537,19 @@ seattle
 </table>
 </div>
 </div>
-<div id="continuum-of-care-analysis" class="section level2">
-<h2>Continuum of Care Analysis</h2>
-<div id="cocs-by-state" class="section level3">
-<h3>CoCs by State</h3>
-<p>A list of CoCs in each state</p>
-<pre class="r"><code>#list cocs in each state
-cocs &lt;- crim_survey %&gt;%
-  select(state, coc) %&gt;%
-  distinct(state, coc) %&gt;%
-  group_by(state) %&gt;%
-  arrange(state, coc)
-
-kable(cocs) %&gt;%
-  column_spec(2, border_left = T, border_right = F) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
-  scroll_box(height = &quot;300px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-coc
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-ak
-</td>
-<td style="text-align:left;border-left:1px solid;">
-anchorage coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-amador, calaveras, tuolumne and mariposa counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-chico/paradise/butte county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-colusa, glenn, trinity counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-humboldt county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-long beach coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-mendocino county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-oakland/alameda county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-pasadena coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-richmond/contra costa county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-salinas/monterey, san benito counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-san diego city and county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-san francisco coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-san jose/santa clara city &amp; county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-san luis obispo county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-santa rosa/petaluma/sonoma county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-watsonville/santa cruz city &amp; county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
-yuba city &amp; county/sutter county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-district of columbia coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-columbia, hamilton, lafayette, suwannee counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-daytona beach/daytona/volusia, flagler counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-fort walton beach/okaloosa, walton counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-hendry, hardee, highlands counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-monroe county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-pasco county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-punta gorda/charlotte county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-saint johns county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
-st. petersburg/clearwater/largo/pinellas county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ga
-</td>
-<td style="text-align:left;border-left:1px solid;">
-atlanta continuum of care
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ga
-</td>
-<td style="text-align:left;border-left:1px solid;">
-savannah/chatham county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hi
-</td>
-<td style="text-align:left;border-left:1px solid;">
-hawaii balance of state coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hi
-</td>
-<td style="text-align:left;border-left:1px solid;">
-honolulu coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ky
-</td>
-<td style="text-align:left;border-left:1px solid;">
-lexington/fayette county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-la
-</td>
-<td style="text-align:left;border-left:1px solid;">
-new orleans/jefferson parish coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;border-left:1px solid;">
-boston coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;border-left:1px solid;">
-cambridge coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;border-left:1px solid;">
-lowell coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;border-left:1px solid;">
-lynn coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;border-left:1px solid;">
-new bedford coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;border-left:1px solid;">
-springfield coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-md
-</td>
-<td style="text-align:left;border-left:1px solid;">
-baltimore city coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-md
-</td>
-<td style="text-align:left;border-left:1px solid;">
-charles, calvert, st.mary’s counties coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mo
-</td>
-<td style="text-align:left;border-left:1px solid;">
-st.louis city coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-northwest north carolina coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nv
-</td>
-<td style="text-align:left;border-left:1px solid;">
-las vegas/clark county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ny
-</td>
-<td style="text-align:left;border-left:1px solid;">
-new york city coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:left;border-left:1px solid;">
-central oregon coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:left;border-left:1px solid;">
-eugene/springfield/lane county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:left;border-left:1px solid;">
-medford/ashland/jackson county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:left;border-left:1px solid;">
-oregon balance of state coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:left;border-left:1px solid;">
-portland-gresham-multnomah county coc
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wa
-</td>
-<td style="text-align:left;border-left:1px solid;">
-seattle/king county coc
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The number of CoCs in each state</p>
-<pre class="r"><code>#number cocs in each state
-cocs &lt;- cocs %&gt;%
-  group_by(state) %&gt;%
-  summarise(count=n())
-
-kable(cocs) %&gt;%
-  column_spec(2, border_left = T, border_right = F) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
-  scroll_box(height = &quot;250px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; ">
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-state
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-count
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-ak
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:right;border-left:1px solid;">
-17
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-dc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:right;border-left:1px solid;">
-9
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ga
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hi
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ky
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-la
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-md
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mo
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nv
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ny
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-wa
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="location-of-laws-in-cocs" class="section level3">
-<h3><strong>Location of laws in CoCs:</strong></h3>
-<ul>
-<li>California CoC Oakland/Alameda has the greatest number of laws that disproportionately affect homeless individuals with 9, which means they have a law banning each examined act. California’s San Francisco CoC and Atlanta, Georgia’s CoC are close seconds with 8 laws.</li>
-<li>CoCs in California and Florida also have the second fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa and Humboldt County CoCs in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.</li>
-<li>A Maryland CoC consisting of Charles, Calvert and St. Mary’s counties nq ` x has only 1 law. It outlaws begging citywide.</li>
-</ul>
-<pre class="r"><code>## create new data set
-coc_totals &lt;- crim_survey %&gt;%
-  select(coc, citywide, particular_places, unclear, none) %&gt;%
-  ## group by coc so totals are by coc
-  group_by(coc)
-
-coc_totals &lt;- aggregate(coc_totals[,2:5], by=list(coc_totals$coc), FUN=sum, na.rm=TRUE) %&gt;%
-  rename(&quot;coc&quot; = &quot;Group.1&quot;) %&gt;%
-  group_by(coc) %&gt;%
-  mutate(total_laws = sum(citywide + particular_places)) %&gt;%
-  select(1, 6, 2:5) %&gt;%
-  ## put the state with the most laws first
-  arrange(desc(total_laws))
-
-kable(coc_totals) %&gt;%
-  column_spec (1:ncol(coc_totals),border_left = T, border_right = F) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
-  scroll_box(height = &quot;300px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-coc
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-total_laws
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-citywide
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-particular_places
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-unclear
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-none
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-oakland/alameda county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-9
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-atlanta continuum of care
-</td>
-<td style="text-align:right;border-left:1px solid;">
-8
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-san francisco coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-8
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-boston coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-daytona beach/daytona/volusia, flagler counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-district of columbia coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-long beach coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-mendocino county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-new orleans/jefferson parish coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-new york city coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-oregon balance of state coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-pasadena coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-san luis obispo county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-chico/paradise/butte county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-humboldt county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-las vegas/clark county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-lowell coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-lynn coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-medford/ashland/jackson county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-pasco county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-punta gorda/charlotte county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-richmond/contra costa county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-saint johns county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-salinas/monterey, san benito counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-santa rosa/petaluma/sonoma county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-savannah/chatham county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-seattle/king county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-yuba city &amp; county/sutter county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-anchorage coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-cambridge coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-central oregon coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-fort walton beach/okaloosa, walton counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-hawaii balance of state coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-honolulu coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-monroe county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-new bedford coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-northwest north carolina coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-portland-gresham-multnomah county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-san diego city and county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-san jose/santa clara city &amp; county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-springfield coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-st. petersburg/clearwater/largo/pinellas county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-st.louis city coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-watsonville/santa cruz city &amp; county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-baltimore city coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-eugene/springfield/lane county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-hendry, hardee, highlands counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-lexington/fayette county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-colusa, glenn, trinity counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-amador, calaveras, tuolumne and mariposa counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-columbia, hamilton, lafayette, suwannee counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-</tr>
-<tr>
-<td style="text-align:left;border-left:1px solid;">
-charles, calvert, st.mary’s counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="type-of-laws-by-coc" class="section level3">
-<h3>Type of laws by CoC</h3>
-<pre class="r"><code>type_by_coc &lt;- crim_survey %&gt;%
-  select(2,9:17) %&gt;%
-  group_by(coc) %&gt;%
-  naniar::replace_with_na_all(condition = ~.x == &quot;unclear&quot;) %&gt;%
-  naniar::replace_with_na_all(condition = ~.x == &quot;none&quot;)
-
-type_by_coc[type_by_coc == &quot;citywide&quot;] &lt;- 1
-type_by_coc[type_by_coc == &quot;only in particular places&quot;] &lt;- 1
-type_by_coc[type_by_coc == &quot;county&quot;] &lt;- 1
-
-type_by_coc[,2:10] &lt;- sapply(type_by_coc[,2:10], as.numeric)</code></pre>
-<pre><code>## Warning in lapply(X = X, FUN = FUN, ...): NAs introduced by coercion</code></pre>
-<pre class="r"><code>type_by_coc &lt;- aggregate(type_by_coc[,2:10], by=list(type_by_coc$coc), FUN=sum, na.rm=TRUE) %&gt;%
-  rename(&quot;coc&quot; = &quot;Group.1&quot;)
-
-kable(type_by_coc) %&gt;%
-  column_spec(2:ncol(type_by_coc),border_left = T, border_right = F) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
-  scroll_box(height = &quot;300px&quot;)</code></pre>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-coc
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-sleeping_in_public
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-camping_in_public
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-sitting_laying_in_public
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-living_in_vehicle
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-loitering_vagrancy
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-begging
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-food_sharing_ban
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-public_urination
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-public_intoxication
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-amador, calaveras, tuolumne and mariposa counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-anchorage coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-atlanta continuum of care
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-baltimore city coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-boston coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cambridge coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-central oregon coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-charles, calvert, st.mary’s counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chico/paradise/butte county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-columbia, hamilton, lafayette, suwannee counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-colusa, glenn, trinity counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-daytona beach/daytona/volusia, flagler counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-district of columbia coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-eugene/springfield/lane county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fort walton beach/okaloosa, walton counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hawaii balance of state coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-hendry, hardee, highlands counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-honolulu coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-humboldt county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-las vegas/clark county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lexington/fayette county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-long beach coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lowell coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lynn coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-medford/ashland/jackson county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-mendocino county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-monroe county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-new bedford coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-new orleans/jefferson parish coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-new york city coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-northwest north carolina coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-oakland/alameda county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-oregon balance of state coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pasadena coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pasco county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-portland-gresham-multnomah county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-punta gorda/charlotte county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-richmond/contra costa county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-saint johns county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-salinas/monterey, san benito counties coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-san diego city and county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-san francisco coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-san jose/santa clara city &amp; county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-san luis obispo county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-santa rosa/petaluma/sonoma county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-savannah/chatham county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-seattle/king county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-springfield coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-st. petersburg/clearwater/largo/pinellas county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-st.louis city coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-watsonville/santa cruz city &amp; county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-yuba city &amp; county/sutter county coc
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
 <div id="city-analysis" class="section level2">
 <h2>City Analysis</h2>
 <ul>
-<li>The cities of Waldorf, Md., Sparta, N.C. and Worcester, Mass. have the fewest laws with only 1. Lake City, Fla. and Ione, Calif. and round out the bottom five with two laws each.</li>
 <li>Oakland has the most with 9 laws. This means that Oakland has every possible examined law on the books.</li>
-<li>Atlanta, Ga. is the only city with eight laws, but 11 cities have seven laws.</li>
+<li>Oakland, California has the greatest number of laws that disproportionately affect homeless individuals with 9, which means they have a law banning each examined act. San Francisco and Los Angeles and Atlanta, Georgia are tied for a close seconds with 8 laws.
+<ul>
+<li>California cities account for three of the top four cities with the most laws.</li>
+</ul></li>
+<li>Cities in California and Florida also have the second fewest laws that mostly impact homeless individuals: Ione California and Lake City, Florida only have 2 laws.</li>
+<li>The city of Waldorf, Md. has the fewest laws with only 1.
+<ul>
+<li>Waldorf’s one law outlaws begging citywide.</li>
+</ul></li>
 </ul>
 <pre class="r"><code>## create new data set
 city_totals &lt;- crim_survey %&gt;%
@@ -9976,6 +6620,29 @@ oakland
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+los angeles
+</td>
+<td style="text-align:right;border-left:1px solid;">
+8
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 </tr>
 <tr>
@@ -11154,14 +7821,1774 @@ waldorf (laws are from charles county)
 </tbody>
 </table>
 </div>
+<div id="type-of-laws-by-city" class="section level3">
+<h3>Type of laws by City</h3>
+<pre class="r"><code>type_by_city &lt;- crim_survey %&gt;%
+  select(3,9:17) %&gt;%
+  group_by(city) %&gt;%
+  naniar::replace_with_na_all(condition = ~.x == &quot;unclear&quot;) %&gt;%
+  naniar::replace_with_na_all(condition = ~.x == &quot;none&quot;)
+
+type_by_city[type_by_city == &quot;citywide&quot;] &lt;- 1
+type_by_city[type_by_city == &quot;only in particular places&quot;] &lt;- 1
+type_by_city[type_by_city == &quot;county&quot;] &lt;- 1
+
+type_by_city[,2:10] &lt;- sapply(type_by_city[,2:10], as.numeric)</code></pre>
+<pre><code>## Warning in lapply(X = X, FUN = FUN, ...): NAs introduced by coercion</code></pre>
+<pre class="r"><code>type_by_city &lt;- aggregate(type_by_city[,2:10], by=list(type_by_city$city), FUN=sum, na.rm=TRUE) %&gt;%
+  rename(&quot;city&quot; = &quot;Group.1&quot;)
+
+kable(type_by_city) %&gt;%
+  column_spec(2:ncol(type_by_city),border_left = T, border_right = F) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
+  scroll_box(height = &quot;300px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+city
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+sleeping_in_public
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+camping_in_public
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+sitting_laying_in_public
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+living_in_vehicle
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+loitering_vagrancy
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+begging
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+food_sharing_ban
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+public_urination
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+public_intoxication
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+anchorage
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+atlanta
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+baltimore city
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bend
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+boston
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cambridge
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+charlotte county
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chico
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+clewiston
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+concord
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+corvallis
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+daytona beach
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eugene
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eureka
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fort walton beach
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+honolulu
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ione
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+key west
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lake city
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+las vegas
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lexington
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+long beach
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+los angeles
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lowell
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lynn
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+marysville
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+maui co.
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medford
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+new bedford
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+new orleans
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+new port richey
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nyc
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oakland
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+orland (glenn)
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pasadena
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+portland
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+salinas
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+san diego
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+san francisco
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+san jose
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+san luis obispo
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+santa cruz
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+santa rosa
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+savannah
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+seattle
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+springfield
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+st. augustine
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+st. louis
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+st. petersburg
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+town of boone (watauga county seat)
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ukiah
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+waldorf (laws are from charles county)
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+washington, d.c.
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="which-state-has-the-most-laws" class="section level2">
-<h2>Which state has the most laws?</h2>
+</div>
+</div>
+<div id="types-of-laws-by-state" class="section level2">
+<h2>Types of Laws by State</h2>
+<div id="which-state-has-the-most-laws" class="section level3">
+<h3>Which state has the most laws?</h3>
 <ul>
-<li>California comes in first with 115 laws and is the only examined state with over 100 laws.</li>
+<li>California comes in first with 109 laws and is the only examined state with over 50 laws.</li>
 <li>Kentucky has the fewest laws with only 4</li>
-<li>North Carolina is the only state in which more than one city was examined but, due to the total number of laws, fell behind a state with only one city.</li>
-<li>The top eight states - California, Florida, Oregon, Massachusetts, Georgia, Washington, Hawaii and Maryland - were the only states (besides N.C.) in which more than one CoC was examined.</li>
+<li>Maryland is the only state in which more than one city was examined but, due to the total number of laws, fell behind multiple states with only one city.</li>
+<li>The top six states - California, Florida, Massachusetts, Oregon, Georgia and Hawaii - were the only states (besides Maryland) in which more than one CoC was examined.</li>
 </ul>
 <pre class="r"><code>## create new data set
 state_totals &lt;- crim_survey %&gt;%
@@ -11200,7 +9627,7 @@ total_laws
 ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
-101
+109
 </td>
 </tr>
 <tr>
@@ -11327,8 +9754,6 @@ ky
 </table>
 </div>
 </div>
-<div id="types-of-laws-by-state" class="section level2">
-<h2>Types of Laws by State</h2>
 <div id="what-acts-do-each-state-outlaw" class="section level3">
 <h3>What acts do each state outlaw?</h3>
 <pre class="r"><code>type_by_state &lt;- crim_survey %&gt;%
@@ -11424,31 +9849,31 @@ ak
 ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-14
-</td>
-<td style="text-align:right;border-left:1px solid;">
-13
+6
 </td>
 <td style="text-align:right;border-left:1px solid;">
 15
-</td>
-<td style="text-align:right;border-left:1px solid;">
-13
-</td>
-<td style="text-align:right;border-left:1px solid;">
-10
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 14
 </td>
 <td style="text-align:right;border-left:1px solid;">
 16
+</td>
+<td style="text-align:right;border-left:1px solid;">
+14
+</td>
+<td style="text-align:right;border-left:1px solid;">
+11
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+15
+</td>
+<td style="text-align:right;border-left:1px solid;">
+17
 </td>
 </tr>
 <tr>
@@ -11904,14 +10329,14 @@ wa
 </div>
 <p><strong>Notes:</strong></p>
 <ul>
-<li>There are more citywide laws than any other kind , followed by no law, particular places and unclear.</li>
+<li>There are more citywide laws than any other kind, followed by no law, particular places and unclear.</li>
 <li>In 12 of the 15 states (and DC), fifty percent or less of the laws analyzed are citywide.</li>
-<li>Hawaii, N.C. and Ga. had the lowest percentage of citywide laws with only 16.7%
+<li>Hawaii and Ga. had the lowest percentage of citywide laws with only 16.7%
 <ul>
 <li>Hawaii also had the greatest share of “unclear” laws, accounting for seven (27.8%) of its examined laws</li>
 </ul></li>
 <li>Over half of the examined laws in New York City (55.56%) and Georgia (61.1%) are only applicable in particular places. Over in New Orleans, 44.4% of the laws cover a particular place.</li>
-<li>Missouri, Alaska and Massachusetts have no laws only applicable in particular places.</li>
+<li>Missouri and Alaska have no laws only applicable in particular places.</li>
 </ul>
 <pre class="r"><code>all_state &lt;- crim_survey %&gt;%
 
@@ -12010,13 +10435,13 @@ ak
 ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
-68
+72
 </td>
 <td style="text-align:right;border-left:1px solid;">
-33
+37
 </td>
 <td style="text-align:right;border-left:1px solid;">
-35
+36
 </td>
 <td style="text-align:right;border-left:1px solid;">
 17
@@ -12025,13 +10450,13 @@ ca
 44.44444
 </td>
 <td style="text-align:right;border-left:1px solid;">
-21.568628
+22.839506
 </td>
 <td style="text-align:right;border-left:1px solid;">
-22.87582
+22.22222
 </td>
 <td style="text-align:right;border-left:1px solid;">
-11.111111
+10.493827
 </td>
 </tr>
 <tr>
@@ -12445,13 +10870,13 @@ wa
 Total
 </td>
 <td style="text-align:right;border-left:1px solid;">
-193
+197
 </td>
 <td style="text-align:right;border-left:1px solid;">
-96
+100
 </td>
 <td style="text-align:right;border-left:1px solid;">
-140
+141
 </td>
 <td style="text-align:right;border-left:1px solid;">
 39
@@ -12460,13 +10885,13 @@ Total
 607.27220
 </td>
 <td style="text-align:right;border-left:1px solid;">
-377.266477
+378.537356
 </td>
 <td style="text-align:right;border-left:1px solid;">
-490.54158
+489.88799
 </td>
 <td style="text-align:right;border-left:1px solid;">
-124.919738
+124.302454
 </td>
 </tr>
 </tbody>
@@ -12663,34 +11088,34 @@ public_intoxication
 ca
 </td>
 <td style="text-align:right;border-left:1px solid;">
-101
+109
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-14
-</td>
-<td style="text-align:right;border-left:1px solid;">
-13
+6
 </td>
 <td style="text-align:right;border-left:1px solid;">
 15
-</td>
-<td style="text-align:right;border-left:1px solid;">
-13
-</td>
-<td style="text-align:right;border-left:1px solid;">
-10
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 14
 </td>
 <td style="text-align:right;border-left:1px solid;">
 16
+</td>
+<td style="text-align:right;border-left:1px solid;">
+14
+</td>
+<td style="text-align:right;border-left:1px solid;">
+11
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+15
+</td>
+<td style="text-align:right;border-left:1px solid;">
+17
 </td>
 </tr>
 </tbody>
@@ -13021,6 +11446,59 @@ none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;">
+los angeles city &amp; county coc
+</td>
+<td style="text-align:left;border-left:1px solid;">
+los angeles
+</td>
+<td style="text-align:right;border-left:1px solid;">
+8
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+none
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
@@ -13793,10 +12271,13 @@ citywide
 <div id="florida" class="section level3">
 <h3>Florida</h3>
 <ul>
-<li>Journalists examined the laws in 11 continuums of care in Florida, encompassing 17 cities such as Daytona Beach, Gainesville, Fort Walton Beach and Okaloosa County. In a survey analyzing the criminalization of homelessness in 49 CoCs across the country, three of the top five CoCs with the most laws criminalizing homeless acts are in Florida.</li>
-<li>Camping in public and living in a vehicle are each criminalized in 15 Florida cities. The only other act outlawed in over 10 cities is begging, which is illegal in 11 cities. But despite their frequency, Gainesville Florida opts not to ban public intoxication and is instead the only examined city in Florida to criminalize food sharing.</li>
-<li>The CoC including Fort Piece, St. Lucie and Martin counties had the most laws of any CoC in Florida. While there are no laws against food sharing and public intoxication, all three examined cities in these counties banned camping in public, sitting or laying in public and living in a vehicle. In these cities, essentially, individuals who can’t or don’t want to find room in a homeless shelter are breaking the law.</li>
-<li>The city of Daytona Beach criminalizes seven of the nine acts identified as disproportionately targeting homeless individuals and acts of homelessness. All the laws are citywide except for one, camping in public. The ban on camping in public iis only applicable in particular places, suggesting that some areas in the city are purposefully reserved for public camping, though whether those campers are intended to be tourists or homeless individuals is unknown. Daytona does permit sitting and laying in public, but the lack of allowance for sleeping either in public or a car leaves no exception for those who remain homeless when night falls.</li>
+<li>Journalists examined the lawsin 9 cities in Florida, including Daytona Beach, Gainesville, Fort Walton Beach and St. Petersburg.</li>
+<li>Florida cities ban camping in public more than any other act, with laws on the books in 8 cities. Living in a vehicle and loitering or vagrancy round out the top three most criminalized with laws in 7 cities.</li>
+<li>The city of Daytona Beach criminalizes seven of the nine acts identified as disproportionately targeting homeless individuals and acts of homelessness (it does not ban sitting or laying in public and sharing food).
+<ul>
+<li>All the laws are citywide except for one, camping in public. The ban on camping in public is only applicable in particular places, suggesting that some areas in the city are purposefully reserved for public camping, though whether those campers are intended to be tourists or homeless individuals is unknown.</li>
+<li>Daytona does permit sitting and laying in public, but the lack of allowance for sleeping either in public or a car leaves no exception for those who remain homeless when night falls.</li>
+</ul></li>
 <li>Lake City in the Columbia CoC is the most lenient, with citywide laws only against public intoxication and vagrancy and loitering. Though an encampment might violate the loitering and vagrancy law, both of these acts are also committed by vast swaths of the population and thus target homeless populations less than a ban on sleeping in public or sharing food.</li>
 </ul>
 <pre class="r"><code>florida &lt;- type_by_state %&gt;%
@@ -16374,10 +14855,11 @@ citywide
 <ul>
 <li>Individuals who either cannot or do not want to find room at a homeless shelter will often turn to homeless encampments. Though the lodgings are impermanent, lack utilities and hardly protect against the elements, living in a community engenders feelings of belonging and may seem safer than surviving independently. But even as encampment populations increase nation-wide due to a lack of shelters and beds, so too do the number of laws against camping in public.</li>
 <li>Homeless encampments are threatened by laws banning camping, sitting, laying or sleeping in public or living in a vehicle. Yet many cities seek to downsize their homeless populations by enforcing such laws, with the consequence of sending many homeless people into the criminal justice system for commiting necessary acts to survive while homeless.</li>
-<li>In an analysis of laws in 58 cities across the country that disproportionately impact homeless individuals, only public intoxication was criminalized more than camping in public. A little less than half of cities only banned public camping in particular places, but it’s unknown if there are allowances for homeless encampments.</li>
-<li>At least half of all examined cities had bans on some aspect of homeless encampments defined as camping in public, sitting or laying in public, sleeping in public or living in a vehicle. Twelve cities had laws against every aspect, including Marysville and Oakland, California, where all four laws are applicable citywide.</li>
-<li>Most states banned either camping or sitting and laying in public, except California and Florida, who are primarily concerned with people living out of vehicles.</li>
-<li>Eight cities, however, such as Baltimore City, St. Louis and Lake City, Florida, do not criminalize any basic aspects of residing in a homeless encampment.</li>
+<li>In an analysis of nine laws in 53 cities across the country that disproportionately impact homeless individuals, only public intoxication was criminalized more than camping in public. A little less than half of cities only banned public camping in particular places, but it’s unknown if there are allowances for homeless encampments.</li>
+<li>More than half of all examined cities had bans on some aspect of homeless encampments defined as camping in public, sitting or laying in public, sleeping in public or living in a vehicle.</li>
+<li>Eleven cities had laws against every aspect, including Marysville and Oakland, California, where all four laws are applicable citywide.</li>
+<li>Six cities, however, such as Baltimore City, St. Louis and Lake City, Florida, do not criminalize any basic aspects of residing in a homeless encampment.</li>
+<li>Most states had the most bans on either camping or sitting and laying in public, except California, which seems to be primarily concerned with people living out of vehicles.</li>
 </ul>
 <pre class="r"><code>encampment_totals &lt;- law_totals %&gt;%
   filter(key == &quot;camping_in_public&quot; |
@@ -16407,7 +14889,7 @@ count
 camping_in_public
 </td>
 <td style="text-align:right;border-left:1px solid;">
-40
+41
 </td>
 </tr>
 <tr>
@@ -16415,7 +14897,7 @@ camping_in_public
 sitting_laying_in_public
 </td>
 <td style="text-align:right;border-left:1px solid;">
-35
+36
 </td>
 </tr>
 <tr>
@@ -16423,7 +14905,7 @@ sitting_laying_in_public
 living_in_vehicle
 </td>
 <td style="text-align:right;border-left:1px solid;">
-29
+30
 </td>
 </tr>
 <tr>
@@ -16431,7 +14913,7 @@ living_in_vehicle
 sleeping_in_public
 </td>
 <td style="text-align:right;border-left:1px solid;">
-27
+28
 </td>
 </tr>
 </tbody>
@@ -16482,7 +14964,7 @@ camping_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-19
+20
 </td>
 </tr>
 <tr>
@@ -16515,7 +14997,7 @@ living_in_vehicle
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-14
+15
 </td>
 </tr>
 <tr>
@@ -16526,7 +15008,7 @@ sitting_laying_in_public
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-23
+24
 </td>
 </tr>
 <tr>
@@ -16548,7 +15030,7 @@ sleeping_in_public
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-16
+17
 </td>
 </tr>
 <tr>
@@ -16570,10 +15052,11 @@ only in particular places
 <h3>Encampment Laws by State and City</h3>
 <pre class="r"><code>encampments &lt;- crim_survey_initial %&gt;%
   ##get rid of columns we don&#39;t need to analyze
-  filter(complete == &quot;yes&quot;,
-         coc != &quot;state&quot;) %&gt;%
+   filter(complete == &quot;yes&quot;,
+         coc != &quot;state&quot;,
+         c3 == &quot;yes&quot;,
+         meet_definition == &quot;yes&quot;) %&gt;%
   select(-name, -complete, -new_reporting_or_nlchp_fact_check, -c3, -meet_definition, -contains (&quot;link&quot;), -contains(&quot;law&quot;)) %&gt;%
-  ##reorder columns with mutated columns first
   select(3,1,2,4:7)
 
 encampments &lt;- encampments %&gt;%
@@ -16870,7 +15353,10 @@ ca
 los angeles city &amp; county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-redondo beach
+los angeles
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -16882,22 +15368,19 @@ redondo beach
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
 0
 </td>
 <td style="text-align:left;border-left:1px solid;">
-none
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
+only in particular places
 </td>
 </tr>
 <tr>
@@ -16946,44 +15429,6 @@ ca
 oakland/alameda county coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
-berkeley
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;">
-oakland/alameda county coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
 oakland
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -17006,44 +15451,6 @@ citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;">
-oakland/alameda county coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-union city
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -17164,44 +15571,6 @@ none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;">
-san diego city and county coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-el cajon
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-unclear
 </td>
 </tr>
 <tr>
@@ -17589,158 +15958,6 @@ citywide
 fl
 </td>
 <td style="text-align:left;">
-fort pierce/st. lucie, indian river, martin counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-fort pierce
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-fort pierce/st. lucie, indian river, martin counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-port st. lucie
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:left;border-left:1px solid;">
-unclear
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-fort pierce/st. lucie, indian river, martin counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-stuart
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-fort walton beach/okaloosa, walton counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-destin
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
 fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -17769,120 +15986,6 @@ only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-fort walton beach/okaloosa, walton counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-okaloosa county
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-gainesville/alachua/putnam coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-gainesville
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-hendry, hardee, highlands counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-wauchula
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -17924,44 +16027,6 @@ none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-hendry, hardee, highlands counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-highlands county
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:left;border-left:1px solid;">
-unclear
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
 </td>
 </tr>
 <tr>
@@ -18149,44 +16214,6 @@ citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;">
-te
-</td>
-<td style="text-align:left;border-left:1px solid;">
-state of florida
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -18650,82 +16677,6 @@ none
 </tr>
 <tr>
 <td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;">
-worcester
-</td>
-<td style="text-align:left;border-left:1px solid;">
-worcester
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;">
-te
-</td>
-<td style="text-align:left;border-left:1px solid;">
-state of massachusetts
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-unclear
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 md
 </td>
 <td style="text-align:left;">
@@ -18757,44 +16708,6 @@ none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 unclear
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-md
-</td>
-<td style="text-align:left;">
-charles, calvert, st.mary’s counties coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-la plata
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -18906,44 +16819,6 @@ unclear
 </td>
 <td style="text-align:left;border-left:1px solid;">
 only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-nc
-</td>
-<td style="text-align:left;">
-northwest north carolina coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-town of sparta (alleghany county seat)
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
 none
@@ -19256,44 +17131,6 @@ only in particular places
 none
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-wa
-</td>
-<td style="text-align:left;">
-seattle/king county coc
-</td>
-<td style="text-align:left;border-left:1px solid;">
-woodinville
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-only in particular places
-</td>
-<td style="text-align:left;border-left:1px solid;">
-none
-</td>
-<td style="text-align:left;border-left:1px solid;">
-citywide
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -19381,10 +17218,10 @@ ak
 ca
 </td>
 <td style="text-align:right;">
-56
+51
 </td>
 <td style="text-align:right;border-left:1px solid;">
-37
+32
 </td>
 <td style="text-align:right;border-left:1px solid;">
 19
@@ -19393,13 +17230,13 @@ ca
 6
 </td>
 <td style="text-align:right;border-left:1px solid;">
-16
+15
+</td>
+<td style="text-align:right;border-left:1px solid;">
+14
 </td>
 <td style="text-align:right;border-left:1px solid;">
 16
-</td>
-<td style="text-align:right;border-left:1px solid;">
-18
 </td>
 </tr>
 <tr>
@@ -19433,25 +17270,25 @@ dc
 fl
 </td>
 <td style="text-align:right;">
-49
+25
 </td>
 <td style="text-align:right;border-left:1px solid;">
-23
+16
 </td>
 <td style="text-align:right;border-left:1px solid;">
-26
+9
 </td>
 <td style="text-align:right;border-left:1px solid;">
-10
+6
 </td>
 <td style="text-align:right;border-left:1px solid;">
-15
+8
 </td>
 <td style="text-align:right;border-left:1px solid;">
-10
+4
 </td>
 <td style="text-align:right;border-left:1px solid;">
-14
+7
 </td>
 </tr>
 <tr>
@@ -19589,16 +17426,16 @@ ma
 md
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -19641,10 +17478,10 @@ mo
 nc
 </td>
 <td style="text-align:right;">
-2
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -19653,7 +17490,7 @@ nc
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-2
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -19745,13 +17582,7 @@ or
 wa
 </td>
 <td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-3
+2
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -19760,10 +17591,16 @@ wa
 2
 </td>
 <td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 </tr>
 </tbody>

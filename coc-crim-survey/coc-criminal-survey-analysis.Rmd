@@ -1,7 +1,7 @@
 ---
 title: "CoC Criminal Survey Analysis"
 author: "Theresa Diffendal"
-date: "4/13/2020"
+date: "4/23/2020"
 output:
   html_document:
     df_print:  paged
@@ -117,12 +117,12 @@ kable(crim_survey) %>%
 ```
 
 
-Based on pre-reporting, the following laws were examined as they disproportionately impact homeless individuals. Homeless individuals often end up with multiple criminal charges and exorbitant through the criminalization of necessary acts such as begging, sharing food or camping in public. The list below contains the nine laws
+Based on pre-reporting, the following laws were examined as they disproportionately impact homeless individuals. Homeless individuals often end up with multiple criminal charges and exorbitant through the criminalization of necessary acts such as begging, sharing food or camping in public. The list below contains the nine laws.
 ```{r}
 colnames(crim_survey[9:17])
 ```
 
-34 of the 41 laws against public intoxication apply citywide, the most citywide-applicable laws for any crime. Public urination is criminalized citywide in 33 cities, while begging is the third act most criminalized citywide with laws in 29 cities.
+There are more citywide laws against public intoxication and public urination than any other crimes, with 34 each. Begging is the third act most criminalized citywide with laws in 30 cities.
 ```{r}
 law_type_totals <- crim_survey %>%
   select(9:17) %>%
@@ -147,7 +147,7 @@ law_totals <- law_type_totals %>%
 print(law_totals)
 ```
 
-Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, "citywide" and "none" account for over 70% of the laws examined. 20% of laws are only applicable in particular places while 9% of the laws were unclear.
+Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, "citywide" and "none" account for over 70% of the laws examined. 21% of laws are only applicable in particular places while 9% of the laws were unclear.
 
 While laws applicable in particular places represent a fifth of the laws examined, the majority of the time it appears that laws either apply citywide or do not exist.
 ```{r}
@@ -187,13 +187,13 @@ crim_survey_states <- crim_survey %>%
 print(crim_survey_states)
 ```
 
-Total cities examined
+Total cities examined:
 
 ```{r}
 print(sum(crim_survey_states$city_count))
 ```
 
-Names of cities examined in each state
+Names of cities examined in each state:
 ```{r}
 # See each city examined in each state
 crim_survey_cities <- crim_survey %>%
@@ -208,92 +208,14 @@ kable(crim_survey_cities) %>%
   scroll_box(height = "250px")
 ```
 
-## Continuum of Care Analysis
-
-### CoCs by State
-
-A list of CoCs in each state
-```{r}
-#list cocs in each state
-cocs <- crim_survey %>%
-  select(state, coc) %>%
-  distinct(state, coc) %>%
-  group_by(state) %>%
-  arrange(state, coc)
-
-kable(cocs) %>%
-  column_spec(2, border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "300px")
-```
-
-The number of CoCs in each state
-```{r}
-#number cocs in each state
-cocs <- cocs %>%
-  group_by(state) %>%
-  summarise(count=n())
-
-kable(cocs) %>%
-  column_spec(2, border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "250px")
-```
-
-### **Location of laws in CoCs:**
-
-* California CoC Oakland/Alameda has the greatest number of laws that disproportionately affect homeless individuals with 9, which means they have a law banning each examined act. California's San Francisco CoC and Atlanta, Georgia's CoC are close seconds with 8 laws.
-* CoCs in California and Florida also have the second fewest laws that mostly impact homeless individuals. Amador/Calaveras/Tuolumne/Mariposa and Humboldt County CoCs in California and Columbia/Hamilton/Lafayette/Suwanee Coc in Florida only have 2 laws.
-* A Maryland CoC consisting of Charles, Calvert and St. Mary's counties nq  ` x has only 1 law. It outlaws begging citywide.
-```{r}
-## create new data set
-coc_totals <- crim_survey %>%
-  select(coc, citywide, particular_places, unclear, none) %>%
-  ## group by coc so totals are by coc
-  group_by(coc)
-
-coc_totals <- aggregate(coc_totals[,2:5], by=list(coc_totals$coc), FUN=sum, na.rm=TRUE) %>%
-  rename("coc" = "Group.1") %>%
-  group_by(coc) %>%
-  mutate(total_laws = sum(citywide + particular_places)) %>%
-  select(1, 6, 2:5) %>%
-  ## put the state with the most laws first
-  arrange(desc(total_laws))
-
-kable(coc_totals) %>%
-  column_spec (1:ncol(coc_totals),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "300px")
-```
-
-### Type of laws by CoC
-```{r}
-type_by_coc <- crim_survey %>%
-  select(2,9:17) %>%
-  group_by(coc) %>%
-  naniar::replace_with_na_all(condition = ~.x == "unclear") %>%
-  naniar::replace_with_na_all(condition = ~.x == "none")
-
-type_by_coc[type_by_coc == "citywide"] <- 1
-type_by_coc[type_by_coc == "only in particular places"] <- 1
-type_by_coc[type_by_coc == "county"] <- 1
-
-type_by_coc[,2:10] <- sapply(type_by_coc[,2:10], as.numeric)
-
-type_by_coc <- aggregate(type_by_coc[,2:10], by=list(type_by_coc$coc), FUN=sum, na.rm=TRUE) %>%
-  rename("coc" = "Group.1")
-
-kable(type_by_coc) %>%
-  column_spec(2:ncol(type_by_coc),border_left = T, border_right = F) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  scroll_box(height = "300px")
-```
-
 ## City Analysis
 
-* The cities of Waldorf, Md., Sparta, N.C. and Worcester, Mass. have the fewest laws with only 1. Lake City, Fla. and Ione, Calif. and round out the bottom five with two laws each.
 * Oakland has the most with 9 laws. This means that Oakland has every possible examined law on the books.
-* Atlanta, Ga. is the only city with eight laws, but 11 cities have seven laws.
+* Oakland, California has the greatest number of laws that disproportionately affect homeless individuals with 9, which means they have a law banning each examined act. San Francisco and Los Angeles and Atlanta, Georgia are tied for a close seconds with 8 laws.
+  + California cities account for three of the top four cities with the most laws.
+* Cities in California and Florida also have the second fewest laws that mostly impact homeless individuals: Ione California and Lake City, Florida only have 2 laws.
+* The city of Waldorf, Md. has the fewest laws with only 1. 
+  + Waldorf's one law outlaws begging citywide.
 ```{r}
 ## create new data set
 city_totals <- crim_survey %>%
@@ -317,12 +239,37 @@ kable(city_totals) %>%
   scroll_box(height = "250px")
 ```
 
-## Which state has the most laws?
+### Type of laws by City
+```{r}
+type_by_city <- crim_survey %>%
+  select(3,9:17) %>%
+  group_by(city) %>%
+  naniar::replace_with_na_all(condition = ~.x == "unclear") %>%
+  naniar::replace_with_na_all(condition = ~.x == "none")
 
-* California comes in first with 115 laws and is the only examined state with over 100 laws.
+type_by_city[type_by_city == "citywide"] <- 1
+type_by_city[type_by_city == "only in particular places"] <- 1
+type_by_city[type_by_city == "county"] <- 1
+
+type_by_city[,2:10] <- sapply(type_by_city[,2:10], as.numeric)
+
+type_by_city <- aggregate(type_by_city[,2:10], by=list(type_by_city$city), FUN=sum, na.rm=TRUE) %>%
+  rename("city" = "Group.1")
+
+kable(type_by_city) %>%
+  column_spec(2:ncol(type_by_city),border_left = T, border_right = F) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "300px")
+```
+
+## Types of Laws by State
+
+### Which state has the most laws?
+
+* California comes in first with 109 laws and is the only examined state with over 50 laws.
 * Kentucky has the fewest laws with only 4
-* North Carolina is the only state in which more than one city was examined but, due to the total number of laws, fell behind a state with only one city.
-* The top eight states - California, Florida, Oregon, Massachusetts, Georgia, Washington, Hawaii and Maryland - were the only states (besides N.C.) in which more than one CoC was examined.
+* Maryland is the only state in which more than one city was examined but, due to the total number of laws, fell behind multiple states with only one city.
+* The top six states - California, Florida, Massachusetts, Oregon, Georgia and Hawaii - were the only states (besides Maryland) in which more than one CoC was examined.
 ```{r}
 ## create new data set
 state_totals <- crim_survey %>%
@@ -344,8 +291,6 @@ kable(state_totals) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "250px")
 ```
-
-## Types of Laws by State
 
 ### What acts do each state outlaw?
 
@@ -374,12 +319,12 @@ kable(type_by_state) %>%
 
 **Notes:**
 
-* There are more citywide laws than any other kind , followed by no law, particular places  and unclear.
+* There are more citywide laws than any other kind, followed by no law, particular places  and unclear.
 * In 12 of the 15 states (and DC), fifty percent or less of the laws analyzed are citywide.
-* Hawaii, N.C. and Ga. had the lowest percentage of citywide laws with only 16.7%
+* Hawaii and Ga. had the lowest percentage of citywide laws with only 16.7%
   + Hawaii also had the greatest share of "unclear" laws, accounting for seven (27.8%) of its examined laws
 * Over half  of the examined laws in New York City (55.56%) and Georgia (61.1%) are only applicable in particular places. Over in New Orleans, 44.4% of the laws cover a particular place.
-* Missouri, Alaska and Massachusetts have no laws only applicable in particular places.
+* Missouri and Alaska have no laws only applicable in particular places.
 
 ```{r}
 all_state <- crim_survey %>%
@@ -471,10 +416,11 @@ kable(dc) %>%
 ```
 
 ### Florida
-* Journalists examined the laws in 11 continuums of care in Florida,  encompassing 17 cities such as Daytona Beach, Gainesville, Fort Walton Beach and Okaloosa County.  In a survey analyzing the criminalization of homelessness in 49 CoCs across the country, three of the top five CoCs with the most laws criminalizing homeless acts are in Florida.
-* Camping in public and living in a vehicle are each criminalized in 15 Florida cities. The only other act outlawed in over 10 cities is begging, which is illegal in 11 cities. But despite their frequency, Gainesville Florida opts not to ban public intoxication and is instead the only examined city in Florida to criminalize food sharing.
-* The CoC including Fort Piece, St. Lucie and Martin counties had the most laws of any CoC in Florida. While there are no laws against food sharing and public intoxication, all three examined cities in these counties banned camping in public, sitting or laying in public and living in a vehicle. In these cities, essentially, individuals who can’t or don’t want to find room in a homeless shelter are breaking the law.
-* The city of Daytona Beach criminalizes seven of the nine acts identified as disproportionately targeting homeless individuals and acts of homelessness. All the laws are citywide except for one, camping in public. The ban on camping in public iis only applicable in particular places, suggesting that some areas in the city are purposefully reserved for public camping, though whether those campers are intended to be tourists or homeless individuals is unknown. Daytona does permit sitting and laying in public, but the lack of allowance for sleeping either in public or a car leaves no exception for those who remain homeless when night falls.
+* Journalists examined the lawsin 9 cities in Florida, including Daytona Beach, Gainesville, Fort Walton Beach and St. Petersburg.
+* Florida cities ban camping in public more than any other act, with laws on the books in 8 cities. Living in a vehicle and loitering or vagrancy round out the top three most criminalized with laws in 7 cities.
+* The city of Daytona Beach criminalizes seven of the nine acts identified as disproportionately targeting homeless individuals and acts of homelessness (it does not ban sitting or laying in public and sharing food). 
+  + All the laws are citywide except for one, camping in public. The ban on camping in public is only applicable in particular places, suggesting that some areas in the city are purposefully reserved for public camping, though whether those campers are intended to be tourists or homeless individuals is unknown.
+  + Daytona does permit sitting and laying in public, but the lack of allowance for sleeping either in public or a car leaves no exception for those who remain homeless when night falls.
 * Lake City in the Columbia CoC is the most lenient, with citywide laws only against public intoxication and vagrancy and loitering. Though an encampment might violate the loitering and vagrancy law, both of these acts are also committed by vast swaths of the population and thus target homeless populations less than a ban on sleeping in public or sharing food.
 ```{r}
 florida <- type_by_state %>%
@@ -660,10 +606,11 @@ The following is an analysis of laws only related to homeless encampments: sleep
 
 * Individuals who either cannot or do not want to find room at a homeless shelter will often turn to homeless encampments. Though the lodgings are impermanent, lack utilities and hardly protect against the elements, living in a community engenders feelings of belonging and may seem safer than surviving independently. But even as encampment populations increase nation-wide due to a lack of shelters and beds, so too do the number of laws against camping in public.
 * Homeless encampments are threatened by laws banning camping, sitting, laying or sleeping in public or living in a vehicle. Yet many cities seek to downsize their homeless populations by enforcing such laws, with the consequence of sending many homeless people into the criminal justice system for commiting necessary acts to survive while homeless.
-* In an analysis of laws in 58 cities across the country that disproportionately impact homeless individuals, only public intoxication was criminalized more than camping in public. A little less than half of cities only banned public camping in particular places, but it’s unknown if there are allowances for homeless encampments.
-* At least half of all examined cities had bans on some aspect of homeless encampments defined as camping in public, sitting or laying in public, sleeping in public or living in a vehicle. Twelve cities had laws against every aspect, including Marysville and Oakland, California, where all four laws are applicable citywide.
-* Most states banned either camping or sitting and laying in public, except California and Florida, who are primarily concerned with people living out of vehicles.
-* Eight cities, however, such as Baltimore City, St. Louis and Lake City, Florida, do not criminalize any basic aspects of residing in a homeless encampment.
+* In an analysis of nine laws in 53 cities across the country that disproportionately impact homeless individuals, only public intoxication was criminalized more than camping in public. A little less than half of cities only banned public camping in particular places, but it’s unknown if there are allowances for homeless encampments.
+* More than half of all examined cities had bans on some aspect of homeless encampments defined as camping in public, sitting or laying in public, sleeping in public or living in a vehicle. 
+* Eleven cities had laws against every aspect, including Marysville and Oakland, California, where all four laws are applicable citywide.
+* Six cities, however, such as Baltimore City, St. Louis and Lake City, Florida, do not criminalize any basic aspects of residing in a homeless encampment.
+* Most states had the most bans on either camping or sitting and laying in public, except California, which seems to be primarily concerned with people living out of vehicles.
 
 ```{r}
 encampment_totals <- law_totals %>%
@@ -694,10 +641,11 @@ kable(encampment_type_totals) %>%
 ```{r}
 encampments <- crim_survey_initial %>%
   ##get rid of columns we don't need to analyze
-  filter(complete == "yes",
-         coc != "state") %>%
+   filter(complete == "yes",
+         coc != "state",
+         c3 == "yes",
+         meet_definition == "yes") %>%
   select(-name, -complete, -new_reporting_or_nlchp_fact_check, -c3, -meet_definition, -contains ("link"), -contains("law")) %>%
-  ##reorder columns with mutated columns first
   select(3,1,2,4:7)
 
 encampments <- encampments %>%
@@ -752,9 +700,9 @@ homeless_crim <- left_join(crim_survey, pit, by="coc")
 ```{r, include=FALSE}
 ## Write csv files for adam with cocs as rows and Y/N laws as columns
 
-type_by_coc_adam <- type_by_coc
-type_by_coc_adam[type_by_coc_adam == "1"] <- "Y"
-type_by_coc_adam[type_by_coc_adam == "0"] <- "N"
+#type_by_coc_adam <- type_by_coc
+#type_by_coc_adam[type_by_coc_adam == "1"] <- "Y"
+#type_by_coc_adam[type_by_coc_adam == "0"] <- "N"
 #view(type_by_coc_adam)
 
 #write.csv(type_by_coc_adam, "crim-survey-adam.csv")
@@ -776,3 +724,4 @@ type_by_coc_adam[type_by_coc_adam == "0"] <- "N"
 #write.csv(north_carolina, "north-carolina-summary.csv")
 #write.csv(oregon, "oregon-summary.csv")
 ```
+
