@@ -12,6 +12,7 @@ library(tidytext)
 library(tidyr)
 library(stringr)
 library(lubridate)
+library(janitor)
 ##read in the data and join by final_name----
 
   volusia_cases <- read_excel("cases_volusia_2019.xlsx")
@@ -135,5 +136,67 @@ case_urls <- vol_data %>%
       rename(court_docket_no = casenr) %>% 
       left_join(short_volusia, by = "court_docket_no") %>% 
       select(final_name, case_urls)
+ 
+
+  
+###if you just start here 
+  vol_caseurls <- read_csv("vol_caseurls.csv") %>% 
+    rename(case_url = case_urls)
+  names_volusia <- as.data.frame(matrix(ncol = 0, 
+                                 nrow=0))
+  #if you haven't done the upper part and need only names you're fine, if you have, 
+  #then close the remote server and save your changes and close R and then start from here again
+  #or if you wish start from the for caseurl part 
+  driver <- rsDriver(browser = c("chrome"), chromever = "80.0.3987.106")
+  remote_driver <- driver[["client"]] 
+  myurl <- remote_driver$navigate(
+    "https://app02.clerk.org/ccms/")
+  Sys.sleep(1)
+  
+  
+  temp <- remote_driver$findElement(using = "id", 
+                                    value = "ctl00_Content1_button_accept")
+  temp$clickElement()
+  
+  
+  for (case_url in vol_caseurls$case_url) {
+    #for(case_url in missing$case_url) {
+    temp_url <- remote_driver$navigate(case_url) %>% 
+      remote_driver$getPageSource()
+    Sys.sleep(1)
+
+    
+    
+    person <- read_html(temp_url[[1]]) %>% 
+      html_nodes('#main > div:nth-child(5) > fieldset > table') %>% 
+      html_table() %>% 
+      unlist() %>% 
+      as.data.frame() %>% 
+      unique()
+    
+    person <- person %>% 
+      mutate(x2 = str_remove(person$., '^.*'),
+        x1 = str_match(person$.,'^.*') %>% 
+          str_remove(':')) %>% 
+      select(x1, x2) %>% 
+      pivot_wider(names_from = x1, values_from = x2) %>% 
+      clean_names() %>% 
+      mutate(case_url = case_url)
+   
+    Sys.sleep(4)
+    
+    names_volusia <- bind_rows(names_volusia, person)
+    
+    
+    }
+    
+  #sometimes all pages don't load, run same code with missing urls
+  
+  missing <- anti_join(vol_caseurls, names_volusia, by = "case_url")
+  
+  write_csv(names_volusia, "volusia_dem_data.csv")
+
+
+
 
         
