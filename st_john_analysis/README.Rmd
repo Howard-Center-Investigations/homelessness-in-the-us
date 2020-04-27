@@ -1,0 +1,386 @@
+---
+title: "Basics about St John County"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+  github_document: default
+  pdf_document:
+    toc: yes
+date: "03/10/2020"
+always_allow_html: true
+---
+<!-- Timestamp: leave this in to automatically track when a file is rendered -->
+*Rendered at `r format(Sys.time(), '%I:%M %p, %b. %d, %Y')`*
+
+<!-- Contact info: leave author/reporter/editor contact info here -->
+*Riin Aljas (<aljasriin@gmail.com>)*
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  message = FALSE, 
+  warning = FALSE
+  )
+
+knitr::opts_knit$set(
+  root.dir = rprojroot::find_rstudio_root_file()
+  )
+
+options(DT.options = list(pageLength = 20, language = list(search = 'Search anything in the table:')))
+source("03_helper_functions.R")
+
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(data.table)
+library(gridExtra)
+library(DT)
+
+final_homeless <- readRDS("final_homeless.rds")
+all_jail_time <-  readRDS("all_jail_time.rds")
+
+masterdata <- readRDS("masterdata.rds")
+owed_by_person <- readRDS("owed_by_person.rds") %>%
+  left_join(all_jail_time, by = "full_name")
+homeless_crimes <- crimes <- c("316.130", "316130", "316.2045", "162045", "810.08", "810.09", "856.011", "856.021", "877.03", 
+                               "4-5", "13-4", "18-8", "22-12", "18-56", "99-50", "91-11", 
+                               "24-14", "2007-19,3.0", "28-3", "18-51", "337.406")
+
+
+```
+## ALL HOMELESS PEOPLE BY MONEY OWED
+
+13 people are double here, because either their race, sex or bday is missing, but **that doesn't change their total owed sums**. 
+
+If they have a **receipt_date** then it means they're currently in prison and this is the day they were admitted. 
+
+If they have a **release_date**, then that's most current date they were released from prison. 
+
+Difference in homeless fees and all fees comes from the fact that allfees take in account all charges which people with homeless associated addresses are charged with, whereas homeless fees count only those charges which we associate with homeless (look at the bottom of the document for more info about homeless statutes )
+
+*maurice rendell garrick doesn't have jail time, because jailsystem gives an error for him 
+
+```{r }
+
+owed_by_person %>% 
+  select(-n, all_fees, all_paid, all_balance, receipt_date, release_date) %>% 
+  datatable()
+
+
+```
+
+## CHARGED THE MOST (by dates) 
+
+This table shows charges per date, meaning if an officer finds a person with panhandling with marijuana in their pocket, it will count as one as it was same incident. 
+
+```{r }
+
+final_homeless %>% 
+  group_by(full_name, offense_date) %>% 
+  count() %>% 
+  group_by(full_name) %>% 
+  count() %>% 
+  arrange(desc(n)) %>%
+  datatable()
+  
+
+
+```
+
+## CHARGED THE MOST (by charges)
+
+This table shows charges per charge, meaning if an officer finds a person with panhandling with marijuana in their pocket, it will count as two as they're separate charges. there isn't much differences compared to the previous data frame 
+
+
+```{r}
+final_homeless %>% 
+  group_by(full_name, case_number, initial_charge) %>% 
+  count() %>% 
+  group_by(full_name) %>% 
+  count() %>% 
+  arrange(desc(n))%>%
+  datatable()
+```
+
+
+
+
+## ALL PEOPLE
+
+These are all homeless people, with all columns, you can use the search here to see more information per single case or person 
+
+```{r cars}
+
+final_homeless %>%
+  select(full_name, initial_charge, offense_date, everything()) %>%
+  data.table()%>%
+  datatable()
+
+
+```
+
+## BREAKDOWN BY INITIAL CHARGES 
+
+Here's a breakdown when grouped by initial charge and inital statute (counts are unique per person, offense_date and case nr). When we've done the phonecall with the clerk I can standardise the charges and we'll get the better view (for example we can group all tresspassing together or the first two), but before we're sure what the (court) and (arrest) mean after various charges, we cannot standardize anything as we might start to count double rows 
+
+```{r}
+final_homeless %>%
+  group_by(full_name, case_number, offense_date, initial_charge, initial_statute) %>%
+  count() %>% 
+  group_by(initial_charge, initial_statute) %>%
+  count() %>%
+  arrange(desc(n))%>%
+  datatable()
+
+
+```
+
+## BREAKDOWN BY INITIAL STATUTES
+
+Here's a breakdown when grouped by initial charge and inital statute (counts are unique per person, offense_date and case nr). When we've done the phonecall with the clerk I can standardise the charges and we'll get the better view (for example we can group all tresspassing together or the first two), but before we're sure what the (court) and (arrest) mean after various charges, we cannot standardize anything as we might start to count double rows 
+
+```{r}
+final_homeless %>%
+  group_by(full_name, case_number, offense_date, initial_statute) %>%
+  count() %>% 
+  group_by(initial_statute) %>%
+  summarise(total = n()) %>%
+  mutate( pct = round(total/sum(total)*100,2)) %>% 
+  arrange(desc(total))%>%
+  datatable()
+
+
+```
+
+```{r}
+masterdata %>%
+  anti_join(final_homeless, by = c("full_name")) %>% 
+  filter(!is.na(date_of_birth), !is.na(sex)) %>% 
+  group_by(full_name, sex, date_of_birth, case_number, offense_date, initial_statute) %>%
+  count() %>% 
+  group_by(initial_statute) %>%
+  summarise(total = n()) %>%
+  mutate( pct = round(total/sum(total)*100,2)) %>% 
+  arrange(desc(total))%>%
+  datatable()
+
+
+```
+
+## DIFFERENCE IN DATES 
+
+First graph will show the change in cases against people with homeless people by offense year, the second will show by 
+the year their case was opened and the third one will show number of cases through all data (any person, not homeless people)
+
+```{r }
+
+
+
+plot1 <- final_homeless %>% 
+  filter(offense_year > 2013) %>% 
+  group_by(offense_year, case_number, full_name) %>% 
+  count() %>%
+  group_by(offense_year) %>%
+  count() %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(offense_year, n))
+
+plot2 <- final_homeless %>%
+  filter(case_year > 2013) %>%
+  group_by(case_year, case_number, full_name) %>% 
+  count() %>%
+  group_by(case_year) %>%
+  count() %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(case_year, n))
+
+plot3 <- masterdata %>%
+  filter(offense_year > 2013) %>%
+  group_by(case_year, case_number, full_name) %>% 
+  count() %>%
+  group_by(case_year) %>%
+  count() %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(case_year, n))
+
+grid.arrange(plot1, plot2, plot3)
+
+```
+
+## IS THERE DIFFERENCE WHEN WE LOOK AT 'HOMELESS CRIMESS' ONLY?
+
+```{r }
+
+
+
+plot1 <- final_homeless %>% 
+  filter(offense_year > 2013, initial_statute %in% homeless_crimes) %>% 
+  group_by(offense_year, case_number, full_name) %>% 
+  count() %>%
+  group_by(offense_year) %>%
+  count() %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(offense_year, n))
+
+plot2 <- final_homeless %>%
+  filter(case_year > 2013, initial_statute %in% homeless_crimes) %>%
+  group_by(case_year, case_number, full_name) %>% 
+  count() %>%
+  group_by(case_year) %>%
+  count() %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(case_year, n))
+
+plot3 <- masterdata %>%
+  filter(offense_year > 2013, initial_statute %in% homeless_crimes) %>%
+  group_by(case_year, case_number, full_name) %>% 
+  count() %>%
+  group_by(case_year) %>%
+  count() %>% 
+  ggplot()+
+  geom_smooth(mapping = aes(case_year, n))
+
+grid.arrange(plot1, plot2, plot3)
+
+```
+
+
+
+## ST AUGUSTINE VS REST OF THE COUNTY 
+
+```{r}
+#group by jurisdiction
+plot1 <- final_homeless %>% 
+  filter(offense_year > 2013,jurisdiction %in% c("st johns county - 2","st aug city - 1")) %>% 
+  group_by(offense_year, offense_date, case_number, full_name, initial_charge, jurisdiction) %>% 
+  count() %>%
+  group_by(offense_year, jurisdiction) %>%
+  count() %>% 
+  ggplot()+
+  geom_line(mapping = aes(offense_year, n))+
+  facet_wrap(~jurisdiction)+
+  ggtitle("Number of interactions with police per person across homeless people")
+
+plot2 <- masterdata %>%
+  unique() %>% 
+  filter(offense_year > 2013 & jurisdiction %in% c("st johns county - 2", "st aug city - 1")) %>%
+  group_by(offense_year, offense_date, case_number, full_name, initial_charge, jurisdiction) %>% 
+  count() %>%
+  group_by(offense_year, jurisdiction) %>%
+  count() %>% 
+  ggplot()+
+  geom_line(mapping = aes(offense_year, n))+
+  facet_wrap(~jurisdiction)+
+  ggtitle("Number of interactions with police per person across all data")
+
+# plot3 <- masterdata %>%
+#   filter(offense_year > 2013) %>%
+#   group_by(case_year, case_number, full_name) %>% 
+#   count() %>%
+#   group_by(case_year) %>%
+#   count() %>% 
+#   ggplot()+
+#   geom_smooth(mapping = aes(case_year, n))
+
+grid.arrange(plot1, plot2)
+
+```
+
+When we look at the changes, we can see that the change has been most dramatic among **homeless people** in **St Augustine** where there were 46% and 68% more interactions compared to the previous year in 2017 and 2018, respectively. Same figures for all people were 12% and 59%. 
+
+It's interesting however, that when we look at St Johns County, we see that interactions went up for homeless people but not for all people. 
+```{r}
+```
+
+##WHAT'S GOING ON IN ST AUGUSTINE MORE SPECIFICALLY?
+
+```{r}
+#group by jurisdiction
+plot1 <- final_homeless %>% 
+  filter(offense_year > 2013,jurisdiction == "st aug city - 1",initial_statute %in% homeless_crimes) %>% 
+  group_by(offense_year, offense_date, case_number, full_name, initial_statute) %>% 
+  count() %>%
+  group_by(offense_year, initial_statute) %>%
+  count() %>% 
+  ggplot()+
+  geom_line(mapping = aes(offense_year, n))+
+  facet_wrap(~initial_statute)+
+  ggtitle("Number of interactions with police per person across homeless people by statute (n>5")
+
+ 
+plot2 <- masterdata %>% 
+  filter(offense_year > 2013,jurisdiction == "st aug city - 1", initial_statute %in% homeless_crimes) %>% 
+  anti_join(final_homeless, by = "full_name") %>% 
+  group_by(offense_year, offense_date, case_number, full_name, initial_statute) %>% 
+  count() %>%
+  group_by(offense_year, initial_statute) %>%
+  count() %>% 
+  #filter(n>20) %>% 
+  ggplot()+
+  geom_line(mapping = aes(offense_year, n))+
+  facet_wrap(~initial_statute)+
+  
+  ggtitle("Number of interactions with police per person across all data people by statute among 'homeless related charges' ")
+
+# plot3 <- masterdata %>%
+#   filter(offense_year > 2013) %>%
+#   group_by(case_year, case_number, full_name) %>% 
+#   count() %>%
+#   group_by(case_year) %>%
+#   count() %>% 
+#   ggplot()+
+#   geom_smooth(mapping = aes(case_year, n))
+
+grid.arrange(plot1, plot2)
+
+```
+
+### What are the charges
+City Law | Description 
+--|--|
+[4-5]|Public drinking 
+[18-8] | Panhandling
+[22-12]| Sleep/camp/habitation or leave human waste public
+[18-56]| Wilful obstruction of public ways/passages
+[24-14] | Prohibiting sales and solicitations in traffic lanes.
+[810.08 and 810.09] | Misdemeanor trespass 
+[856.011]| Disorderly intoxication
+[856.021]| Loitering or prowling; penalty
+[877.03]| Breach of the peace; disorderly conduct
+## LAWS WE ASSOCIATE WITH CRIMINALIZING HOMELESS 
+
+### State laws that we associate with criminalizing homelessness
+State Law | Unconstitutional? | Description 
+--|--|---------
+[316.130](http://www.leg.state.fl.us/statutes/index.cfm?mode=View%20Statutes&SubMenu=1&App_mode=Display_Statute&Search_String=316.130&URL=0300-0399/0316/Sections/0316.130.html) | ? | A pedestrian shall obey the instructions of any official traffic control device specifically applicable to the pedestrian unless otherwise directed by a police officer
+[316.2045](http://www.leg.state.fl.us/statutes/index.cfm?mode=View%20Statutes&SubMenu=1&App_mode=Display_Statute&Search_String=316.2045&URL=0300-0399/0316/Sections/0316.2045.html) | Yes | Obstruction of public streets, highways, and roads. 
+[810.08(2a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.08.html) | ? | Misdemeanor trespass in structure or conveyance
+[810.08(2b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.08.html) | ? | Misdemeanor trespass in occupied structure
+[810.09(2a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html) | ? | Misdemeanor trespass on property other than structure or conveyance
+[810.09(2b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html) | ? | Misdemeanor trespass on curtilage (i.e. a yard or shed or some other structure near a building)
+[810.09(2d)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html) | ? | Third degree felony trespass on a construction site of a certain size
+[810.097](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html)| ? | Tresspass from school property
+[856.011](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0856/Sections/0856.011.html) | ? | Disorderly intoxication
+[856.021](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0856/Sections/0856.021.html) | ? | Loitering or prowling; penalty
+[877.03](http://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0877/Sections/0877.03.html) | ? | Breach of the peace; disorderly conduct
+
+### St Augustine City laws that we associate with criminalizing homelessness
+City Law | Unconstitutional? | Description 
+--|--|---------
+[4-5](https://library.municode.com/fl/st._augustine/codes/code_of_ordinances?nodeId=PTIICOOR_CH4ALBE_S4-5DRPU) | ? | Public drinking 
+[13-4](https://library.municode.com/fl/st._augustine/codes/code_of_ordinances?nodeId=PTIICOOR_CH13TE_ARTICORI-W_S13-4REPLMACOFAPURI-W) | ? | Sleeping in public
+[18-8](https://library.municode.com/fl/st._augustine/codes/code_of_ordinances?nodeId=PTIICOOR_CH18MIPROF) | ? | Panhandling
+[22-12](https://library.municode.com/fl/st._augustine/codes/code_of_ordinances?nodeId=PTIICOOR_CH22STSIPAMIPUPL_ARTIINGE_S22-12SLCAHALEHUWAPUPLPR)| ? | Sleep/camp/habitation or leave human waste public
+[18-56](https://library.municode.com/fl/st._augustine/codes/code_of_ordinances?nodeId=PTIICOOR_CH18MIPROF_ARTIIIOFINPUPEOR_S18-56WIOBPUWAPA)| ? | Wilful obstruction of public ways/passages
+[24-14](https://library.municode.com/fl/st._augustine/codes/code_of_ordinances?nodeId=PTIICOOR_CH24TR_ARTIINGE_S24-14PRSASOTRLA) | ? | Prohibiting sales and solicitations in traffic lanes.
+[99-50] | ? | Drinking in public
+[91-11 ] | ? | Drinking in public 
+
+### St John County Ordinances that we associate with criminalizing homelessness
+County Law | Unconstitutional? | Description 
+[2007-19,3.04](https://stjohnsclerk.com/minrec/OrdinanceBooks/2007/ORD2007-19.pdf) | ? | Over-night camping porhibited 
+

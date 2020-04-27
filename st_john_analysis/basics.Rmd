@@ -1,0 +1,85 @@
+---
+title: "basics"
+author: "Riin Aljas"
+date: "2/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(data.table)
+```
+###ALL HOMELESS PEOPLE BY MONEY OWED
+
+13 people are double here, because either their race, sex or bday is missing, but that doesn't change their total owed sums. 
+
+If they have a *receipt_date* then it means they're currently in prison and this is the day they were admitted, 
+if they have a *release_date*, then that's most current date they were released from prison. 
+
+```{r }
+
+owed_by_person %>% 
+  select(-n, all_fees, all_paid, all_balance, receipt_date, release_date)
+  data.table()
+
+
+```
+## WHO HAS BEEN CHARGED THE MOST when it comes to dates 
+
+This table shows charges per date, meaning if an officer finds a person with panhandling with marijuana in their pocket, it will count as one as it was same incident. 
+
+```{r }
+
+final_homeless %>% 
+  group_by(full_name, offense_date) %>% 
+  count() %>% 
+  group_by(full_name) %>% 
+  count() %>% 
+  arrange(desc(n))
+  
+
+
+```
+
+
+## WHO HAS BEEN CHARGED THE MOST when it comes to charges
+
+This table shows charges per charge, meaning if an officer finds a person with panhandling with marijuana in their pocket, it will count as two as they're separate charges. there isn't much differences compared to the previous data frame 
+
+
+```{r}
+final_homeless %>% 
+  group_by(full_name, case_number, initial_charge) %>% 
+  count() %>% 
+  group_by(full_name) %>% 
+  count() %>% 
+  arrange(desc(n))
+```
+
+
+
+```
+## ALL PEOPLE
+These are all homeless people, with all columns, you can use the search here to see more information per single case or person 
+```
+```{r cars}
+
+final_homeless %>%
+  select(full_name, initial_charge, offense_date, everything()) %>%
+  data.table()
+
+
+```
+
+###BREAKDOWNS BY CHARGES 
+
+```{r}
+
+
+
+```
+
+T
