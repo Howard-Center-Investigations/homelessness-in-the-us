@@ -237,35 +237,36 @@ breakdown_2014_details <- DC_311_2014 %>%
            (str_detect(DETAILS, "sleeping"))|
            (str_detect(DETAILS, "homless"))|
            (str_detect(DETAILS, "congregate"))|
-           (str_detect(DETAILS, "urinat"))
+           (str_detect(DETAILS, "urinat")) |
+           (str_detect(SERVICECODE, "HOME"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
 # From 2010-2015, there was a specific service code for homelessness: HOMEENCA. For these five years, I did two separate breakdowns before merging them into one: one search through DETAILS, one search for the SERVICECODE.
-breakdown_2014_service <- DC_311_2014 %>%
-  filter(str_detect(SERVICECODE, "HOME")) %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
+# breakdown_2014_service <- DC_311_2014 %>%
+#  filter(str_detect(SERVICECODE, "HOME")) %>%
+#  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
 # Here is where I bound the two breakdowns together. These steps are applicable for 2010-2015.
-breakdown_2014 <- breakdown_2014_details %>%
-  rbind(breakdown_2014_service)
+# breakdown_2014 <- breakdown_2014_details %>%
+#  rbind(breakdown_2014_service)
 ```
 
 ```{r}
-breakdown_2014$new_column <- "2014"
+breakdown_2014_details$new_column <- "2014"
 ```
 
 ```{r}
-breakdown_2014 <- breakdown_2014 %>%
+breakdown_2014_details <- breakdown_2014_details %>%
   rename("YEAR" = "new_column")
 ```
 
 ```{r}
-leaflet(breakdown_2014) %>% 
+leaflet(breakdown_2014_details) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
 ```
@@ -276,33 +277,34 @@ breakdown_2013_details <- DC_311_2013 %>%
            (str_detect(DETAILS, "sleeping"))|
            (str_detect(DETAILS, "homless"))|
            (str_detect(DETAILS, "congregate"))|
-           (str_detect(DETAILS, "urinat"))
+           (str_detect(DETAILS, "urinat"))|
+           (str_detect(SERVICECODE, "HOME"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2013_service <- DC_311_2013 %>%
-  filter(str_detect(SERVICECODE, "HOME")) %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
+# breakdown_2013_service <- DC_311_2013 %>%
+#  filter(str_detect(SERVICECODE, "HOME")) %>%
+#  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2013 <- breakdown_2013_details %>%
-  rbind(breakdown_2013_service)
+# breakdown_2013 <- breakdown_2013_details %>%
+#  rbind(breakdown_2013_service)
 ```
 
 ```{r}
-breakdown_2013$new_column <- "2013"
+breakdown_2013_details$new_column <- "2013"
 ```
 
 ```{r}
-breakdown_2013 <- breakdown_2013 %>%
+breakdown_2013_details <- breakdown_2013_details %>%
   rename("YEAR" = "new_column")
 ```
 
 ```{r}
-leaflet(breakdown_2013) %>% 
+leaflet(breakdown_2013_details) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
 ```
@@ -313,33 +315,34 @@ breakdown_2012_details <- DC_311_2012 %>%
            (str_detect(DETAILS, "sleeping"))|
            (str_detect(DETAILS, "homless"))|
            (str_detect(DETAILS, "congregate"))|
-           (str_detect(DETAILS, "urinat"))
+           (str_detect(DETAILS, "urinat")) |
+           (str_detect(SERVICECODE, "HOME"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2012_service <- DC_311_2012 %>%
-  filter(str_detect(SERVICECODE, "HOME")) %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
+# breakdown_2012_service <- DC_311_2012 %>%
+#  filter(str_detect(SERVICECODE, "HOME")) %>%
+#  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2012 <- breakdown_2012_details %>%
-  rbind(breakdown_2012_service)
+#breakdown_2012 <- breakdown_2012_details %>%
+#  rbind(breakdown_2012_service)
 ```
 
 ```{r}
-breakdown_2012$new_column <- "2012"
+breakdown_2012_details$new_column <- "2012"
 ```
 
 ```{r}
-breakdown_2012 <- breakdown_2012 %>%
+breakdown_2012_details <- breakdown_2012_details %>%
   rename("YEAR" = "new_column")
 ```
 
 ```{r}
-leaflet(breakdown_2012) %>% 
+leaflet(breakdown_2012_details) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
 ```
@@ -350,34 +353,35 @@ breakdown_2011_details <- DC_311_2011 %>%
            (str_detect(DETAILS, "sleeping"))|
            (str_detect(DETAILS, "homless"))|
            (str_detect(DETAILS, "congregate"))|
-           (str_detect(DETAILS, "urinat"))
+           (str_detect(DETAILS, "urinat")) |
+           (str_detect(SERVICECODE, "HOME"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 
 ```{r}
-breakdown_2011_service <- DC_311_2011 %>%
-  filter(str_detect(SERVICECODE, "HOME")) %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
+# breakdown_2011_service <- DC_311_2011 %>%
+#  filter(str_detect(SERVICECODE, "HOME")) %>%
+#  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2011 <- breakdown_2011_details %>%
-  rbind(breakdown_2011_service)
+#breakdown_2011 <- breakdown_2011_details %>%
+ # rbind(breakdown_2011_service)
 ```
 
 ```{r}
-breakdown_2011$new_column <- "2011"
+breakdown_2011_details$new_column <- "2011"
 ```
 
 ```{r}
-breakdown_2011 <- breakdown_2011 %>%
+breakdown_2011_details <- breakdown_2011_details %>%
   rename("YEAR" = "new_column")
 ```
 
 ```{r}
-leaflet(breakdown_2011) %>% 
+leaflet(breakdown_2011_details) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
 ```
@@ -400,9 +404,9 @@ leaflet(breakdown_2020) %>%
 ```
 
 ```{r}
-breakdown_2015_service <- DC_311_2015 %>%
-  filter(str_detect(SERVICECODE, "HOME")) %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
+# breakdown_2015_service <- DC_311_2015 %>%
+#  filter(str_detect(SERVICECODE, "HOME")) %>%
+#  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
@@ -411,35 +415,36 @@ breakdown_2015_details <- DC_311_2015 %>%
            (str_detect(DETAILS, "sleeping"))|
            (str_detect(DETAILS, "homless"))|
            (str_detect(DETAILS, "congregate"))|
-           (str_detect(DETAILS, "urinat"))
+           (str_detect(DETAILS, "urinat")) |
+           (str_detect(SERVICECODE, "HOME"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2015 <- breakdown_2015_details %>%
-  rbind(breakdown_2015_service)
+# breakdown_2015 <- breakdown_2015_details %>%
+#  rbind(breakdown_2015_service)
 ```
 
 ```{r}
-breakdown_2015$new_column <- "2015"
+breakdown_2015_details$new_column <- "2015"
 ```
 
 ```{r}
-breakdown_2015 <- breakdown_2015 %>%
+breakdown_2015_details <- breakdown_2015_details %>%
   rename("YEAR" = "new_column")
 ```
 
 ```{r}
-leaflet(breakdown_2015) %>% 
+leaflet(breakdown_2015_details) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
 ```
 
 ```{r}
-breakdown_2010_service <- DC_311_2010 %>%
-  filter(str_detect(SERVICECODE, "HOME")) %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
+# breakdown_2010_service <- DC_311_2010 %>%
+#  filter(str_detect(SERVICECODE, "HOME")) %>%
+#  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
@@ -448,32 +453,33 @@ breakdown_2010_details <- DC_311_2010 %>%
            (str_detect(DETAILS, "sleeping"))|
            (str_detect(DETAILS, "homless"))|
            (str_detect(DETAILS, "congregate"))|
-           (str_detect(DETAILS, "urinat"))
+           (str_detect(DETAILS, "urinat")) |
+           (str_detect(SERVICECODE, "HOME"))
          ) %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2010 <- breakdown_2010_details %>%
-  rbind(breakdown_2010_service)
+# breakdown_2010 <- breakdown_2010_details %>%
+#  rbind(breakdown_2010_service)
 ```
 
 ```{r}
-breakdown_2010 <- breakdown_2010 %>%
+# breakdown_2010 <- breakdown_2010 %>%
   select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
-breakdown_2010$new_column <- "2010"
+breakdown_2010_details$new_column <- "2010"
 ```
 
 ```{r}
-breakdown_2010 <- breakdown_2010 %>%
+breakdown_2010_details <- breakdown_2010_details %>%
   rename("YEAR" = "new_column")
 ```
 
 ```{r}
-leaflet(breakdown_2010) %>% 
+leaflet(breakdown_2010_details) %>% 
   addTiles() %>%
   addMarkers(~LONGITUDE, ~LATITUDE, popup = ~as.character(SERVICECODEDESCRIPTION))
 ```
@@ -490,12 +496,12 @@ breakdown_2014 %>%
 
 ```{r}
 # I put all years together for further analysis.
-breakdown_all_years <- breakdown_2010 %>%
-  rbind(breakdown_2011) %>%
-  rbind(breakdown_2012) %>%
-  rbind(breakdown_2013) %>%
-  rbind(breakdown_2014) %>%
-  rbind(breakdown_2015) %>%
+breakdown_all_years <- breakdown_2010_details %>%
+  rbind(breakdown_2011_details) %>%
+  rbind(breakdown_2012_details) %>%
+  rbind(breakdown_2013_details) %>%
+  rbind(breakdown_2014_details) %>%
+  rbind(breakdown_2015_details) %>%
   rbind(breakdown_2016) %>%
   rbind(breakdown_2017) %>%
   rbind(breakdown_2018) %>%
@@ -587,76 +593,89 @@ breakdown_all_years%>%
 
 ```{r}
 # Using TIGRIS, I turned all of the latitude and longitude coordinates into the GEOID. 
-coord <- breakdown_2010 %>%
-  select(LATITUDE, LONGITUDE)
+coord <- breakdown_2010_details
  
 coord_2010 <- coord %>%
   mutate(census_tract = apply(coord, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11))
 ```
 
 ```{r}
-coord_2011 <- breakdown_2011 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2011 <- breakdown_2011_details 
+
 coord_2011 <- coord_2011 %>%
   mutate(census_tract = apply(coord_2011, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11))
 ```
 
 ```{r}
-coord_2012 <- breakdown_2012 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2012 <- breakdown_2012_details
+
 coord_2012 <- coord_2012 %>%
   mutate(census_tract = apply(coord_2012, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11))
+
 ```
 
 ```{r}
-coord_2013 <- breakdown_2013 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2013 <- breakdown_2013_details 
+
 coord_2013 <- coord_2013 %>%
   mutate(census_tract = apply(coord_2013, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11))
 ```
 
 ```{r}
-coord_2014 <- breakdown_2014 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2014 <- breakdown_2014_details 
+
 coord_2014 <- coord_2014 %>%
   mutate(census_tract = apply(coord_2014, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11)) 
 ```
 
 ```{r}
-coord_2015 <- breakdown_2015 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2015 <- breakdown_2015_details
+
 coord_2015 <- coord_2015 %>%
   mutate(census_tract = apply(coord_2015, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11)) 
+
 ```
 
 ```{r}
-coord_2016 <- breakdown_2016 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2016 <- breakdown_2016 
+
 coord_2016 <- coord_2016 %>%
   mutate(census_tract = apply(coord_2016, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11)) 
+
 ```
 
 ```{r}
-coord_2017 <- breakdown_2017 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2017 <- breakdown_2017 
+
 coord_2017 <- coord_2017 %>%
   mutate(census_tract = apply(coord_2017, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11))
+
 ```
 
 ```{r}
-coord_2018 <- breakdown_2018 %>%
-  select(LATITUDE, LONGITUDE)
+coord_2018 <- breakdown_2018
+
 coord_2018 <- coord_2018 %>%
   mutate(census_tract = apply(coord_2018, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-  rename("GEOID" = "census_tract")
+  rename("GEOID" = "census_tract") %>%
+  mutate(GEOID = str_sub(GEOID, 1, 11))
+
 ```
 
 ```{r}
@@ -1113,12 +1132,104 @@ DCGentrification_2019 <- DCGentrification_2019 %>%
 
 ```
 
+```{r}
 
+# This is to get data specifically for the three NoMa tracts.
 
+NoMa_2019 <- coord_2019 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
 
+```
 
+```{r}
 
+NoMa_2018 <- coord_2018 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
 
+```
+
+```{r}
+
+NoMa_2017 <- coord_2017 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+NoMa_2016 <- coord_2016 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+NoMa_2015 <- coord_2015 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+NoMa_2014 <- coord_2014 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+NoMa_2013 <- coord_2013 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+NoMa_2012 <- coord_2012 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+NoMa_2011 <- coord_2011 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+NoMa_2010 <- coord_2010 %>%
+  filter(GEOID %in% c("11001004701", "11001004702", "11001010600"))
+
+```
+
+```{r}
+
+# Making a master sheet for all NoMa 311 calls from 2010-2019
+
+NoMa_Master <- NoMa_2010 %>%
+  rbind(NoMa_2011) %>%
+  rbind(NoMa_2012) %>%
+  rbind(NoMa_2013) %>%
+  rbind(NoMa_2014) %>%
+  rbind(NoMa_2015) %>%
+  rbind(NoMa_2016) %>%
+  rbind(NoMa_2017) %>%
+  rbind(NoMa_2018) %>%
+  rbind(NoMa_2019)
+
+```
+
+```{r}
+
+NoMa_Master%>%
+  select(SERVICECODEDESCRIPTION) %>%
+  group_by(SERVICECODEDESCRIPTION) %>%
+  summarise(total = n()) %>%
+  arrange((desc(total)))
+
+```
 
 
 
