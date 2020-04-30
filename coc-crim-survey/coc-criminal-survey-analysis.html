@@ -2882,7 +2882,6 @@ div.tocify {
   select(1:3,17,4:16) %&gt;%
   arrange(state)
 
-
 kable(crim_survey) %&gt;%
   column_spec(2:ncol(crim_survey), border_left = T, border_right = F) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) %&gt;%
@@ -6089,7 +6088,7 @@ print(crim_survey_states)</code></pre>
 crim_survey_cities &lt;- crim_survey %&gt;%
   group_by(state) %&gt;%
   select(state, city) %&gt;%
-  arrange(state)
+  arrange(state, city)
 
 ## all the kable code creates an interactive, scrollable table in the .html output
 kable(crim_survey_cities) %&gt;%
@@ -6122,14 +6121,6 @@ anchorage
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ione
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
 chico
 </td>
 </tr>
@@ -6138,7 +6129,7 @@ chico
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-orland (glenn)
+concord
 </td>
 </tr>
 <tr>
@@ -6147,6 +6138,14 @@ ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
 eureka
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+ione
 </td>
 </tr>
 <tr>
@@ -6170,7 +6169,7 @@ los angeles
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-ukiah
+marysville
 </td>
 </tr>
 <tr>
@@ -6186,7 +6185,7 @@ oakland
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-pasadena
+orland (glenn)
 </td>
 </tr>
 <tr>
@@ -6194,7 +6193,7 @@ pasadena
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-concord
+pasadena
 </td>
 </tr>
 <tr>
@@ -6242,14 +6241,6 @@ san luis obispo
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-santa rosa
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ca
-</td>
-<td style="text-align:left;border-left:1px solid;">
 santa cruz
 </td>
 </tr>
@@ -6258,7 +6249,15 @@ santa cruz
 ca
 </td>
 <td style="text-align:left;border-left:1px solid;">
-marysville
+santa rosa
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ca
+</td>
+<td style="text-align:left;border-left:1px solid;">
+ukiah
 </td>
 </tr>
 <tr>
@@ -6274,7 +6273,15 @@ washington, d.c.
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-lake city
+charlotte county
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+clewiston
 </td>
 </tr>
 <tr>
@@ -6298,14 +6305,6 @@ fort walton beach
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-clewiston
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fl
-</td>
-<td style="text-align:left;border-left:1px solid;">
 key west
 </td>
 </tr>
@@ -6314,7 +6313,7 @@ key west
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-new port richey
+lake city
 </td>
 </tr>
 <tr>
@@ -6322,7 +6321,7 @@ new port richey
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
-charlotte county
+new port richey
 </td>
 </tr>
 <tr>
@@ -6362,7 +6361,7 @@ savannah
 hi
 </td>
 <td style="text-align:left;border-left:1px solid;">
-maui co.
+honolulu
 </td>
 </tr>
 <tr>
@@ -6370,7 +6369,7 @@ maui co.
 hi
 </td>
 <td style="text-align:left;border-left:1px solid;">
-honolulu
+maui co.
 </td>
 </tr>
 <tr>
@@ -6498,6 +6497,14 @@ bend
 or
 </td>
 <td style="text-align:left;border-left:1px solid;">
+corvallis
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+or
+</td>
+<td style="text-align:left;border-left:1px solid;">
 eugene
 </td>
 </tr>
@@ -6507,14 +6514,6 @@ or
 </td>
 <td style="text-align:left;border-left:1px solid;">
 medford
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-or
-</td>
-<td style="text-align:left;border-left:1px solid;">
-corvallis
 </td>
 </tr>
 <tr>
@@ -7824,7 +7823,7 @@ waldorf (laws are from charles county)
 <div id="type-of-laws-by-city" class="section level3">
 <h3>Type of laws by City</h3>
 <pre class="r"><code>type_by_city &lt;- crim_survey %&gt;%
-  select(3,9:17) %&gt;%
+  select(3:4,9:17) %&gt;%
   group_by(city) %&gt;%
   naniar::replace_with_na_all(condition = ~.x == &quot;unclear&quot;) %&gt;%
   naniar::replace_with_na_all(condition = ~.x == &quot;none&quot;)
@@ -7833,10 +7832,11 @@ type_by_city[type_by_city == &quot;citywide&quot;] &lt;- 1
 type_by_city[type_by_city == &quot;only in particular places&quot;] &lt;- 1
 type_by_city[type_by_city == &quot;county&quot;] &lt;- 1
 
-type_by_city[,2:10] &lt;- sapply(type_by_city[,2:10], as.numeric)</code></pre>
+type_by_city[,3:11] &lt;- sapply(type_by_city[,3:11], as.numeric)</code></pre>
 <pre><code>## Warning in lapply(X = X, FUN = FUN, ...): NAs introduced by coercion</code></pre>
 <pre class="r"><code>type_by_city &lt;- aggregate(type_by_city[,2:10], by=list(type_by_city$city), FUN=sum, na.rm=TRUE) %&gt;%
-  rename(&quot;city&quot; = &quot;Group.1&quot;)
+  rename(&quot;city&quot; = &quot;Group.1&quot;) %&gt;%
+  arrange(desc(total_laws))
 
 kable(type_by_city) %&gt;%
   column_spec(2:ncol(type_by_city),border_left = T, border_right = F) %&gt;%
@@ -7848,6 +7848,9 @@ kable(type_by_city) %&gt;%
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 city
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+total_laws
 </th>
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 sleeping_in_public
@@ -7873,15 +7876,15 @@ food_sharing_ban
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 public_urination
 </th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-public_intoxication
-</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-anchorage
+oakland
+</td>
+<td style="text-align:right;border-left:1px solid;">
+9
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -7893,22 +7896,19 @@ anchorage
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
+1
 </td>
 </tr>
 <tr>
@@ -7916,7 +7916,7 @@ anchorage
 atlanta
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+8
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -7926,38 +7926,6 @@ atlanta
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-baltimore city
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -7977,7 +7945,22 @@ baltimore city
 </tr>
 <tr>
 <td style="text-align:left;">
-bend
+los angeles
+</td>
+<td style="text-align:right;border-left:1px solid;">
+8
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -7991,6 +7974,29 @@ bend
 <td style="text-align:right;border-left:1px solid;">
 1
 </td>
+</tr>
+<tr>
+<td style="text-align:left;">
+san francisco
+</td>
+<td style="text-align:right;border-left:1px solid;">
+8
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
 <td style="text-align:right;border-left:1px solid;">
 1
 </td>
@@ -7998,13 +8004,7 @@ bend
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
 1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
 </td>
 </tr>
 <tr>
@@ -8012,100 +8012,7 @@ bend
 boston
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cambridge
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-charlotte county
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-chico
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8127,73 +8034,6 @@ chico
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-clewiston
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-concord
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8204,16 +8044,7 @@ concord
 corvallis
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8226,6 +8057,15 @@ corvallis
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8236,301 +8076,13 @@ corvallis
 daytona beach
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-eugene
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-eureka
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-fort walton beach
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-honolulu
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ione
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-key west
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lake city
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-las vegas
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lexington
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -8556,77 +8108,7 @@ lexington
 long beach
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-los angeles
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lowell
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -8638,52 +8120,6 @@ lowell
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lynn
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-marysville
-</td>
-<td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -8691,114 +8127,6 @@ marysville
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-maui co.
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-medford
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-new bedford
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -8812,45 +8140,7 @@ new bedford
 new orleans
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-new port richey
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8863,6 +8153,12 @@ new port richey
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -8876,6 +8172,9 @@ new port richey
 nyc
 </td>
 <td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -8895,73 +8194,6 @@ nyc
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-oakland
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-orland (glenn)
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8972,135 +8204,10 @@ orland (glenn)
 pasadena
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-portland
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-salinas
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-san diego
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-san francisco
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9119,41 +8226,6 @@ san francisco
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-san jose
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9164,6 +8236,9 @@ san jose
 san luis obispo
 </td>
 <td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -9183,9 +8258,6 @@ san luis obispo
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9193,7 +8265,368 @@ san luis obispo
 </tr>
 <tr>
 <td style="text-align:left;">
-santa cruz
+ukiah
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+washington, d.c.
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+charlotte county
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chico
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+concord
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eureka
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+las vegas
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lowell
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lynn
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+marysville
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medford
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+new port richey
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9213,11 +8646,34 @@ santa cruz
 <td style="text-align:right;border-left:1px solid;">
 0
 </td>
+</tr>
+<tr>
+<td style="text-align:left;">
+salinas
+</td>
+<td style="text-align:right;border-left:1px solid;">
+6
+</td>
 <td style="text-align:right;border-left:1px solid;">
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9228,16 +8684,7 @@ santa cruz
 santa rosa
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+6
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9246,10 +8693,19 @@ santa rosa
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9260,19 +8716,10 @@ santa rosa
 savannah
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+6
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9282,6 +8729,15 @@ savannah
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9292,13 +8748,7 @@ savannah
 seattle
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+6
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9318,34 +8768,8 @@ seattle
 <td style="text-align:right;border-left:1px solid;">
 1
 </td>
-</tr>
-<tr>
-<td style="text-align:left;">
-springfield
-</td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9356,6 +8780,73 @@ springfield
 st. augustine
 </td>
 <td style="text-align:right;border-left:1px solid;">
+6
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+anchorage
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bend
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -9371,6 +8862,23 @@ st. augustine
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cambridge
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -9378,6 +8886,50 @@ st. augustine
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fort walton beach
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9385,7 +8937,83 @@ st. augustine
 </tr>
 <tr>
 <td style="text-align:left;">
-st. louis
+honolulu
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+key west
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+maui co.
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9401,6 +9029,218 @@ st. louis
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+new bedford
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+portland
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+san diego
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+san jose
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+santa cruz
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+springfield
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+st. louis
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9420,19 +9260,13 @@ st. louis
 st. petersburg
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+5
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9441,10 +9275,16 @@ st. petersburg
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 </tr>
 <tr>
@@ -9452,13 +9292,7 @@ st. petersburg
 town of boone (watauga county seat)
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
+5
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9467,13 +9301,19 @@ town of boone (watauga county seat)
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9481,7 +9321,19 @@ town of boone (watauga county seat)
 </tr>
 <tr>
 <td style="text-align:left;">
-ukiah
+baltimore city
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9496,7 +9348,18 @@ ukiah
 1
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+clewiston
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -9509,6 +9372,175 @@ ukiah
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eugene
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lexington
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+orland (glenn)
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ione
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lake city
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 </tr>
 <tr>
@@ -9516,6 +9548,9 @@ ukiah
 waldorf (laws are from charles county)
 </td>
 <td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
 0
 </td>
 <td style="text-align:right;border-left:1px solid;">
@@ -9538,41 +9573,6 @@ waldorf (laws are from charles county)
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-washington, d.c.
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
 </td>
 </tr>
 </tbody>
@@ -17624,7 +17624,11 @@ wa
 ##   cluster_description = col_character()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre class="r"><code>homeless_crim &lt;- left_join(crim_survey, pit, by=&quot;coc&quot;)</code></pre>
+<pre class="r"><code>homeless_crim &lt;- right_join(crim_survey, pit, by=&quot;coc&quot;) %&gt;%
+  select(1,18,2:3,20:22,30:31,4:17)
+
+c3_homeless_crim &lt;- homeless_crim %&gt;%
+  filter(city != &quot;NA&quot;)</code></pre>
 </div>
 
 

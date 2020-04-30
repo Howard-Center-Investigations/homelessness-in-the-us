@@ -109,7 +109,6 @@ crim_survey <- crim_survey %>%
   select(1:3,17,4:16) %>%
   arrange(state)
 
-
 kable(crim_survey) %>%
   column_spec(2:ncol(crim_survey), border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
@@ -199,7 +198,7 @@ Names of cities examined in each state:
 crim_survey_cities <- crim_survey %>%
   group_by(state) %>%
   select(state, city) %>%
-  arrange(state)
+  arrange(state, city)
 
 ## all the kable code creates an interactive, scrollable table in the .html output
 kable(crim_survey_cities) %>%
@@ -242,7 +241,7 @@ kable(city_totals) %>%
 ### Type of laws by City
 ```{r}
 type_by_city <- crim_survey %>%
-  select(3,9:17) %>%
+  select(3:4,9:17) %>%
   group_by(city) %>%
   naniar::replace_with_na_all(condition = ~.x == "unclear") %>%
   naniar::replace_with_na_all(condition = ~.x == "none")
@@ -251,10 +250,11 @@ type_by_city[type_by_city == "citywide"] <- 1
 type_by_city[type_by_city == "only in particular places"] <- 1
 type_by_city[type_by_city == "county"] <- 1
 
-type_by_city[,2:10] <- sapply(type_by_city[,2:10], as.numeric)
+type_by_city[,3:11] <- sapply(type_by_city[,3:11], as.numeric)
 
 type_by_city <- aggregate(type_by_city[,2:10], by=list(type_by_city$city), FUN=sum, na.rm=TRUE) %>%
-  rename("city" = "Group.1")
+  rename("city" = "Group.1") %>%
+  arrange(desc(total_laws))
 
 kable(type_by_city) %>%
   column_spec(2:ncol(type_by_city),border_left = T, border_right = F) %>%
@@ -694,7 +694,11 @@ Read in HUD PIT counts and join to crim survey
 pit <- read_csv("~/GitHub/homelessness-in-the-us/data/output-data/pit-hic-zillow.csv") %>%
   rename(coc = coc_name)
 
-homeless_crim <- left_join(crim_survey, pit, by="coc")
+homeless_crim <- right_join(crim_survey, pit, by="coc") %>%
+  select(1,18,2:3,20:22,30:31,4:17)
+
+c3_homeless_crim <- homeless_crim %>%
+  filter(city != "NA")
 ```
 
 ```{r, include=FALSE}
