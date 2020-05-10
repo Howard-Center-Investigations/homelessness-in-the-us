@@ -13,6 +13,7 @@ library(lubridate)
 library(janitor)
 library(chron)
 library(refinr)
+library(readxl)
 
 
 ###READ IN DATA ----
@@ -297,16 +298,6 @@ mynames = c("animal", "boating", "civil_traf", "code_en", "county_ord", "crim_tr
  
  #check for general delivery (from  Ryan's reporting)
  
- masterdata %>% 
-   filter(str_detect(address, "GENERAL")) %>% 
-   group_by(first_name, last_name, date_of_birth, address) %>% 
-   count()
- 
- # some places have general delivery with post office addresses, local police officer said that might be the case if they have PO box
- 
- #check against list of homeless centers from here https://docs.google.com/document/d/1I9yF0jknqvSCF4S4jqgLpVTU1QDjMAOCCVVk_s5XNs0/edit?ts=5e4ab08c
- 
- #check for spelling errors for street names we're interested in and add them to the query
  
  t <- masterdata %>%
    group_by(address) %>% 
@@ -491,12 +482,6 @@ mynames = c("animal", "boating", "civil_traf", "code_en", "county_ord", "crim_tr
    count() %>% 
    filter(n>1) 
  
- na_and_address_atsometime <- masterdata %>%
-   filter(full_name %in% na_and_address$full_name) 
- 
- na_and_address_atsometime %>% 
-   group_by(full_name, case_id, address) %>% 
-   count() 
  
  #there's 13 people who have both NA and existing address, but the case numbers dont match, so for now we include them 
  
@@ -507,6 +492,8 @@ mynames = c("animal", "boating", "civil_traf", "code_en", "county_ord", "crim_tr
    mutate(offense_year = year(offense_date),
           case_year = year(case_open_date)) %>%
    mutate(id = rownames(final_homeless))
+ 
+ saveRDS(final_homeless, 'final_homeless.rds')
  
  ####CHECK SEPARATELY----
  #str_detect(masterdata$address,"75 (t) king st")| #(salvation army)
