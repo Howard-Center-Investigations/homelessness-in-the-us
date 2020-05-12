@@ -466,7 +466,7 @@ breakdown_2010_details <- DC_311_2010 %>%
 
 ```{r}
 # breakdown_2010 <- breakdown_2010 %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
+#  select(SERVICECODE, SERVICECODEDESCRIPTION, DETAILS, ZIPCODE, LATITUDE, LONGITUDE)
 ```
 
 ```{r}
@@ -486,11 +486,11 @@ leaflet(breakdown_2010_details) %>%
 
 ```{r}
 # To give Brenda, Julia and Bryan an idea of what was happening, I ran each year through this to give them the number of incidents.
-breakdown_2014 %>%
-  select(SERVICECODE, SERVICECODEDESCRIPTION) %>%
-  group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
-  summarise(total = n()) %>%
-  arrange(desc(total))
+# breakdown_2014 %>%
+#  select(SERVICECODE, SERVICECODEDESCRIPTION) %>%
+#  group_by(SERVICECODE, SERVICECODEDESCRIPTION) %>%
+#  summarise(total = n()) %>%
+#  arrange(desc(total))
 ```
 
 
@@ -687,12 +687,6 @@ coord_2019 <- coord_2019 %>%
   rename("GEOID" = "census_tract") %>%
   mutate(GEOID = str_sub(GEOID, 1, 11))
 
-# coord_2019 <- breakdown_2019 %>%
-#  select(LATITUDE, LONGITUDE)
-# coord_2019 <- coord_2019 %>%
-#  mutate(census_tract = apply(coord_2019, 1, function(row) call_geolocator_latlon(row['LATITUDE'], row['LONGITUDE']))) %>%
-#  rename("GEOID" = "census_tract")
-
 ```
 
 ```{r}
@@ -781,7 +775,7 @@ glimpse(median_household_income_tract_2013)
 
 ```{r}
 coord_2013 <- coord_2013 %>%
-  rename("total" = "number")
+  rename("total" = "n()")
 ```
 
 ```{r}
@@ -1231,12 +1225,126 @@ NoMa_Master%>%
 
 ```
 
+```{r}
 
+homelessadds_2016 <- DC_311_2016 %>%
+  filter(str_detect(STREETADDRESS, "1376 PARK ROAD NW")|
+           (str_detect(STREETADDRESS, "1101 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1617 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1701 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "1624 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "VIRGINIA AVENUE NW AND 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "17TH STREET NW AND CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "2720 MARTIN LUTHER KING JR AVENUE SE"))|
+           (str_detect(STREETADDRESS, "1035 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1645 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1660 LAMONT STREET NW"))|
+           (str_detect(STREETADDRESS, "3149 16TH STREET NW"))|
+           (str_detect(STREETADDRESS, "2301 I STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "24TH STREET NW AND VIRGINIA AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "4450 WISCONSIN AVENUE NW"))|
+           (str_detect(STREETADDRESS, "3160 16TH STREET NW"))
+         ) %>%
+  select(SERVICECODEDESCRIPTION, STREETADDRESS, DETAILS)
 
+```
 
+```{r}
 
+homelessadds_2017 <- DC_311_2017 %>%
+  filter(str_detect(STREETADDRESS, "1376 PARK ROAD NW")|
+           (str_detect(STREETADDRESS, "1101 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1617 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1701 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "1624 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "VIRGINIA AVENUE NW AND 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "17TH STREET NW AND CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "2720 MARTIN LUTHER KING JR AVENUE SE"))|
+           (str_detect(STREETADDRESS, "1035 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1645 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1660 LAMONT STREET NW"))|
+           (str_detect(STREETADDRESS, "3149 16TH STREET NW"))|
+           (str_detect(STREETADDRESS, "2301 I STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "24TH STREET NW AND VIRGINIA AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "4450 WISCONSIN AVENUE NW"))|
+           (str_detect(STREETADDRESS, "3160 16TH STREET NW"))
+         ) %>%
+  select(SERVICECODEDESCRIPTION, STREETADDRESS, DETAILS)
 
+```
 
+```{r}
 
+homelessadds_2018 <- DC_311_2018 %>%
+  filter(str_detect(STREETADDRESS, "1376 PARK ROAD NW")|
+           (str_detect(STREETADDRESS, "1101 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1617 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1701 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "1624 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "VIRGINIA AVENUE NW AND 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "17TH STREET NW AND CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "2720 MARTIN LUTHER KING JR AVENUE SE"))|
+           (str_detect(STREETADDRESS, "1035 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1645 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1660 LAMONT STREET NW"))|
+           (str_detect(STREETADDRESS, "3149 16TH STREET NW"))|
+           (str_detect(STREETADDRESS, "2301 I STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "24TH STREET NW AND VIRGINIA AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "4450 WISCONSIN AVENUE NW"))|
+           (str_detect(STREETADDRESS, "3160 16TH STREET NW"))
+         ) %>%
+  select(SERVICECODEDESCRIPTION, STREETADDRESS, DETAILS)
 
+```
+
+```{r}
+
+homelessadds_2019 <- DC_311_2019 %>%
+  filter(str_detect(STREETADDRESS, "1376 PARK ROAD NW")|
+           (str_detect(STREETADDRESS, "1101 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1617 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1701 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "1624 CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "VIRGINIA AVENUE NW AND 24TH STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "17TH STREET NW AND CORCORAN STREET NW"))|
+           (str_detect(STREETADDRESS, "2720 MARTIN LUTHER KING JR AVENUE SE"))|
+           (str_detect(STREETADDRESS, "1035 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1645 CONNECTICUT AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1660 LAMONT STREET NW"))|
+           (str_detect(STREETADDRESS, "3149 16TH STREET NW"))|
+           (str_detect(STREETADDRESS, "2301 I STREET NW"))|
+           (str_detect(STREETADDRESS, "1619 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "24TH STREET NW AND VIRGINIA AVENUE NW"))|
+           (str_detect(STREETADDRESS, "1619 - 1699 BLOCK OF 17TH STREET NW"))|
+           (str_detect(STREETADDRESS, "940 26TH STREET NW"))|
+           (str_detect(STREETADDRESS, "4450 WISCONSIN AVENUE NW"))|
+           (str_detect(STREETADDRESS, "3160 16TH STREET NW"))
+         ) %>%
+  select(SERVICECODEDESCRIPTION, STREETADDRESS, DETAILS)
+```
+
+```{r}
+
+homelessadds_2019 %>%
+  group_by(SERVICECODEDESCRIPTION) %>%
+  summarise(n())
+
+```
 
