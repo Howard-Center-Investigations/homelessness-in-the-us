@@ -4115,6 +4115,59 @@ citywide
 fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
+fort pierce/st. lucie, indian river, martin counties coc
+</td>
+<td style="text-align:left;border-left:1px solid;">
+port st. lucie
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:left;border-left:1px solid;">
+unclear
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+unclear
+</td>
+<td style="text-align:left;border-left:1px solid;">
+unclear
+</td>
+<td style="text-align:left;border-left:1px solid;">
+none
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
 fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -4969,13 +5022,13 @@ lynn coc
 lynn
 </td>
 <td style="text-align:right;border-left:1px solid;">
-6
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5
+4
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+3
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -4984,10 +5037,10 @@ lynn
 0
 </td>
 <td style="text-align:left;border-left:1px solid;">
-citywide
+only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
-select type
+only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -5833,18 +5886,7 @@ camping_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-camping_in_public
-</td>
-<td style="text-align:left;border-left:1px solid;">
-select type
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+22
 </td>
 </tr>
 <tr>
@@ -5877,7 +5919,7 @@ living_in_vehicle
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-15
+16
 </td>
 </tr>
 <tr>
@@ -5910,7 +5952,7 @@ loitering_vagrancy
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-19
+20
 </td>
 </tr>
 <tr>
@@ -5932,7 +5974,7 @@ public_intoxication
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-8
+9
 </td>
 </tr>
 <tr>
@@ -5976,7 +6018,7 @@ sitting_laying_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-12
+13
 </td>
 </tr>
 <tr>
@@ -5987,7 +6029,7 @@ sleeping_in_public
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-17
+16
 </td>
 </tr>
 <tr>
@@ -5998,7 +6040,7 @@ sleeping_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-11
+12
 </td>
 </tr>
 </tbody>
@@ -6013,13 +6055,13 @@ print(law_totals)</code></pre>
 <pre><code>## # A tibble: 9 x 2
 ##   key                      count
 ##   &lt;chr&gt;                    &lt;int&gt;
-## 1 public_intoxication         42
-## 2 camping_in_public           41
-## 3 public_urination            40
-## 4 loitering_vagrancy          39
+## 1 public_intoxication         43
+## 2 camping_in_public           42
+## 3 loitering_vagrancy          40
+## 4 public_urination            40
 ## 5 begging                     38
-## 6 sitting_laying_in_public    36
-## 7 living_in_vehicle           30
+## 6 sitting_laying_in_public    37
+## 7 living_in_vehicle           31
 ## 8 sleeping_in_public          28
 ## 9 food_sharing_ban             4</code></pre>
 <p>Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, “citywide” and “none” account for over 70% of the laws examined. 21% of laws are only applicable in particular places while 9% of the laws were unclear.</p>
@@ -6033,11 +6075,11 @@ print(law_totals)</code></pre>
   mutate(pct = (count / sum(count))*100)
 
 print(overall_laws)</code></pre>
-<pre><code>##             rowname count       pct
-## 1          citywide   197 41.299790
-## 2 particular_places   100 20.964361
-## 3           unclear    39  8.176101
-## 4              none   141 29.559748</code></pre>
+<pre><code>##             rowname count      pct
+## 1          citywide   197 40.45175
+## 2 particular_places   106 21.76591
+## 3           unclear    42  8.62423
+## 4              none   142 29.15811</code></pre>
 </div>
 </div>
 <div id="state-and-city-information" class="section level2">
@@ -6067,7 +6109,7 @@ print(crim_survey_states)</code></pre>
 ##  1 ak             1
 ##  2 ca            18
 ##  3 dc             1
-##  4 fl             9
+##  4 fl            10
 ##  5 ga             2
 ##  6 hi             2
 ##  7 ky             1
@@ -6082,7 +6124,7 @@ print(crim_survey_states)</code></pre>
 ## 16 wa             1</code></pre>
 <p>Total cities examined:</p>
 <pre class="r"><code>print(sum(crim_survey_states$city_count))</code></pre>
-<pre><code>## [1] 53</code></pre>
+<pre><code>## [1] 54</code></pre>
 <p>Names of cities examined in each state:</p>
 <pre class="r"><code># See each city examined in each state
 crim_survey_cities &lt;- crim_survey %&gt;%
@@ -6322,6 +6364,14 @@ fl
 </td>
 <td style="text-align:left;border-left:1px solid;">
 new port richey
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+port st. lucie
 </td>
 </tr>
 <tr>
@@ -6876,6 +6926,29 @@ boston
 </tr>
 <tr>
 <td style="text-align:left;">
+ma
+</td>
+<td style="text-align:left;border-left:1px solid;">
+lynn
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 ny
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -7175,29 +7248,6 @@ lowell
 </tr>
 <tr>
 <td style="text-align:left;">
-ma
-</td>
-<td style="text-align:left;border-left:1px solid;">
-lynn
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-5
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 nv
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -7401,6 +7451,29 @@ key west
 </td>
 <td style="text-align:right;border-left:1px solid;">
 4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;border-left:1px solid;">
+port st. lucie
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 </tr>
 <tr>
@@ -7832,9 +7905,9 @@ type_by_city[type_by_city == &quot;citywide&quot;] &lt;- 1
 type_by_city[type_by_city == &quot;only in particular places&quot;] &lt;- 1
 type_by_city[type_by_city == &quot;county&quot;] &lt;- 1
 
-type_by_city[,3:11] &lt;- sapply(type_by_city[,3:11], as.numeric)</code></pre>
-<pre><code>## Warning in lapply(X = X, FUN = FUN, ...): NAs introduced by coercion</code></pre>
-<pre class="r"><code>type_by_city &lt;- aggregate(type_by_city[,2:10], by=list(type_by_city$city), FUN=sum, na.rm=TRUE) %&gt;%
+type_by_city[,3:11] &lt;- sapply(type_by_city[,3:11], as.numeric)
+
+type_by_city &lt;- aggregate(type_by_city[,2:10], by=list(type_by_city$city), FUN=sum, na.rm=TRUE) %&gt;%
   rename(&quot;city&quot; = &quot;Group.1&quot;) %&gt;%
   arrange(desc(total_laws))
 
@@ -8121,6 +8194,38 @@ long beach
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lynn
+</td>
+<td style="text-align:right;border-left:1px solid;">
+7
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -8490,38 +8595,6 @@ las vegas
 <tr>
 <td style="text-align:left;">
 lowell
-</td>
-<td style="text-align:right;border-left:1px solid;">
-6
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-lynn
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -9055,6 +9128,38 @@ new bedford
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+port st. lucie
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 0
@@ -9635,7 +9740,7 @@ ca
 fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
-46
+51
 </td>
 </tr>
 <tr>
@@ -9643,7 +9748,7 @@ fl
 ma
 </td>
 <td style="text-align:right;border-left:1px solid;">
-34
+35
 </td>
 </tr>
 <tr>
@@ -9766,9 +9871,9 @@ type_by_state[type_by_state == &quot;citywide&quot;] &lt;- 1
 type_by_state[type_by_state == &quot;only in particular places&quot;] &lt;- 1
 type_by_state[type_by_state == &quot;county&quot;] &lt;- 1
 
-type_by_state[,2:10] &lt;- sapply(type_by_state[,2:10], as.numeric)</code></pre>
-<pre><code>## Warning in lapply(X = X, FUN = FUN, ...): NAs introduced by coercion</code></pre>
-<pre class="r"><code>type_by_state &lt;- aggregate(type_by_state[,2:10], by=list(type_by_state$state), FUN=sum, na.rm=TRUE) %&gt;%
+type_by_state[,2:10] &lt;- sapply(type_by_state[,2:10], as.numeric)
+
+type_by_state &lt;- aggregate(type_by_state[,2:10], by=list(type_by_state$state), FUN=sum, na.rm=TRUE) %&gt;%
   rename(&quot;state&quot; = &quot;Group.1&quot;)
 
 kable(type_by_state) %&gt;%
@@ -9916,16 +10021,16 @@ fl
 6
 </td>
 <td style="text-align:right;border-left:1px solid;">
+9
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
 8
 </td>
 <td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
+8
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -9937,7 +10042,7 @@ fl
 3
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5
+6
 </td>
 </tr>
 <tr>
@@ -10076,7 +10181,7 @@ ma
 5
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+2
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -10493,28 +10598,28 @@ dc
 fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
-30
+31
 </td>
 <td style="text-align:right;border-left:1px solid;">
-16
+20
 </td>
 <td style="text-align:right;border-left:1px solid;">
-34
+35
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+4
 </td>
 <td style="text-align:right;border-left:1px solid;">
-37.03704
+34.44444
 </td>
 <td style="text-align:right;border-left:1px solid;">
-19.753086
+22.222222
 </td>
 <td style="text-align:right;border-left:1px solid;">
-41.97531
+38.88889
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.234568
+4.444444
 </td>
 </tr>
 <tr>
@@ -10638,10 +10743,10 @@ la
 ma
 </td>
 <td style="text-align:right;border-left:1px solid;">
-33
+32
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+3
 </td>
 <td style="text-align:right;border-left:1px solid;">
 14
@@ -10650,16 +10755,16 @@ ma
 5
 </td>
 <td style="text-align:right;border-left:1px solid;">
-62.26415
+59.25926
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1.886793
+5.555556
 </td>
 <td style="text-align:right;border-left:1px solid;">
-26.41509
+25.92593
 </td>
 <td style="text-align:right;border-left:1px solid;">
-9.433962
+9.259259
 </td>
 </tr>
 <tr>
@@ -10873,25 +10978,25 @@ Total
 197
 </td>
 <td style="text-align:right;border-left:1px solid;">
-100
+106
 </td>
 <td style="text-align:right;border-left:1px solid;">
-141
+142
 </td>
 <td style="text-align:right;border-left:1px solid;">
-39
+42
 </td>
 <td style="text-align:right;border-left:1px solid;">
-607.27220
+601.67472
 </td>
 <td style="text-align:right;border-left:1px solid;">
-378.537356
+384.675255
 </td>
 <td style="text-align:right;border-left:1px solid;">
-489.88799
+486.31240
 </td>
 <td style="text-align:right;border-left:1px solid;">
-124.302454
+127.337627
 </td>
 </tr>
 </tbody>
@@ -12336,22 +12441,22 @@ public_intoxication
 fl
 </td>
 <td style="text-align:right;border-left:1px solid;">
-46
+51
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
 </td>
 <td style="text-align:right;border-left:1px solid;">
+9
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
 8
 </td>
 <td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
+8
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -12363,7 +12468,7 @@ fl
 3
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5
+6
 </td>
 </tr>
 </tbody>
@@ -12538,6 +12643,59 @@ citywide
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;">
+fort pierce/st. lucie, indian river, martin counties coc
+</td>
+<td style="text-align:left;border-left:1px solid;">
+port st. lucie
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+4
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:left;border-left:1px solid;">
+unclear
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+unclear
+</td>
+<td style="text-align:left;border-left:1px solid;">
+unclear
+</td>
+<td style="text-align:left;border-left:1px solid;">
+none
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
 </td>
 </tr>
 <tr>
@@ -13753,13 +13911,13 @@ public_intoxication
 ma
 </td>
 <td style="text-align:right;border-left:1px solid;">
-34
+35
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+2
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
@@ -14021,13 +14179,13 @@ lynn coc
 lynn
 </td>
 <td style="text-align:right;border-left:1px solid;">
-6
+7
 </td>
 <td style="text-align:right;border-left:1px solid;">
-5
+4
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+3
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
@@ -14036,10 +14194,10 @@ lynn
 0
 </td>
 <td style="text-align:left;border-left:1px solid;">
-citywide
+only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
-select type
+only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -14889,7 +15047,7 @@ count
 camping_in_public
 </td>
 <td style="text-align:right;border-left:1px solid;">
-41
+42
 </td>
 </tr>
 <tr>
@@ -14897,7 +15055,7 @@ camping_in_public
 sitting_laying_in_public
 </td>
 <td style="text-align:right;border-left:1px solid;">
-36
+37
 </td>
 </tr>
 <tr>
@@ -14905,7 +15063,7 @@ sitting_laying_in_public
 living_in_vehicle
 </td>
 <td style="text-align:right;border-left:1px solid;">
-30
+31
 </td>
 </tr>
 <tr>
@@ -14964,18 +15122,7 @@ camping_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-20
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-camping_in_public
-</td>
-<td style="text-align:left;border-left:1px solid;">
-select type
-</td>
-<td style="text-align:right;border-left:1px solid;">
-1
+22
 </td>
 </tr>
 <tr>
@@ -14986,7 +15133,7 @@ living_in_vehicle
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-15
+16
 </td>
 </tr>
 <tr>
@@ -15019,7 +15166,7 @@ sitting_laying_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-12
+13
 </td>
 </tr>
 <tr>
@@ -15030,7 +15177,7 @@ sleeping_in_public
 citywide
 </td>
 <td style="text-align:right;border-left:1px solid;">
-17
+16
 </td>
 </tr>
 <tr>
@@ -15041,7 +15188,7 @@ sleeping_in_public
 only in particular places
 </td>
 <td style="text-align:right;border-left:1px solid;">
-11
+12
 </td>
 </tr>
 </tbody>
@@ -15958,6 +16105,44 @@ citywide
 fl
 </td>
 <td style="text-align:left;">
+fort pierce/st. lucie, indian river, martin counties coc
+</td>
+<td style="text-align:left;border-left:1px solid;">
+port st. lucie
+</td>
+<td style="text-align:right;border-left:1px solid;">
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:right;border-left:1px solid;">
+2
+</td>
+<td style="text-align:right;border-left:1px solid;">
+0
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
+</td>
+<td style="text-align:left;border-left:1px solid;">
+unclear
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+only in particular places
+</td>
+<td style="text-align:left;border-left:1px solid;">
+citywide
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fl
+</td>
+<td style="text-align:left;">
 fort walton beach/okaloosa, walton counties coc
 </td>
 <td style="text-align:left;border-left:1px solid;">
@@ -16572,13 +16757,13 @@ lynn coc
 lynn
 </td>
 <td style="text-align:right;border-left:1px solid;">
-2
+3
+</td>
+<td style="text-align:right;border-left:1px solid;">
+1
 </td>
 <td style="text-align:right;border-left:1px solid;">
 2
-</td>
-<td style="text-align:right;border-left:1px solid;">
-0
 </td>
 <td style="text-align:right;border-left:1px solid;">
 1
@@ -16587,10 +16772,10 @@ lynn
 0
 </td>
 <td style="text-align:left;border-left:1px solid;">
-citywide
+only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
-select type
+only in particular places
 </td>
 <td style="text-align:left;border-left:1px solid;">
 citywide
@@ -17147,9 +17332,8 @@ encampment_state[encampment_state == &quot;citywide&quot;] &lt;- 1
 encampment_state[encampment_state == &quot;only in particular places&quot;] &lt;- 1
 encampment_state[encampment_state == &quot;county&quot;] &lt;- 1
 
-encampment_state[,2:8] &lt;- sapply(encampment_state[,2:8], as.numeric)</code></pre>
-<pre><code>## Warning in lapply(X = X, FUN = FUN, ...): NAs introduced by coercion</code></pre>
-<pre class="r"><code>  encampment_state &lt;- aggregate(encampment_state[,2:8], by=list(encampment_state$state), FUN=sum, na.rm=TRUE) %&gt;%
+encampment_state[,2:8] &lt;- sapply(encampment_state[,2:8], as.numeric)
+  encampment_state &lt;- aggregate(encampment_state[,2:8], by=list(encampment_state$state), FUN=sum, na.rm=TRUE) %&gt;%
   rename(&quot;state&quot; = &quot;Group.1&quot;)
 
 kable(encampment_state) %&gt;%
@@ -17270,25 +17454,25 @@ dc
 fl
 </td>
 <td style="text-align:right;">
-25
+28
 </td>
 <td style="text-align:right;border-left:1px solid;">
-16
+17
 </td>
 <td style="text-align:right;border-left:1px solid;">
-9
+11
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
 </td>
 <td style="text-align:right;border-left:1px solid;">
+9
+</td>
+<td style="text-align:right;border-left:1px solid;">
+5
+</td>
+<td style="text-align:right;border-left:1px solid;">
 8
-</td>
-<td style="text-align:right;border-left:1px solid;">
-4
-</td>
-<td style="text-align:right;border-left:1px solid;">
-7
 </td>
 </tr>
 <tr>
@@ -17400,19 +17584,19 @@ la
 ma
 </td>
 <td style="text-align:right;">
-12
+13
 </td>
 <td style="text-align:right;border-left:1px solid;">
-12
+11
 </td>
 <td style="text-align:right;border-left:1px solid;">
-0
+2
 </td>
 <td style="text-align:right;border-left:1px solid;">
 5
 </td>
 <td style="text-align:right;border-left:1px solid;">
-1
+2
 </td>
 <td style="text-align:right;border-left:1px solid;">
 6
