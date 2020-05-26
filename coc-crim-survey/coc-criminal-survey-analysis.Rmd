@@ -1,7 +1,7 @@
 ---
 title: "CoC Criminal Survey Analysis"
 author: "Theresa Diffendal"
-date: "4/23/2020"
+date: "5/13/2020"
 output:
   html_document:
     df_print:  paged
@@ -39,6 +39,7 @@ library(lubridate)
 library(ggplot2)
 library(dplyr)
 library(stringr)
+library(readxl)
 library(kableExtra)
 
 ## Set working directory
@@ -105,10 +106,12 @@ crim_survey <- crim_survey_initial %>%
 Below is the complete dataset which journalists compiled and is the source for this data analysis.
 ```{r}
 crim_survey <- crim_survey %>%
+  #create column that counts have many citywide or in particular places law a city has
   mutate(total_laws = rowSums(crim_survey[,c("citywide", "particular_places")], na.rm=TRUE)) %>%
   select(1:3,17,4:16) %>%
   arrange(state)
 
+#table
 kable(crim_survey) %>%
   column_spec(2:ncol(crim_survey), border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
@@ -146,7 +149,7 @@ law_totals <- law_type_totals %>%
 print(law_totals)
 ```
 
-Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, "citywide" and "none" account for over 70% of the laws examined. 21% of laws are only applicable in particular places while 9% of the laws were unclear.
+Most of the laws examined are applicable across the city, which is only slightly greater than the amount of laws that are not on the books. Together, "citywide" and "none" account for almost 70% of the laws examined. About 21% of laws are only applicable in particular places while about 9% of the laws were unclear.
 
 While laws applicable in particular places represent a fifth of the laws examined, the majority of the time it appears that laws either apply citywide or do not exist.
 ```{r}
@@ -207,6 +210,10 @@ kable(crim_survey_cities) %>%
   scroll_box(height = "250px")
 ```
 
+```{r, include=FALSE}
+rm(overall_laws, crim_survey_cities, crim_survey_states)
+```
+
 ## City Analysis
 
 * Oakland has the most with 9 laws. This means that Oakland has every possible examined law on the books.
@@ -243,23 +250,24 @@ kable(city_totals) %>%
 type_by_city <- crim_survey %>%
   select(3:4,9:17) %>%
   group_by(city) %>%
-  naniar::replace_with_na_all(condition = ~.x == "unclear") %>%
-  naniar::replace_with_na_all(condition = ~.x == "none")
-
+  arrange(desc(total_laws))
+  
+type_by_city[type_by_city == "none"] <- 0
+type_by_city[type_by_city == "unclear"] <- 0
 type_by_city[type_by_city == "citywide"] <- 1
 type_by_city[type_by_city == "only in particular places"] <- 1
 type_by_city[type_by_city == "county"] <- 1
 
 type_by_city[,3:11] <- sapply(type_by_city[,3:11], as.numeric)
 
-type_by_city <- aggregate(type_by_city[,2:10], by=list(type_by_city$city), FUN=sum, na.rm=TRUE) %>%
-  rename("city" = "Group.1") %>%
-  arrange(desc(total_laws))
-
 kable(type_by_city) %>%
   column_spec(2:ncol(type_by_city),border_left = T, border_right = F) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "300px")
+```
+
+```{r, include=FALSE}
+rm(type_by_city, city_totals)
 ```
 
 ## Types of Laws by State
@@ -357,6 +365,10 @@ kable(all_state) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   scroll_box(height = "300px")
 
+```
+
+```{r, include=FALSE}
+rm(all_state, state_totals)
 ```
 
 ## State by State Data {.tabset}
@@ -598,6 +610,10 @@ kable(oregon_cities) %>%
   scroll_box(height = "250px")
 ```
 
+```{r, include=FALSE}
+rm(alaska, california_cities, dc, florida_cities, hawaii_cities, kentucky, louisiana, maryland_cities, massachusetts_cities, new_york, north_carolina, oregon_cities)
+```
+
 ## Encampment Analysis
 
 The following is an analysis of laws only related to homeless encampments: sleeping in public, camping in public, sitting/laying in public, and lodging/living/sleeping in vehicles or parking a vehicle used as a lodging.
@@ -687,18 +703,59 @@ kable(encampment_state) %>%
   scroll_box(height = "400px")
 ```
 
+```{r, include=FALSE}
+rm(encampment_state, encampment_totals, encampment_type_totals,
+   crim_survey_initial)
+```
+
 ## Cross Examine CoCs with Homeless Counts
 
 Read in HUD PIT counts and join to crim survey
+
+The difference column is the difference between the total of yearly available beds and the homeless count in a coc. Negative numbers indicate excess of homeless persons to beds.
 ```{r}
-pit <- read_csv("~/GitHub/homelessness-in-the-us/data/output-data/pit-hic-zillow.csv") %>%
-  rename(coc = coc_name)
+### read in and clean beds
+beds <- read_excel("2007-2019-HIC-Counts-by-CoC.xlsx") %>%
+  mutate_all(funs(tolower))
+colnames(beds) <- beds[1,] 
+beds <- beds[-1,] %>%
+  clean_names()
+beds <- beds %>%
+  rename(total_yearly_beds = total_year_round_beds_es_th_sh)
 
-homeless_crim <- right_join(crim_survey, pit, by="coc") %>%
-  select(1,18,2:3,20:22,30:31,4:17)
+###read in and clean pit
+pit <- read_excel("2007-2019-PIT-Counts-by-CoC.xlsx") %>%
+  clean_names() %>%
+  mutate_all(funs(tolower)) %>%
+  rename(coc_number = co_c_number)
 
-c3_homeless_crim <- homeless_crim %>%
-  filter(city != "NA")
+pitbed <- full_join(pit, beds, by="coc_number") %>%
+  select(1:2,4,68,84,543) %>%
+  rename(coc = co_c_name)
+
+coc_codes <- read_excel("coc-codes.xlsx") %>%
+  clean_names() %>%
+  mutate_all(funs(tolower))
+
+temp <- right_join(coc_codes,crim_survey, by=c("coc_name" = "coc")) %>%
+  select(-"state")
+
+homeless_crim <- left_join(temp, pitbed, by="coc_number") %>%
+  select(1:4,23,20:22,5:18)
+
+## remove pit df
+rm(pit, beds, pitbed, temp, coc_codes)
+
+homeless_crim <- homeless_crim %>%
+  #difference between available beds and homeless count. Negative numbers indicate excess of homeless persons to beds
+  mutate(difference = as.numeric(total_yearly_beds) - as.numeric(overall_homeless_2019)) %>%
+  select(1:5,23,6:22)
+
+
+kable(homeless_crim) %>%
+  column_spec (3:ncol(homeless_crim),border_left = T, border_right = F) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "400px")
 ```
 
 ```{r, include=FALSE}
@@ -710,6 +767,7 @@ c3_homeless_crim <- homeless_crim %>%
 #view(type_by_coc_adam)
 
 #write.csv(type_by_coc_adam, "crim-survey-adam.csv")
+#write.csv(homeless_crim, "all-cities-and-laws.csv")
 ```
 
 ```{r, include=FALSE}
