@@ -1,0 +1,16 @@
+"","arrest_statute","arrest_charge","count"
+"1","failure to appear for misdemeanor","843.15(1b)",3
+"2","domestic violence battery","784.03(1a1)",2
+"3","drive while lic susp with prior convictions","322.34(2c)",2
+"4","narcotic equip possess or use","893.147(1)",2
+"5","burgl-of unoccupied dwelling; unarmed; no asslt or batt","810.02(3b)",1
+"6","dui alcohol or drugs","316.193(1)",1
+"7","felony battery","784.03(2)",1
+"8","felony battery","784.041(1)",1
+"9","kidnap false imprisonment-adult","787.02(1a)",1
+"10","larc-grand theft $5 000 or more but less than $10 000"",2,""812.014(2c2)","812.014(2c2)",1
+"11","larc-petit first offense","812.014(3a)",1
+"12","petit theft to und 300 dols","812.014(2e)*",1
+"13","resist officer-obstruct wo violence","843.02",1
+"14","trespassing-construction site","810.09(2d)",1
+"15","trespassing-structure or conveyance","810.08(2a)",1

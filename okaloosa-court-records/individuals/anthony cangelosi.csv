@@ -1,0 +1,13 @@
+"","arrest_statute","arrest_charge","count"
+"1","failure to appear for misdemeanor","843.15(1b)",5
+"2","worthless check","832.05(2b)",5
+"3","resist officer-obstruct wo violence","843.02",3
+"4","trespassing-fail to leave property","810.09(2b)",3
+"5","trespassing-property not structure or convey","810.09(1a)*",2
+"6","trespassing-property not structure or convey","810.09(2a)",2
+"7","disorderly conduct","877.03",1
+"8","disturbing peace-breach peace","877.03",1
+"9","indecent exposure","800.03",1
+"10","trespassing-occupied structure or conveyance","810.08(2b)",1
+"11","trespassing-structure or conveyance","810.08(2a)",1
+"12","trespassing-structure or conveyance","810.08(2a)*",1

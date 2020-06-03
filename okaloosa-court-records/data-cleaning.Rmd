@@ -1,0 +1,2117 @@
+---
+title: "data-cleaning"
+author: "Ryan Little"
+date: "12/3/2019"
+output: html_document
+---
+
+## R Markdown
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, paged.print=TRUE)
+```
+
+
+## Load libraries
+
+```{r}
+library(tidyverse)  # attaches purrr and readr
+library(lubridate)
+library(rvest)
+library(downloader)
+library(R.utils)
+library(rlist)
+library(here)
+library(janitor)
+library(scales)
+library(ggrepel)
+library(ggplot2)
+library(here)
+library(tidycensus)
+library(ggthemes)
+library(scales)
+library(mapview)
+library(here)
+library(svMisc)
+
+# Store census API key
+census_api_key("2badea95d03037d0582d8c5ada5195100b1d92f6")
+
+# the function that should be in Tidyverse but isn't
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+options(scipen=999)
+options(digits=2)
+```
+
+```{r}
+
+#clear environment for when I need it
+rm(list = ls())
+
+#why this function isn't in tidyverse, I do not know
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+#function for calculating age, updates to the day; stolen from the internet
+calc_age <- function(birthDate, refDate = Sys.Date()) {
+    require(lubridate)
+    period <- as.period(interval(birthDate, refDate),
+                        unit = "year")
+    period$year
+}
+
+```
+
+
+#Import and Clean Data
+
+The data had to be downloaded by month by request of Okaloosa County Clerk. They said larger timeframes would tax their system. This means the data had to be downloaded by month, imported and binded together using a for loop.
+
+
+```{r}
+
+# list of file names
+files <- c(
+    "0110", "0210", "0310", "0410", "0510", "0610", "0710", "0810", "0910", "1010", "1110", "1210",
+    "0111", "0211", "0311", "0411", "0511", "0611", "0711", "0811", "0911", "1011", "1111", "1211",
+    "0112", "0212", "0312", "0412", "0512", "0612", "0712", "0812", "0912", "1012", "1112", "1212",
+    "0113", "0213", "0313", "0413", "0513", "0613", "0713", "0813", "0913", "1013", "1113", "1213",
+    "0114", "0214", "0314", "0414", "0514", "0614", "0714", "0814", "0914", "1014", "1114", "1214",
+    "0115", "0215", "0315", "0415", "0515", "0615", "0715", "0815", "0915", "1015", "1115", "1215",
+    "0116", "0216", "0316", "0416", "0516", "0616", "0716", "0816", "0916", "1016", "1116", "1216", 
+    "0117", "0217", "0317", "0417", "0517", "0617", "0717", "0817", "0917", "1017", "1117", "1217", 
+    "0118", "0218", "0318", "0418", "0518", "0618", "0718", "0818", "0918", "1018", "1118", "1218", 
+    "0119", "0219", "0319", "0419", "0519", "0619", "0719", "0819", "0919", "1019", "1119", "1219",
+    "0120", "0220", "0320", "0420", "0520")
+
+# creating empty dataframe, changes to character were made playing wack-a-mole with binding errors
+master_data <- read_csv(here("data", "0115.csv")) %>%
+  clean_names() %>%
+  filter(arrest_charge == "nothing") %>%
+  mutate(actual_speed = as.character(actual_speed),
+         blood_alcohol_level = as.character(blood_alcohol_level),
+         commercial_vehicle = as.character(commercial_vehicle),
+         haul_hazard = as.character(haul_hazard),
+         obts_number = as.character(obts_number),
+         vehicle_tag_expiration_year = as.character(vehicle_tag_expiration_year),
+         prosecutor_charge_count = as.character(prosecutor_charge_count))
+
+# importing, binding to empty data frame 
+for (i in files) {
+  #writing filepath
+  name <- paste0(i, ".csv")
+  filepath <- "data/"
+  name_plus_filepath <- paste0(filepath,name)
+  # importing and cleaning files to temp dataframe
+  temp <- read_csv(name_plus_filepath) %>%
+    clean_names() 
+  temp <- unique(temp)
+  # changes to character were made playing wack-a-mole with binding errors
+  temp <- temp %>%
+  mutate(actual_speed = as.character(actual_speed),
+         blood_alcohol_level = as.character(blood_alcohol_level),
+         commercial_vehicle = as.character(commercial_vehicle),
+         haul_hazard = as.character(haul_hazard),
+         obts_number = as.character(obts_number),
+         vehicle_tag_expiration_year = as.character(vehicle_tag_expiration_year),
+         prosecutor_charge_count = as.character(prosecutor_charge_count),
+         zip = as.character(zip),
+         bond_hearing_date = as.character(bond_hearing_date),
+         arrest_charge_count = as.numeric(arrest_charge_count))
+  # binding temp to master_data
+  master_data <- master_data %>%
+    bind_rows(temp)
+  # processing and clearing environment
+  rm(temp, name, filepath, name_plus_filepath)
+}
+
+rm(i)
+rm(files)
+
+# changing columns back to numerics, go lowercase
+master_data <- master_data %>%
+    mutate_all(tolower) %>%  
+    mutate(actual_speed = as.double(actual_speed),
+         blood_alcohol_level = as.double(blood_alcohol_level),
+         commercial_vehicle = as.double(commercial_vehicle),
+         haul_hazard = as.double(haul_hazard),
+         obts_number = as.double(obts_number),
+         vehicle_tag_expiration_year = as.double(vehicle_tag_expiration_year),
+         prosecutor_charge_count = as.double(prosecutor_charge_count),
+         case_open_date = mdy(case_open_date),
+         case_close_date = mdy(case_close_date),
+         disposition_date = mdy(disposition_date),
+         date_of_birth = mdy(date_of_birth),
+         offense_date = mdy(offense_date),
+         arrest_date = mdy(arrest_date),
+         arrest_month = month(arrest_date),
+         arrest_year = year(arrest_date),
+         offense_month = month(offense_date),
+         offense_year = year(offense_date),
+         close_year = year(case_close_date),
+         total_assessed = as.numeric(total_assessed),
+         balance = as.numeric(balance),
+         total_paid = as.numeric(total_paid),
+         obts_number = as.character(obts_number),
+         arrest_charge_count = as.numeric(arrest_charge_count),
+         arrest_week = week(arrest_date),
+         next_day = (arrest_date + 1)
+         ) %>%
+    filter(offense_year %in% c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020")) %>%
+    select(-case_type, -disposition_date, -disposition, -defendant_code, -bond_hearing_date, -posted_speed, -actual_speed, -school_status, -commercial_vehicle, -haul_hazard, -d6_issued_date, -d6_issue_status, -d6_released_date)
+
+master_data <- master_data %>%
+    unique()
+
+master_data <- master_data %>%
+  mutate(case_close_date = substr(case_close_date, start = 1, stop = 7))
+
+charges_by_month <- master_data %>%
+  group_by(case_close_date) %>%
+  summarise(count = n())
+
+rm(temp)
+
+# There are a few people who have errors in the data that have been manually cleaned:
+
+# In every case, typos in name, birthday or drivers license were tested using a combination of the other two datapoints to prove the third
+
+# Example: donavan jason webb - two different birthdays ("1977-12-16" "1977-02-19") were confirmed errors by # comparing driver's license; a mispelling of his name exists
+
+master_data <- master_data %>%
+  mutate(
+    date_of_birth = case_when(
+      defendant == "donavan jason webb" ~ as_date("1977-02-16"),
+      TRUE  ~ date_of_birth
+    )
+  ) %>%
+  mutate(
+    defendant = case_when(
+      defendant == "donovan jason webb" ~ "donavan jason webb",
+      TRUE  ~ defendant
+    )
+  ) %>%
+  #tested with birthday
+  mutate(
+    drivers_license_number = case_when(
+      defendant == "billy ray bottoms" ~ "b352076490060",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+  mutate(
+  date_of_birth = case_when(
+    defendant == "billy ray bottoms" ~ as_date("1949-01-06"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  #tested with birthday
+  mutate(
+    drivers_license_number = case_when(
+      defendant == "timothy roger linville" ~ "l514816561740",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+  #tested with driver's license number
+  mutate(
+  date_of_birth = case_when(
+    defendant == "timothy roger linville" ~ as_date("1956-05-14"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  #tested with driver's license number
+  mutate(
+  date_of_birth = case_when(
+    defendant == "timothy roger linville" ~ as_date("1968-01-07"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  mutate(
+  date_of_birth = case_when(
+    defendant == "daniel lee stetson" ~ as_date("1955-05-31"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%  
+  # used court records to confirm that the date and drivers license were wrong and that she is the other jennifer gail hunt
+  mutate(
+  date_of_birth = case_when(
+    defendant == "jennifer gail hunt" ~ as_date("1979-06-19"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  mutate(
+    drivers_license_number = case_when(
+      defendant == "jennifer gail hunt" ~ "h530427797190",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+  mutate(
+  date_of_birth = case_when(
+    defendant == "joseph kevin sullivan" ~ as_date("1964-12-23"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  # used court records to confirm right birthdate
+    mutate(
+  date_of_birth = case_when(
+    defendant == "mary moore erlich" ~ as_date("1952-05-13"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  # this person was confirmed the same using both court records and jail inmate records, jail lists him as having been born in 1958	
+      mutate(
+  date_of_birth = case_when(
+    defendant == "phay chaleunsavanh" ~ as_date("1958-02-06"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+    mutate(
+    drivers_license_number = case_when(
+      defendant == "phay chaleunsavanh" ~ "c452660580460",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+        mutate(
+  date_of_birth = case_when(
+    defendant == "robert terry duckworth" ~ as_date("1967-07-24"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+          mutate(
+  date_of_birth = case_when(
+    defendant == "ronald a foster" ~ as_date("1959-04-16"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+      mutate(
+    drivers_license_number = case_when(
+      defendant == "ronald a foster" ~ "f236721591360",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+            mutate(
+  date_of_birth = case_when(
+    defendant == "ronald dean cordero" ~ as_date("1954-05-24"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%	
+  	            mutate(
+  date_of_birth = case_when(
+    defendant == "russell kippen ferguson" ~ as_date("1948-06-30"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%	
+         mutate(
+    drivers_license_number = case_when(
+      defendant == "russell kippen ferguson" ~ "f622731482300",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+   mutate(
+	  date_of_birth = case_when(
+    defendant == "terry antonio mcleod" ~ as_date("1968-03-21"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%	
+         mutate(
+    drivers_license_number = case_when(
+      defendant == "terry antonio mcleod" ~ "m243801681010",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+   mutate(
+	  date_of_birth = case_when(
+    defendant == "william todd bischoff" ~ as_date("1973-01-23"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+     mutate(
+	  date_of_birth = case_when(
+    defendant == "bryan edward may" ~ as_date("1968-01-07"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+ # drivers license matches across all 3 names
+  mutate(
+    defendant = case_when(
+      drivers_license_number == "b652004597540" ~ "andrea kizziah barnes",
+      TRUE ~ defendant
+    )
+  ) %>%
+  # dob and license match
+  mutate(
+	  defendant = case_when(
+    defendant == "charles edward ferribee" ~ "charles edward ferribee ii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+  mutate(
+	  defendant = case_when(
+    defendant == "dennis carr" ~ "dennis mitchell carr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+    mutate(
+	  defendant = case_when(
+    defendant == "gary earl hunnicutt" ~ "gary earl hunniecutt",
+    TRUE  ~ defendant
+    )
+  ) %>%
+  	    mutate(
+	  defendant = case_when(
+    defendant == "gary earl hunniecut" ~ "gary earl hunniecutt",
+    TRUE  ~ defendant
+    )
+  ) %>%
+ 	  	    mutate(
+	  defendant = case_when(
+    defendant == "george hubert spence" ~ "george hubert spence jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+      mutate(
+	  defendant = case_when(
+    defendant == "gregory a denney" ~ "gregory alan denney",
+    TRUE  ~ defendant
+    )
+  ) %>%
+  	    mutate(
+	  defendant = case_when(
+    defendant == "gregory allan denney" ~ "gregory alan denney",
+    TRUE  ~ defendant
+    )
+  ) %>%
+    	    mutate(
+	  defendant = case_when(
+    defendant == "james william beller" ~ "james william beller s",
+    TRUE  ~ defendant
+    )
+  ) %>%
+      	    mutate(
+	  defendant = case_when(
+    defendant == "jerald warren green" ~ "jerald warren green jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+       	    mutate(
+	  defendant = case_when(
+    defendant == "jerald warren green" ~ "jerald warren green jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+         	    mutate(
+	  defendant = case_when(
+    defendant == "jerald warren green" ~ "jerald warren green jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+         	    mutate(
+	  defendant = case_when(
+    defendant == "jerry stanley groshon" ~ "jerry stanley groshorn",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           	    mutate(
+	  defendant = case_when(
+    defendant == "johnnie s roberts" ~ "johnnie s roberts jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+             	    mutate(
+	  defendant = case_when(
+    defendant == "joseph keith sullivan" ~ "joseph kevin sullivan",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           	    mutate(
+	  defendant = case_when(
+    defendant == "kenneth ivan schultz" ~ "kenneth ivan shultz iii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+             	    mutate(
+	  defendant = case_when(
+    defendant == "kenneth ivan shoultz iii" ~ "kenneth ivan shultz iii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+               	    mutate(
+	  defendant = case_when(
+    defendant == "kenneth ivan shultz" ~ "kenneth ivan shultz iii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                 	    mutate(
+	  defendant = case_when(
+    defendant == "lonnie r duvall" ~ "lonnie rodney duvall",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                     	    mutate(
+	  defendant = case_when(
+    defendant == "lowery allen featherstone" ~ "lowery allen featherson",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                     	    mutate(
+	  defendant = case_when(
+    defendant == "mary moore elrich" ~ "mary moore erlich",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                       	    mutate(
+	  defendant = case_when(
+    defendant == "philip field augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                         	    mutate(
+	  defendant = case_when(
+    defendant == "phillip field augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                           	    mutate(
+	  defendant = case_when(
+    defendant == "phillip schoolcraft augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+   mutate(
+  	  defendant = case_when(
+    defendant == "phillip schoolfield augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+     mutate(
+  	  defendant = case_when(
+    defendant == "richard l abercrombie" ~ "richard leon abercrombie",
+    TRUE  ~ defendant
+    )
+  ) %>%
+       mutate(
+  	  defendant = case_when(
+    defendant == "robert dale taft" ~ "robert dale taff",
+    TRUE  ~ defendant
+    )
+  ) %>%
+         mutate(
+  	  defendant = case_when(
+    defendant == "robert dale taft" ~ "robert dale taff",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           mutate(
+  	  defendant = case_when(
+    defendant == "robin harvey rude" ~ "robin harvey rhude",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           mutate(
+  	  defendant = case_when(
+    defendant == "robin rhude" ~ "robin harvey rhude",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           mutate(
+  	  defendant = case_when(
+    defendant == "ronald w borisenko" ~ "ronald walter borisenko",
+    TRUE  ~ defendant
+    )
+  ) %>%
+             mutate(
+  	  defendant = case_when(
+    defendant == "roy ronald rowell" ~ "roy ronald rowell jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+               mutate(
+  	  defendant = case_when(
+    defendant == "russell k ferguson" ~ "russell kippen ferguson",
+    TRUE  ~ defendant
+    )
+  ) %>%
+               mutate(
+  	  defendant = case_when(
+    defendant == "sterling lemark parker" ~ "sterling lamark parker",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                   mutate(
+  	  defendant = case_when(
+    defendant == "terry glen long" ~ "terry glenn long",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                     mutate(
+  	  defendant = case_when(
+    defendant == "william curtis howard" ~ "william curtis howard jr",
+    TRUE  ~ defendant
+    )
+  )
+
+#importing scraped data from the Okaloosa County Jail website
+jails1 <- read_csv("data/jail-stays-first.csv")
+jails2 <- read_csv("data/jail-stays-second.csv")
+
+#binding and removing entries with no name
+jail_stays <-  jails1 %>%
+  rbind(jails2) %>%
+  filter(last != "none") %>%
+  mutate(booking_date = mdy(booking_date),
+         release_date = mdy(release_date),
+         released_in_am = am(release_time),
+         days_in_jail = replace_na((release_date - booking_date), 0),
+         name = paste0(first, " ", last),
+         arrest_week = week(booking_date),
+         arrest_year = year(booking_date)
+         )
+
+rm(jails1, jails2)
+
+```
+
+
+# Filtering for Homeless
+Fort Walton Beach Police officer confirms that "General Delivery" is an address law enforcement agencies use when they arrest a homeless person. Fort Walton Beach uses "At Large."
+
+```{r}
+
+# creating a dataframe that only includes addresses that match those we know mean they are homeless
+general_delivery <- master_data %>%
+  filter(address %in% c("general delivery", "genral delivery", "at large", "genreal delivery", "general deliverly", "homeless", "gerneral delivery", "general deliver", "general delviery", "not listed", "general deivery", "grneral delivery", "428 mclaughlin ave", "307 harbor blvd", "183 eglin parkway ne", "117 windham ave", "300 miracle strip", "21 walter martin rd", "123 anywhere st"))
+
+
+#filter for list of defendants
+homeless_names <- general_delivery %>%
+  group_by(defendant) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+# converting names to vector to feed into for loop
+names <- as.vector(homeless_names$defendant)
+
+#creating blank dataframe to bind in the loop
+homeless_data <- master_data %>%
+  filter(defendant == "nothing")
+
+for (i in names) {
+  # filtering for person
+  temp <- master_data %>%
+    filter(defendant == i)
+  # binding to dataframe
+  homeless_data <- homeless_data %>%
+    bind_rows(temp)
+}
+
+rm(temp, i, general_delivery, homeless_names)
+```
+
+# Trespass
+
+This frame creates a dataframe that is all trespass charges filed against all homeless people.
+
+```{r}
+
+# creating a dataframe just on trespass
+# creating a list of all trespass charges 
+all_charges <- master_data %>%
+  group_by(arrest_charge, arrest_statute) %>%
+  summarise(count = n())
+# filtering for all charges with "tres" in the statute
+tres_charges <- all_charges %>%
+  filter(str_detect(arrest_statute, "tres"))
+tres_charges <- tres_charges %>%
+  select(arrest_charge) %>%
+  unique()
+# converting to vector to feed into for loop
+trespass <- as.vector(tres_charges$arrest_charge)
+
+# creating blank dataframe
+trespass_data <- homeless_data %>%
+  filter(arrest_charge == "nothing")
+
+for (i in trespass) {
+  # filter for trespass statute
+  temp <- homeless_data %>%
+    filter(arrest_charge == i)
+  # bind to dataframe
+  trespass_data <- trespass_data %>%
+    bind_rows(temp)
+}
+
+trespass_by_month <- trespass_data %>%
+  mutate(case_open_sort = substr(case_open_date, start = 1, stop = 7)) %>%
+  group_by(case_open_sort) %>%
+  summarise(count = n()) %>%
+  inner_join(charges_by_month, by = c("case_open_sort" = "case_close_data")) %>%
+  mutate(trespass_charges = count.x,
+         total_charges = count.y) %>%
+  select(-count.x, -count.y)
+
+april_may <- trespass_data %>%
+  mutate(arrest_sort = substr(arrest_date, start = 1, stop = 7)) %>%
+  filter(arrest_sort %in% c("2020-04", "2020-05"))
+
+write.csv(trespass_by_month, file = "trespass_by_mont.csv")
+
+# fWB police only
+
+fwb_charges_by_month <- master_data %>%
+  filter(arresting_agency == "ft walton bch police") %>%
+  mutate(case_open_sort = substr(case_open_date, start = 1, stop = 7)) %>%
+  group_by(case_open_sort) %>%
+  summarise(charges = n())
+
+fwb_charges <- master_data %>%
+  #mutate(arrest_sort = substr(arrest_date, start = 1, stop = 7)) %>%
+  #filter(arrest_sort %in% c("2020-03", "2020-04", "2020-05")) %>%
+  group_by(arresting_agency) %>%
+  count()
+
+
+```
+
+# Other Crimes
+
+Through analysis and reporting, it became clear that other_crimes_list is a list of other state statutes that are used to criminalize homelessness and that a lot of people who are charged with trespassing also miss court a lot and get charged with resisting arrest. This code block creates a dataframe for each one.
+
+```{r}
+# creating dataframe for all other criminalization statutes that are not trespassing
+
+# "337.406: improper use of state right of way
+
+other_crimes_list <- c("316.130", "316.2045", "337.406", "856.011", "856.021", "877.03")
+
+
+no_show_resist <- c( "843.15(1a)", "843.15(1a)*", "843.15(1b)", "843.15(1b)*", "843.02")
+
+# 843.15(1a): bail secured bond-failure to appear for felony offense
+# 843.15(1b): failure to appear for misdemeanor
+# 843.15(1b)*: bail secured bond-failure to appear for misdemeanor offense
+# 843.02: resist officer-obstruct wo violence"
+
+other_crimes_data <- master_data %>%
+  filter(arrest_charge == "nothing")
+
+for (i in other_crimes_list) {
+  temp <- homeless_data %>%
+    filter(arrest_charge == i)
+  print(paste0("Finished filtering ", i))
+  other_crimes_data <- other_crimes_data %>%
+    bind_rows(temp)
+}
+
+no_show_resist_data <- master_data %>%
+  filter(arrest_charge == "nothing")
+
+for (i in no_show_resist) {
+  temp <- homeless_data %>%
+    filter(arrest_charge == i)
+  no_show_resist_data <- no_show_resist_data %>%
+    bind_rows(temp)
+}
+
+rm(temp, i)
+
+# this searches for the one state law found unconstitutional
+unconst <- master_data %>%
+  filter(str_detect(arrest_charge, "316.2045"))
+
+# creating a spreadsheet of all the charges filed against homeless people
+homeless_charges <- homeless_data %>%
+  group_by(arrest_charge, arrest_statute) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+# creating dataframe of trespass, other and resist_no_show crimes 
+filtered_crimes <- trespass_data %>%
+  rbind(other_crimes_data) %>%
+  rbind(no_show_resist_data)
+
+```
+
+
+# Examing what the homeless are charged with most, building total impacts frame
+
+## Demographics - complete
+
+```{r}
+#pulling demographic info 
+temp <- homeless_data %>%
+  group_by(defendant, race, gender, date_of_birth) %>%
+  summarise()
+
+demo_by_race <- temp %>%
+  group_by(race) %>%
+  summarise(count = n())
+  #b 44 - 14%
+  #w 267 - 85%
+  #na 2 - 0.01 %
+  #total 313
+demo_by_gender <- temp %>%
+  group_by(gender) %>%
+  summarise(count =n())
+  #43 women - 14%
+  #270 men 86%
+demographics <- temp %>%
+  mutate(age = calc_age(date_of_birth)) %>%
+  select(-date_of_birth)
+
+```
+
+## Trespass Charges - complete
+
+```{r}
+# calculating trespass fees
+temp1 <- trespass_data %>%
+  #select and unique to to clear cases with multiple charges that list the fees assessed for the entire case multiple times
+  select(case_number, defendant, total_assessed) %>%
+  unique() %>%
+  group_by(defendant) %>%
+  summarise(tres_fees = sum(total_assessed))
+
+# calculating trespass charges
+temp2 <- trespass_data %>%
+  group_by(defendant) %>%
+  summarise(tres_charges = n())
+
+# calculating trespass fees paid
+temp3 <- trespass_data %>%
+  #select and unique to to clear cases with multiple charges that list the fees assessed for the entire case multiple times
+  select(case_number, defendant, total_paid) %>%
+  group_by(defendant) %>%
+  summarise(tres_paid = sum(total_paid))
+
+#create column that counts missed court charges that resulted from tresspassing
+temp19 <- trespass_data %>%
+  group_by(case_number, defendant) %>%
+  summarise()
+
+temp20 <- homeless_data %>%
+  filter(str_detect(arrest_charge, "843.15")) %>%
+  group_by(case_number) %>%
+  summarise()
+
+temp21 <- temp19 %>%
+  inner_join(temp20, by = "case_number") %>%
+  mutate(missed_court_charge = "yes")
+
+tres_missed_court <- temp21 %>%
+  group_by(defendant) %>%
+  summarise(tres_missed_court = n())
+
+# creating trespass impacts master frame
+trespass_impacts <- temp1 %>%
+  left_join(temp2) %>%
+  left_join(temp3) %>%
+  left_join(tres_missed_court) %>%
+  select(defendant, tres_charges,tres_missed_court, tres_fees, tres_paid)
+trespass_impacts$tres_missed_court[is.na(trespass_impacts$tres_missed_court)] <- 0
+
+rm(temp, temp1, temp2, temp3) 
+
+sum(trespass_impacts$tres_fees)
+
+```
+
+
+## No Show and Resist Crimes
+
+
+
+
+## Calculating other crimes
+
+```{r}
+
+# homeless non-trespass criminilzation charges
+temp <- other_crimes_data  %>%
+  select(case_number, defendant) %>%
+  unique() %>%
+  group_by(defendant, case_number) %>%
+  summarise()
+other_crimes <- temp %>%
+  group_by(defendant) %>%
+  summarise(other_crimes = n())
+other_crimes_charges <- other_crimes_data  %>%
+  select(case_number, defendant, arrest_charge_count) %>%
+  unique() %>%
+  group_by(defendant) %>%
+  summarise(other_crimes_charges = n())
+
+
+
+# summarising court costs for other crimes
+other_crim_fines <- other_crimes_data  %>%
+  select(defendant, case_number, total_assessed, total_paid) %>%
+  group_by(defendant) %>%
+  summarise(other_crim_fines = sum(total_assessed))
+total_fines <- homeless_data %>%
+  select(defendant, case_number, total_assessed, total_paid) %>%
+  group_by(defendant) %>%
+  summarise(total_fines = sum(total_assessed))
+
+# summarising fees paid for other crimes
+other_crim_paid <-other_crimes_data  %>%
+  select(defendant, case_number, total_assessed, total_paid) %>%
+  group_by(defendant) %>%
+  summarise(other_crim_paid = sum(total_paid))
+total_paid <- homeless_data %>%
+  select(defendant, case_number, total_assessed, total_paid) %>%
+  group_by(defendant) %>%
+  summarise(total_paid = sum(total_paid))
+```
+
+## Calculating span of trespass arrests - complete
+
+```{r}             
+# building for loop, leaving behind to create blank dataframe
+
+temp4 <- trespass_data %>%
+  select(case_number, defendant) %>%
+  group_by(defendant, case_number) %>%
+  summarise()
+
+temp11 <- trespass_data %>%
+  filter(defendant == "jerry michael kinney") %>%
+  select(defendant, arrest_date) %>%
+  arrange(arrest_date)
+temp12 <- temp11 %>%
+  slice(1) %>%
+  mutate(first_arrest = arrest_date) %>%
+  select(-arrest_date)
+temp13 <- temp11 %>%
+  slice(n()) %>%
+  mutate(last_arrest = arrest_date) %>%
+  select(-arrest_date)
+temp14 <- temp12 %>%
+  inner_join(temp13, by = "defendant")
+# creating blank data frame
+arrest_dates <- temp4 %>%
+  filter(defendant == "nothing")
+
+# calculating first and last arrest in filtered_crimes
+for (i in names){
+  temp11 <- trespass_data %>%
+    filter(defendant == i) %>%
+    select(defendant, arrest_date)
+  temp12 <- temp11 %>%
+    arrange(arrest_date) %>%
+    slice(1) %>%
+    mutate(first_arrest = arrest_date) %>%
+    select(-arrest_date)
+  temp13 <- temp11 %>%
+    arrange(desc(arrest_date)) %>%
+    slice(1) %>%
+    mutate(last_arrest = arrest_date) %>%
+    select(-arrest_date)
+  temp14 <- temp12 %>%
+    inner_join(temp13, by = "defendant")
+  arrest_dates <- arrest_dates %>%
+    bind_rows(temp14)
+}
+
+# calculating time_span
+charge_dates <- arrest_dates %>%
+  mutate(time_span = (last_arrest - first_arrest),
+         first_charge = first_arrest,
+         last_charge = last_arrest
+         ) %>%
+  select(first_charge, last_charge, time_span)
+
+```
+
+# Calculating total fines
+
+```{r}
+
+#total arrests and charges
+temp4 <- homeless_data %>%
+  select(case_number, defendant, total_assessed) %>%
+  unique() %>%
+  group_by(defendant) %>%
+  summarise(total_assessed = sum(total_assessed))
+total_charges <- homeless_data %>%
+  select(case_number, defendant, arrest_charge_count) %>%
+  group_by(defendant) %>%
+  summarise(total_charges = n()) %>%
+  inner_join(temp4)
+
+
+
+```
+
+# Calculating jail stays
+
+```{r}
+
+tres_jail <- trespass_data %>%
+  inner_join(jail_stays, by = c("defendant" = "name", "arrest_week" = "arrest_week", "arrest_year" = "arrest_year")) %>%
+  unique()
+tres_jail$days_in_jail[is.na(tres_jail$days_in_jail)] <- 0
+
+tres_jail_stays <- tres_jail %>%
+  group_by(name) %>%
+  summarise(tres_days_in_jail = sum(days_in_jail))
+
+# calculating lenghth of jail stays
+temp23 <- joined_jail_stays %>%
+  group_by(defendant) %>%
+  summarise(total_days = sum(days_in_jail))
+        
+temp24 <- joined_jail_stays %>%
+  group_by(defendant) %>%
+  summarise(average_days = mean(days_in_jail))
+
+temp25 <- joined_jail_stays %>%
+  group_by(defendant) %>%
+  summarise(median_days = median(days_in_jail))
+
+jail_stays_per_person <- temp23 %>%
+  left_join(temp24) %>%
+  left_join(temp25)
+```
+
+# Joining everything together
+
+```{r}
+
+# joining everything together
+impacts <- trespass_impacts %>%
+  left_join(other_crimes, by = "defendant") %>%
+  left_join(other_crimes_charges, by = "defendant") %>%
+  left_join(total_cases, by = "defendant") %>%
+  left_join(total_charges, by = "defendant") %>%
+  left_join(other_crim_fines, by = "defendant") %>%
+  left_join(total_fines, by = "defendant") %>%
+  left_join(other_crim_paid, by = "defendant") %>%
+  # left_join(total_paid, by = "defendant") %>%
+  left_join(arrest_dates, by = "defendant") %>%
+  left_join(demographics, by = "defendant") %>%
+  left_join(tres_missed_court, by = "defendant") %>%
+  #left_join(jail_stays_per_person, by = "defendant") %>%
+  
+temporary <- impacts %>%  
+  select(defendant, race, gender, age, tres_charges, tres_fees, tres_paid, tres_missed_court, other_crimes_charges, other_crim_fines, total_fines, first_arrest, last_arrest, time_span) 
+         
+         other_crimes, tres_missed_court, other_crimes, other_crimes_charges, other_crim_fines,  first_arrest, last_arrest, time_span, other_cases, total_fines, total_paid)
+impacts$tres_missed_court[is.na(impacts$tres_missed_court)] <- 0
+ total_days, average_days, median_days, 
+
+#impacts$total_days[is.na(impacts$total_days)] <- 0
+#impacts$average_days[is.na(impacts$average_days)] <- 0
+#impacts$median_days[is.na(impacts$median_days)] <- 0
+
+# rm(temp, other_crimes, other_crimes_charges, temp4, total_cases, total_charges, other_crim_fines, total_fines, other_crim_paid, total_paid, temp11, temp12, temp13, temp14, temp15, temp16, temp17, demographics, temp19, temp20, temp21, temp22, i, arrest_dates)
+
+
+```
+
+# Kenneth Ivan Shultz III
+The code that creates everything we know about Shultz's arrest.
+
+```{r}
+kenny_jail_stays <- jail_stays %>%
+  filter(name == "kenneth ivan shultz")
+# 988 days in jail since 2010, plus 19 more days for the most recent stint that had not ended by the time the scraper pulled his info, so total days are 917. There have been 3,272 days since Shultz first arrest in 2012, as of May 14, 2020. That means he has spent about 28% of the time in jail. 
+
+
+
+kenny <- read_csv("data/test/schultz.csv") 
+
+temp2 <- kenny %>%
+  mutate(booking_date = mdy(booking_date),
+         release_date = mdy(release_date),
+         days_in_jail = (release_date - booking_date)
+         )
+
+kenny_all_charges <- master_data %>%
+  filter(defendant == "kenneth ivan shultz iii") %>%
+  arrange(offense_date)
+
+kenny_all_unique <- kenny_all_charges %>%
+  select(case_number, defendant, total_assessed) %>%
+  unique() %>%
+  group_by(defendant) %>%
+  summarise(sum(total_assessed))
+
+
+temp4 <- temp2 %>%
+  inner_join(temp3, by = c("booking_date" = "arrest_date"))
+
+sum(temp2$days_in_jail, na.rm = TRUE)
+sum(temp4$days_in_jail, na.rm = TRUE)
+
+temp6 <- master_data %>%
+  filter(defendant == "kenneth ivan shultz iii") %>%
+  select(case_number, arrest_date, arrest_statute)
+
+kenny <- temp2 %>%
+  anti_join(temp3, by = c("booking_date" = "arrest_date")) %>%
+  inner_join(temp6, by = c("booking_date" = "arrest_date"))
+  
+
+most_charges <- master_data %>%
+  group_by(defendant) %>%
+  count()
+
+
+
+
+```
+
+
+# Prosecutors
+
+```{r}
+# dataframes investigating prosecutors
+temp1 <- trespass_data %>%
+  group_by(prosecutor) %>%
+  summarise(fees = sum(total_assessed))
+
+temp2 <- trespass_data %>%
+  group_by(prosecutor) %>%
+  summarise(charges = n())
+
+prosecutors <- temp1 %>%
+  inner_join(temp2)
+
+madden <- trespass_data %>%
+  filter(prosecutor == "ginger bowden madden") %>%
+  group_by(court_action) %>%
+  count()
+
+tres_court_action <- trespass_data %>%
+  group_by(court_action) %>%
+  count()
+
+madden_cases <- trespass_data %>%
+  filter(prosecutor == "ginger bowden madden")
+
+```
+
+
+
+
+
+```{r, results="hide"}
+
+joined_jail_stays <- master_data %>%
+  slice(1) %>%
+  inner_join(jail_stays, by = c("arrest_week" = "arrest_week")) %>%
+  filter(arrest_charge == "nothing")
+
+count = 0
+
+for (i in names){
+  temp <- master_data %>%
+    filter(defendant == i)
+  temp <- temp[!duplicated(temp[,c('arrest_date')]),]
+  temp2 <- master_data %>%
+    filter(arrest_charge == "nothing")
+  for (k in trespass) {
+    temp3 <- temp %>%
+      filter(str_detect(arrest_charge, k))
+    temp2 <- temp2 %>%
+      bind_rows(temp3)
+  }
+  nm <- substr(i, 3, 16)
+  temp4 <- jail_stays %>%
+    filter(str_detect(name, nm))
+  temp5 <- temp4 %>%
+    inner_join(temp2, by = c("arrest_week", "arrest_year"))
+  temp5 <- temp5[!duplicated(temp5[,c('booking_date')]),]
+  joined_jail_stays <- joined_jail_stays %>%
+    bind_rows(temp5)
+  count = (count+1)
+  print(count)
+}
+
+temp <- joined_jail_stays %>%
+  mutate(age = calc_age(date_of_birth),
+         court_address = address.y,
+         jail_address = address.x,
+         court_name = defendant, 
+         jail_name = name)%>%
+  select(case_number, booking_number, court_name, court_address, jail_name, jail_address, race, gender, age, arresting_agency, arrest_charge, arrest_date, booking_date, days_in_jail)
+
+jail_impacts <- temp %>%
+  group_by(court_name, jail_name) %>%
+  summarise(jail = sum(days_in_jail)) %>%
+  count(bookings = n()) %>%
+  
+
+
+```
+
+
+
+# Examining which LEO agencies and prosecutors charge more
+
+We cannot sort criminalization by city for the cities where the Okaloosa Sheriff's Office is hired to act as the law enforcement organization in cities like Destin because it appears the sheriff's office rarely inputs the city in the jurisdiction when they make arrests there.
+
+Given the size of the sheriff's office's jurisdiction, which includes other cities in addition to Destin, I would expect the sheriff's office to be charging homeless people with these crimes more than Fort Walton Beach if Destin is criminalizing homelessness more than Fort Walton Beach.
+
+```{r}
+
+# comparing the four rates of arrests among LEO agencies in Okaloosa
+temp <- master_data %>%
+  group_by(arresting_agency) %>%
+  summarise(total_count = n()) %>%
+  mutate(temp = (total_count/(nrow(master_data)))*100) %>%
+  mutate(perc_of_total = round(temp, 2)) %>%
+  select(-temp)
+
+temp2 <- homeless_data %>%
+  group_by(arresting_agency) %>%
+  summarise(homeless_count = n()) %>%
+  mutate(temp = (homeless_count/(nrow(homeless_data))*100)) %>% 
+  mutate(perc_of_homeless = round(temp, 2)) %>%
+  select(-temp)
+
+temp3 <- crimes_data %>%
+  group_by(arresting_agency) %>%
+  summarise(crimes_count = n()) %>%
+  mutate(temp = (crimes_count/(nrow(crimes_data))*100)) %>% 
+  mutate(perc_of_crimes = round(temp, 2)) %>%
+  select(-temp)
+
+temp4 <- filtered_crimes %>%
+  group_by(arresting_agency) %>%
+  summarise(crimes_count = n()) %>%
+  mutate(temp = (crimes_count/(nrow(filtered_crimes))*100)) %>% 
+  mutate(perc_of_filtered = round(temp, 2)) %>%
+  select(-temp)
+
+agency <- temp %>%
+  inner_join(temp2, by = "arresting_agency") %>%
+  inner_join(temp3, by = "arresting_agency") %>%
+  inner_join(temp4, by = "arresting_agency") %>%
+  select(arresting_agency, perc_of_total, perc_of_homeless, perc_of_crimes, perc_of_filtered) %>%
+  arrange(desc(perc_of_filtered))
+
+rm(temp, temp2, temp3)
+
+```
+
+```{r}
+
+# comparing who charged the most filtered crimes
+
+temp <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "oka")) %>%
+  group_by(arrest_charge) %>%
+  summarise(sheriff_charges = n())
+
+temp2 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "ft")) %>%
+  group_by(arrest_charge) %>%
+  summarise(fwb_charges = n())
+
+temp3 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "nice")) %>%
+  group_by(arrest_charge) %>%
+  summarise(nice_charges = n())
+
+temp4 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "crest")) %>%
+  group_by(arrest_charge) %>%
+  summarise(crest_charges = n())
+
+temp5 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "valp")) %>%
+  group_by(arrest_charge) %>%
+  summarise(valp_charges = n())
+  
+agency_filtered <- temp %>%
+  full_join(temp2, by = "arrest_charge") %>%
+  full_join(temp3, by = "arrest_charge") %>%
+  full_join(temp4, by = "arrest_charge") %>%
+  full_join(temp5, by = "arrest_charge") 
+# transforming NAs to zeroes
+agency_filtered[is.na(agency_filtered)] <- 0
+#finishing math  
+agency_filtered <- agency_filtered %>%
+  mutate(temp = (fwb_charges + sheriff_charges + nice_charges + crest_charges + valp_charges)) %>%
+  mutate(perc_fwb = (fwb_charges/temp)*100,
+         statute = arrest_charge) %>%
+  arrange(desc(perc_fwb)) %>%
+  select(statute, nice_charges, crest_charges, valp_charges, sheriff_charges, fwb_charges, perc_fwb) 
+
+rm(temp, temp2, temp3, temp4, temp5)
+
+```
+
+```{r}
+
+# comparing the rates of prosecutors on homeless
+temp <- master_data %>%
+  group_by(prosecutor) %>%
+  summarise(total_count = n()) %>%
+  mutate(temp = (total_count/(nrow(master_data))*100)) %>%
+  mutate(perc_of_total = round(temp, 2)) %>%
+  select(-temp)
+
+temp2 <- homeless_data %>%
+  group_by(prosecutor) %>%
+  summarise(homeless_count = n()) %>%
+  mutate(temp = (homeless_count/(nrow(homeless_data))*100)) %>% 
+  mutate(perc_of_homeless = round(temp, 2)) %>%
+  select(-temp)
+
+temp3 <- crimes_data %>%
+  group_by(prosecutor) %>%
+  summarise(crimes_count = n()) %>%
+  mutate(temp = (crimes_count/(nrow(crimes_data))*100)) %>% 
+  mutate(perc_of_crimes = round(temp, 2)) %>%
+  select(-temp)
+
+temp4 <- filtered_crimes %>%
+  group_by(prosecutor) %>%
+  summarise(crimes_count = n()) %>%
+  mutate(temp = (crimes_count/(nrow(filtered_crimes))*100)) %>% 
+  mutate(perc_of_filtered = round(temp, 2)) %>%
+  select(-temp)
+
+prosecutor <- temp %>%
+  inner_join(temp2, by = "prosecutor") %>%
+  inner_join(temp3, by = "prosecutor") %>%
+  inner_join(temp4, by = "prosecutor") %>%
+  select(prosecutor, perc_of_total, perc_of_homeless, perc_of_crimes, perc_of_filtered) %>%
+  arrange(desc(perc_of_filtered))
+
+rm(temp)
+rm(temp2)
+rm(temp3)
+
+```
+
+```{r}
+
+# comparing the rates of prosecutors on homeless
+temp <- master_data %>%
+  group_by(judge) %>%
+  summarise(total_count = n()) %>%
+  mutate(temp = (total_count/(nrow(master_data))*100)) %>%
+  mutate(perc_of_total = round(temp, 2)) %>%
+  select(-temp)
+
+temp2 <- homeless_data %>%
+  group_by(judge) %>%
+  summarise(homeless_count = n()) %>%
+  mutate(temp = (homeless_count/(nrow(homeless_data))*100)) %>% 
+  mutate(perc_of_homeless = round(temp, 2)) %>%
+  select(-temp)
+
+temp3 <- crimes_data %>%
+  group_by(judge) %>%
+  summarise(crimes_count = n()) %>%
+  mutate(temp = (crimes_count/(nrow(crimes_data))*100)) %>% 
+  mutate(perc_of_crimes = round(temp, 2)) %>%
+  select(-temp)
+
+temp4 <- filtered_crimes %>%
+  group_by(judge) %>%
+  summarise(crimes_count = n()) %>%
+  mutate(temp = (crimes_count/(nrow(filtered_crimes))*100)) %>% 
+  mutate(perc_of_filtered = round(temp, 2)) %>%
+  select(-temp)
+
+temp5 <-  filtered_crimes %>%
+  group_by(judge) %>%
+  summarise(homeless_levied = sum(total_assessed))
+
+
+judge <- temp %>%
+  inner_join(temp2, by = "judge") %>%
+  inner_join(temp3, by = "judge") %>%
+  inner_join(temp4, by = "judge") %>%
+  inner_join(temp5, by = "judge") %>%
+  select(judge, perc_of_total, perc_of_homeless, perc_of_crimes, perc_of_filtered, homeless_levied, crimes_count) %>%
+  arrange(desc(perc_of_filtered))
+
+rm(temp)
+rm(temp2)
+rm(temp3)
+
+```
+
+
+
+```{r}
+# Only specific crimes
+# c("316.130", "316.2045", "810.08", "810.09", "856.011"))
+
+temp <- crimes_data %>%
+  filter(str_detect(arresting_agency, "oka")) %>%
+  group_by(arrest_charge) %>%
+  summarise(sheriff_charges = n())
+
+temp2 <- crimes_data %>%
+  filter(str_detect(arresting_agency, "ft")) %>%
+  group_by(arrest_charge) %>%
+  summarise(fwb_charges = n())
+  
+temp %>%
+  inner_join(temp2, by = "arrest_charge") %>%
+  select(arrest_charge, fwb_charges, sheriff_charges) %>%
+  mutate(temp = (fwb_charges + sheriff_charges)) %>%
+  mutate(perc_sheriff = (sheriff_charges/temp)*100) %>%
+  arrange(desc(perc_sheriff))
+
+
+rm(temp)
+rm(temp2)
+
+
+```
+
+```{r}
+
+affray <- master_data %>%
+  filter(str_detect(arrest_charge, "870.01"))
+
+
+```
+
+# Time
+```{r}
+
+temp <- filtered_crimes %>%
+  group_by(offense_year) %>%
+  summarize(total_charges = n())
+
+temp2 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "oka")) %>%
+  group_by(offense_year) %>%
+  summarize(shr_charges = n())
+
+temp3 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "ft")) %>%
+  group_by(offense_year) %>%
+  summarize(ftw_charges = n())
+
+temp4 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "nice")) %>%
+  group_by(offense_year) %>%
+  summarize(nice_charges = n())
+
+temp5 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "crest")) %>%
+  group_by(offense_year) %>%
+  summarize(crest_charges = n())
+
+temp6 <- filtered_crimes %>%
+  filter(str_detect(arresting_agency, "valp")) %>%
+  group_by(offense_year) %>%
+  summarize(valp_charges = n())
+
+time <- temp %>%
+  full_join(temp2, by = "offense_year") %>%
+  full_join(temp3, by = "offense_year") %>%
+  full_join(temp4, by = "offense_year") %>%
+  full_join(temp5, by = "offense_year") %>%
+  full_join(temp6, by = "offense_year")
+
+rm(temp, temp2, temp3, temp4, temp5, temp6)
+
+
+
+
+```
+
+```{r}
+temp <- master_data %>%
+  group_by(offense_year) %>%
+  summarize(total_charges = n())
+
+temp2 <- master_data %>%
+  filter(str_detect(arresting_agency, "oka")) %>%
+  group_by(offense_year) %>%
+  summarize(shr_charges = n())
+
+temp3 <- master_data %>%
+  filter(str_detect(arresting_agency, "ft")) %>%
+  group_by(offense_year) %>%
+  summarize(ftw_charges = n())
+
+temp4 <- master_data %>%
+  filter(str_detect(arresting_agency, "nice")) %>%
+  group_by(offense_year) %>%
+  summarize(nice_charges = n())
+
+temp5 <- master_data %>%
+  filter(str_detect(arresting_agency, "crest")) %>%
+  group_by(offense_year) %>%
+  summarize(crest_charges = n())
+
+temp6 <- master_data %>%
+  filter(str_detect(arresting_agency, "valp")) %>%
+  group_by(offense_year) %>%
+  summarize(valp_charges = n())
+
+all_cr_time <- temp %>%
+  full_join(temp2, by = "offense_year") %>%
+  full_join(temp3, by = "offense_year") %>%
+  full_join(temp4, by = "offense_year") %>%
+  full_join(temp5, by = "offense_year") %>%
+  full_join(temp6, by = "offense_year")
+
+rm(temp, temp2, temp3, temp4, temp5, temp6)
+
+
+
+```
+
+
+```{r}
+
+recent_filtered <- filtered_crimes %>%
+  filter(offense_year == c("2018", "2019"))
+
+temp <- recent_filtered %>%
+  group_by(arrest_month) %>%
+  summarise(total_charges = n())
+
+temp2 <- recent_filtered %>%
+  filter(str_detect(arresting_agency, "oka")) %>%
+  group_by(arrest_month) %>%
+  summarize(shr_charges = n())
+
+temp3 <- recent_filtered %>%
+  filter(str_detect(arresting_agency, "ft")) %>%
+  group_by(arrest_month) %>%
+  summarize(ftw_charges = n())
+
+temp4 <- recent_filtered %>%
+  filter(str_detect(arresting_agency, "nice")) %>%
+  group_by(arrest_month) %>%
+  summarize(nice_charges = n())
+
+temp5 <- recent_filtered %>%
+  filter(str_detect(arresting_agency, "crest")) %>%
+  group_by(arrest_month) %>%
+  summarize(crest_charges = n())
+
+temp6 <- recent_filtered %>%
+  filter(str_detect(arresting_agency, "valp")) %>%
+  group_by(arrest_month) %>%
+  summarize(valp_charges = n())
+
+recent_month <- temp %>%
+  full_join(temp2, by = "arrest_month") %>%
+  full_join(temp3, by = "arrest_month") %>%
+  full_join(temp4, by = "arrest_month") %>%
+  full_join(temp5, by = "arrest_month") %>%
+  full_join(temp6, by = "arrest_month")
+
+recent_month[is.na(recent_month)] <- 0
+
+rm(temp, temp2, temp3, temp4, temp5, temp6)
+```
+
+```{r}
+
+temp <- recent_filtered %>%
+  filter(str_detect(arresting_agency, "oka")) 
+
+recent_breakdown <- temp %>%
+  group_by(city) %>%
+  summarise(count = n())
+
+```
+
+# Second look at all tresspassing laws charged in Okaloosa
+
+```{r}
+
+homeless_tresspass <- homeless_data %>%
+  filter(str_detect(arrest_charge, "810")) %>%
+  group_by(arrest_charge, arrest_statute) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+tresspass <- crimes_data %>%
+  filter(str_detect(arrest_charge, "810")) %>%
+  group_by(arrest_charge, arrest_statute) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+```
+
+
+
+
+
+
+```{r}
+
+
+
+#joining on booking_date and arrest_date
+exact_match <- jail_stays %>%
+  unique() %>% 
+  select(-address) %>%
+  inner_join(master_data, by = c("booking_date" = "arrest_date", "name" = "defendant"))
+
+#joining on next_day and arrest_date
+next_day <- jail_stays %>%
+  unique() %>% 
+  select(-address) %>%
+  inner_join(master_data, by = c("booking_date" = "next_day", "name" = "defendant"))
+
+#joining on arrest_week
+arrest_week <- jail_stays %>%
+  inner_join(master_data, by = c("arrest_week" = "arrest_week", "name" = "defendant"))
+
+no_match <- jail_stays %>%
+  anti_join(master_data, by = c("arrest_week" = "arrest_week", "name" = "defendant"))
+
+
+
+
+  
+```
+
+
+```{r}
+
+days_kenny <- kenny %>%
+  mutate(days = (release_date - booking_date))
+
+
+```
+
+
+
+# Saving
+
+```{r}
+
+# This loop creates files with a list of all charges filed in the database
+for (i in names){
+  filename <- paste0("individuals/", i, ".csv")
+  temp <- master_data %>%
+    filter(defendant == i) %>%
+    group_by(arrest_statute, arrest_charge) %>%
+    summarise(count = n()) %>%
+    arrange(desc(count))
+  write.csv(temp, file = filename)
+}
+```
+
+```{r}
+
+# homeless people impacted
+write.csv(impacts, file = "output/impacts.csv")
+# what is getting charged
+write.csv(homeless_charges, file = "output/homeless_charges.csv")
+# who charges the most per criminalization statute?
+write.csv(agency_filtered, file = "output/agency-filtered.csv")
+# who is charging it
+write.csv(agency, file = "output/agency.csv")
+# who is prosecuting these people?
+write.csv(prosecutor, file = "output/prosecutor.csv")
+write.csv(prosecutors, file = "output/tres-charges-by-prosecutors.csv" )
+# who is sentencing these people?
+write.csv(judge, file = "output/judge.csv")
+# yearly trend?
+write.csv(time, file = "output/time.csv")
+write.csv(recent_month, file = "output/recent_month.csv")
+write.csv(recent_breakdown, file = "output/recent_breakdown.csv")
+write.csv(kenny_all_charges, file = "output/kenny_all_charges.csv")
+write.csv(kenny_all_unique, file = "output/kenny_all_unique_costs.csv")
+write.csv(kenny_jail_stays, file = "output/kenny_jail_stays.csv")
+write.csv(trespass_impacts, file = "output/trespass_impacts.csv")
+# what is the race breakdown of the people?
+write.csv(tresspass, file = "output/trespass.csv")
+
+write.csv(names, file = "names.csv")
+
+```
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```{r}
+fl_hic <- hud_hic %>%
+  filter(state_code == "fl") %>%
+  select(coc_code, total_year_round_beds_es_th_sh_2018)
+
+fl_pit <- hud_pit %>%
+  filter(state_code == "fl") %>%
+  select(coc_code, coc_name, overall_homeless_2018)
+
+fl <- fl_pit %>%
+  inner_join(fl_hic, by = "coc_code") %>%
+  mutate(beds_per_homeless = total_year_round_beds_es_th_sh_2018/overall_homeless_2018)
+
+write.csv(fl, file="fl-hic-pit.csv")
+```
+
+
+```{r}
+
+master_data %>%
+  filter(defendant == "joseph franklin ford") %>%
+  view() %>%
+  write.csv(file = "data/joseph franklin ford.csv")
+
+  
+```
+
+# BELOW IS CODE THAT WAS USED TO ANALYZE DATA TO IMPROVE CODE ABOVE THIS SUBHEAD
+
+```{r}
+
+probably trash 
+
+  # START CLEANING STATUTES THAT CRIMINALIZE HOMELESSNESS
+  mutate(
+	  arrest_charge = case_when(
+    defendant == "843.15(1a)*" ~ "843.15(1a)",
+    TRUE  ~ arrest_charge
+    )
+  ) %>%
+  mutate(
+	  arrest_charge = case_when(
+    defendant == "810.08(2a)*" ~ "810.08(2a)",
+    TRUE  ~ arrest_charge
+    )
+  ) %>%  
+  mutate(
+	  arrest_charge = case_when(
+    defendant == "810.08(2b)*" ~ "810.08(2b)",
+    TRUE  ~ arrest_charge
+    )
+  ) %>%    
+  mutate(
+	  arrest_charge = case_when(
+    defendant == "810.09(1a)*" ~ "810.09(1a)",
+    TRUE  ~ arrest_charge
+    )
+  )
+
+
+
+```
+
+
+```{r}
+# What are the different spellings for General Delivery in the dataset? Are there any other terms being used that might relate to homeless like At Large?
+master_data %>%
+  filter(!str_detect(address,"[:digit:]")) %>%
+  group_by(address) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+# GENERAL DELIVERY, GENRAL DELIVERY, AT LARGE, GENREAL DELIVERY, GENERAL DELIVERLY, HOMELESS, GERNERAL DELIVERY, GENERAL DELIVER, GENERAL DELVIERY, NOT LISTED. GENERAL DEIVERY, GRNERAL DELIVERY
+
+# general delivery, genral delivery, at large, genreal delivery, general deliverly, homeless, gerneral delivery, general deliver, general delviery, not listed. general deivery, grneral delivery
+
+# What is EXTENDED STAY AMERICA? C/O RIGHT WAY MINISTRIES? HOLIDAY LODGE? C/O FAMILIES FIRST NETWORK? CENTURY WORK CAMP? JOSEPH SHANE DEWS C/O PANAMA CITY RESCUE MISSION? SALVATION ARMY? NWF RECEPTION CENTER ANNEX? WATERFRONT MISSION?
+```
+
+```{r}
+
+# This code was used to identify addresses that are associated with homelessness by identify the people who have been charged with crimes that can be used to criminalize homelessness, grouping by their address and counting the number of times that address has been identified
+
+temp <- crimes_data %>%
+  group_by(defendant) %>%
+  summarise(count = n()) #%>%
+  #select(defendant)
+
+not_homeless_names <- temp %>%
+  anti_join(homeless_names)
+
+yes_homeless_names <- temp %>%
+  inner_join(homeless_names)
+
+crimes_names <- temp %>%
+  left_join(master_data)
+
+
+temp <- master_data %>%
+  filter(str_detect(defendant, "william curtis howard jr"))
+
+temp2 <- master_data %>%
+  filter(str_detect(address, "428 mclaughlin ave"))
+
+temp3 <- crimes_data %>%
+  filter(str_detect(address, "320 sims st"))
+
+#Identifying addressess associated with homelessness
+
+  # 428 mclaughlin ave is owned by the First United Methodist Church of Crestview
+    # it was identified by sorting the list of names who have been charged with crimes that criminalize homelessness who did not match the list of names found by searching the list of terms like general delivery. William Curtis Howard Jr. had the most convictions of this list. Arrest records identify him as homeless. 
+    # this was the former location of Helping Hands, a shelter in Crestview
+  # 307 harbor blvd is owned by St. Andrew's Episcopal Church, home to The Blue Door, the only homeless ministry in Destin
+    # 2018 mm 004108 f, Billy Oscar Lane, was identified as homeless by address "at large" on his arrest record despite this address being listed in the court charge database
+    # 183 eglin parkway ne is the CoC's address
+
+
+top_address <- not_homeless_names %>%
+  inner_join(crimes_data) %>%
+  group_by (address) %>%
+  summarise (arrests = n())
+
+
+```
+
+```{r}
+
+
+homeless_data %>%
+  filter(str_detect(defendant, "wittman"))
+
+# This confirms that at least one person known to be homeless -- reported homeless in the NWF Daily News -- was listed as "general delivery" in the database.
+```
+
+# Jurisdiction and city of general delivery addresses entries appear unreliable
+
+```{r}
+
+master_data %>%
+  group_by(jurisdiction) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+# The data for jursidiction seems wrong. A little more than 1% of the overall charges seems exceptionally low. It is likely that the sheriff's office is not properly listing the jurisdiction when they make arrests in Destin.
+
+```
+
+```{r}
+
+master_data %>%
+  filter(!str_detect(court_type, "traffic")) %>%
+  group_by(jurisdiction) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+
+```
+
+```{r}
+
+homeless_data %>%
+  filter(str_detect(court_type, "traffic"))
+
+```
+
+```{r}
+
+homeless_data %>%
+  group_by(city) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+# It seems unlikely that the city listed for anyone with a homeless address can be trusted as the place they are actually residing. 
+
+```
+
+```{r}
+
+homeless_data %>%
+  group_by(jurisdiction) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+# When filtering for homeless, the percentage of Destin cases shrinks even further. The data shows, however, that the Okaloosa County Sheriff's Office is arresting homeless people more than Fort Walton Beach. They do have a larger jurisdiction, but you would expect to find more homeless in the two largest cities in the county.
+
+```
+
+```{r}
+
+homeless_data %>%
+  #filter(str_detect(arrest_charge, "856")) %>%
+  group_by(arresting_agency, arrest_charge) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+# 918.13 = tampering with or fabricating evidence
+# 951.22 = contraband in county jail
+# 943.0435(9) = sexual offenders required to register
+# 901 = Judicial officers have committing authority.—Each state judicial officer is a conservator of the peace and has committing authority to issue warrants of arrest, commit offenders to jail, and recognize them to appear to answer the charge. He or she may require sureties of the peace when the peace has been substantially threatened or disturbed.
+
+# 893.147(1) = sale controlled substances
+# 893.13(6a) = sale controlled substances that could be legally obtained with a prescription (i.e. opioids)
+# 893.13(6b) = possession cannabis less than 20 grams
+# 893.12 = allows for seizure of illegal drugs
+
+#856.011 = 
+
+# 843.15(1b) = Failure of defendant on bail to appear for misdemeanor.
+# 843.02 = Resisting officer without violence to his or her person.
+
+# 832.05(2b) = Worthless check
+
+# 831.02 = Uttering forged instruments.
+
+# 812.014(2c1)(3a) = theft
+# 812.019 = dealing in stolen property
+
+# 810.09(2a) = Trespass on property other than structure or conveyance. trespass on property other than a structure or conveyance is a misdemeanor of the first degree, punishable as provided in s. 775.082 or s. 775.083.
+# 810.08(2a) = Trespass in structure or conveyance.
+# 810.02(4) = Felony trespass
+# 806.12(1b2) = If the damage to such property is greater than $200 but less than $1,000, it is a misdemeanor of the first degree, punishable as provided 
+# 806.13(1v3) = If the damage is $1,000 or greater, or if there is interruption or impairment of a business operation or public communication, transportation, supply of water, gas or power, or other public service which costs $1,000 or more in labor and supplies to restore, it is a felony of the third degree, punishable as provided in s. 775.082, s. 775.083, or s. 775.084.
+
+# 790.23(1a) = felon and deliquents possesion of firearms
+# 784.021(1a) = assault with a deadly weapon
+# 784.03(1a1) = Felony battery, intentional strike
+# 784.07(2b) = Misdemeanor battery
+# 741.31(4a) = domestic violence injuction/order violation
+
+# 539.011(8b8a) = A statement that the pledgor or seller of the item represents and warrants that it is not stolen, that it has no liens or encumbrances against it
+
+#322.34(2c) = Driving with suspended license, felony because of third conviction
+```
+
+
+
+```{r}
+
+crimes_data %>%
+  filter(str_detect(arrest_charge, "810")) %>%
+  filter(str_detect(arresting_agency, "ft")) %>%
+  group_by(defendant) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+  
+```
+
+```{r}
+
+crimes_data %>%
+  filter(str_detect(arrest_charge, "810.02")) %>%
+  filter(str_detect(arresting_agency, "oka")) %>%
+  group_by(defendant) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+  
+```
+
+```{r}
+
+crimes_data %>%
+  filter(str_detect(arresting_agency, "oka"))%>%
+  group_by(arrest_month) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+
+```
+
+```{r}
+
+crimes_data %>%
+  filter(str_detect(arrest_charge, "810.02")) %>%
+  group_by(offense_month) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+
+```
+
+```{r}
+
+test <- crimes_data %>%
+  filter(str_detect(arrest_charge, "810.02")) %>%
+  filter(offense_month == 3)
+
+```
+
+```{r}
+
+temp <- crimes_data %>%
+  filter(str_detect(arresting_agency, "oka")) %>%
+  group_by(defendant, date_of_birth, arrest_charge) %>%
+  summarise(charges = n()) %>%
+  arrange(defendant)
+temp %>%
+  group_by(defendant, date_of_birth) %>%
+  summarise(arrest_incidents = n(),
+            total_charges = sum(charges)) %>%
+  arrange(desc(arrest_incidents))
+  
+```
+
+
+
+```{r}
+# attemptimg to see how many times someone has been arrested
+temp <- crimes_data %>%
+  filter(str_detect(arresting_agency, "ft")) %>%
+  group_by(defendant, date_of_birth, arrest_charge) %>%
+  summarise(charges = n()) %>%
+  arrange(defendant)
+
+temp %>%
+  group_by(defendant, date_of_birth) %>%
+  summarise(arrest_incidents = n(),
+            total_charges = sum(charges)) %>%
+  arrange(desc(arrest_incidents))
+  
+```
+
+
+```{r}
+# Looking up defense attorneys who have reprsented the most people with addresses listed as general delivery to source on background.
+
+homeless_data %>%
+  group_by(defense_attorney) %>%
+  summarise(cases = n()) %>%
+  arrange(desc(cases))
+
+```
+
+
+
+```{r}
+
+master_data %>%
+  group_by(jurisdiction) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+
+```
+
+```{r}
+
+example <- master_data %>%
+  filter(case_number == "2017 mm 000380 f") %>%
+  select(-arrest_month, -arrest_year, -offense_month, -offense_year)
+
+write.csv(example, file = "data/example.csv")
+
+test <- filtered_crimes %>%
+  group_by(case_number, prosecutor_charge_count) %>%
+  count() 
+
+```
+
+#Import and Clean Data
+
+The data had to be downloaded by month by request of Okaloosa County Clerk. They said larger timeframes would tax their system. This means the data had to be downloaded by month, imported and binded together using a for loop.
+
+```{r}
+
+############################### This is the original code that must be updated to address a bug in the source material that is adding extra days outside the daterange each file should have.
+
+# list of file names
+files <- c(
+    "0115", "0215", "0315", "0415", "0515", "0615", "0715", "0815", "0915", "1015", "1115", "1215",
+    "0116", "0216", "0316", "0416", "0516", "0616", "0716", "0816", "0916", "1016", "1116", "1216", 
+    "0117", "0217", "0317", "0417", "0517", "0617", "0717", "0817", "0917", "1017", "1117", "1217", 
+    "0118", "0218", "0318", "0418", "0518", "0618", "0718", "0818", "0918", "1018", "1118", "1218", 
+    "0119", "0219", "0319", "0419", "0519", "0619", "0719", "0819", "0919", "1019", "1119", "1219")
+
+# from 99,021 to 80,555 after fix that double-listed 2018
+# for fix 2, from 80,555 to 
+
+# creating empty tibble, changes to character were made playing wack-a-mole with binding errors
+master_data <- read_csv(here("data", "0115.csv")) %>%
+  clean_names() %>%
+  filter(arrest_charge == "nothing") %>%
+  mutate(actual_speed = as.character(actual_speed),
+      blood_alcohol_level = as.character(blood_alcohol_level),
+      commercial_vehicle = as.character(commercial_vehicle),
+      haul_hazard = as.character(haul_hazard),
+      obts_number = as.character(obts_number),
+      vehicle_tag_expiration_year = as.character(vehicle_tag_expiration_year),
+      prosecutor_charge_count = as.character(prosecutor_charge_count),
+      case_open_date = mdy(case_open_date),
+      case_close_date = mdy(case_close_date),
+      disposition_date = mdy(disposition_date),
+      date_of_birth = mdy(date_of_birth),
+      offense_date = mdy(offense_date),
+      arrest_date = mdy(arrest_date),
+      arrest_month = month(arrest_date),
+      arrest_year = year(arrest_date),
+      offense_month = month(offense_date),
+      offense_year = year(offense_date),
+      close_month = year(case_close_date)
+      )
+
+
+# importing, binding to empty data frame 
+for (i in files) {
+  #writing filepath
+  name <- paste0(i, ".csv")
+  filepath <- "data/"
+  name_plus_filepath <- paste0(filepath,name)
+  # importing and cleaning files to temp dataframe
+  temp <- read_csv(name_plus_filepath) %>%
+    clean_names() %>%
+  # changes to character were made playing wack-a-mole with binding errors
+  temp <- temp %>%
+  mutate(actual_speed = as.character(actual_speed),
+      blood_alcohol_level = as.character(blood_alcohol_level),
+      commercial_vehicle = as.character(commercial_vehicle),
+      haul_hazard = as.character(haul_hazard),
+      obts_number = as.character(obts_number),
+      vehicle_tag_expiration_year = as.character(vehicle_tag_expiration_year),
+      prosecutor_charge_count = as.character(prosecutor_charge_count),
+      case_open_date = mdy(case_open_date),
+      case_close_date = mdy(case_close_date),
+      disposition_date = mdy(disposition_date),
+      date_of_birth = mdy(date_of_birth),
+      offense_date = mdy(offense_date),
+      arrest_date = mdy(arrest_date),
+      arrest_month = month(arrest_date),
+      arrest_year = year(arrest_date),
+      offense_month = month(offense_date),
+      offense_year = year(offense_date),
+      close_month = year(case_close_date)
+       )
+  filter(close_month == i)
+  # binding temp to master_data
+  master_data <- master_data %>%
+    bind_rows(temp)
+  # processing and clearing environment
+}
+
+rm(i)
+rm(files)
+
+# changing columns back to numerics, go lowercase
+master_data <- master_data %>%
+    mutate_all(tolower) %>%  
+    mutate(actual_speed = as.double(actual_speed),
+         blood_alcohol_level = as.double(blood_alcohol_level),
+         commercial_vehicle = as.double(commercial_vehicle),
+         haul_hazard = as.double(haul_hazard),
+         obts_number = as.double(obts_number),
+         vehicle_tag_expiration_year = as.double(vehicle_tag_expiration_year),
+         prosecutor_charge_count = as.double(prosecutor_charge_count),
+         case_open_date = mdy(case_open_date),
+         case_close_date = mdy(case_close_date),
+         disposition_date = mdy(disposition_date),
+         date_of_birth = mdy(date_of_birth),
+         offense_date = mdy(offense_date),
+         arrest_date = mdy(arrest_date),
+         arrest_month = month(arrest_date),
+         arrest_year = year(arrest_date),
+         offense_month = month(offense_date),
+         offense_year = year(offense_date),
+         total_assessed = as.numeric(total_assessed),
+         balance = as.numeric(balance),
+         total_paid = as.numeric(total_paid),
+         obts_number = as.character(obts_number),
+         arrest_charge_count = as.numeric(arrest_charge_count)) %>%
+    filter(offense_year %in% c("2015", "2016", "2017", "2018", "2019"))
+
+
+```
+
+### notes on mutate and replace
+
+```{r}
+#for(i in 1:nrow(webb)){
+ # if_else(webb$defendant == "donavan jason webb", webb$date_of_birth == as_date("2020-01-01"), webb$date_of_birth == as_date("2010-01-01"))
+#}
+
+#   if (temp$defendant == "donovan jason webb"){
+ #   mutate(temp$date_of_birth == "1977-02-16")
+#  } else {
+#    mutate(temp$date_of_birth == temp$date_of_birth)
+#  }}
+```

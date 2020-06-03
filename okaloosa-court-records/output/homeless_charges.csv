@@ -1,0 +1,612 @@
+"","arrest_charge","arrest_statute","count"
+"1","893.147(1)","narcotic equip possess or use",1016
+"2","843.15(1b)","failure to appear for misdemeanor",971
+"3","893.13(6a)","drugs   possess-controlled substance without prescription",772
+"4","810.09(1a)*","trespassing-property not structure or convey",631
+"5","843.02","resist officer-obstruct wo violence",619
+"6","810.09(2b)","trespassing-fail to leave property",494
+"7","812.014(3a)","larc-petit first offense",432
+"8","812.014(2c1)","larc-theft is $300 or more but less than $5000",377
+"9","893.13(6b)","marijuana possess-not more than 20 grams",373
+"10","810.09(2a)","trespassing-property not structure or convey",354
+"11","322.34(2a)","drive while license suspended 1st offense",351
+"12","832.05(2b)","worthless check",317
+"13","784.03(1a1)","domestic violence battery",273
+"14","810.08(2a)","trespassing-structure or conveyance",246
+"15","784.03(1a1)","battery-touch or strike",222
+"16","812.014(3c)","larc-petit third or subsequent conviction",215
+"17","901.36(1)","fraud imperson-false id given to leo",175
+"18","784.03(2)","felony battery",172
+"19","322.03(1)","operate motor vehicle wo valid license",163
+"20","810.08(2b)","trespassing-occupied structure or conveyance",162
+"21","812.019(1)","stolen prop deal in",146
+"22","316.193(1)","dui alcohol or drugs",145
+"23","812.014(2c6)","vehicle theft",139
+"24","812.014(2e)","petit theft to und 300 dols",134
+"25","810.02(4)(b)","burglary of an unoccupied conveyance",120
+"26","812.015(2)","retail theft/shoplifting",116
+"27","322.34(2c)","drive while lic susp with prior convictions",106
+"28","806.13(1b2)","crim misch-over 200 dollars under 1000 dollars",106
+"29","856.011","disorderly intoxication in public place",92
+"30","810.02(4)","burgl-of structure conveyance unarmed wo person inside",89
+"31","817.61","fraud illeg use credit cards",86
+"32","812.014(2c5)","theft of firearm",84
+"33","856.021","loitering-or prowling",83
+"34","784.07(2b)","battery-on officer or firefighter",82
+"35","324.022","financial responsibility violation",80
+"36","810.02(3b)","burgl-of unoccupied dwelling; unarmed; no asslt or batt",78
+"37","831.02","pass forged-altered instrument",78
+"38","893.13(6a)","possession cocaine third degree",78
+"39","810.02(4)(a)","burg-unoccupied structure",77
+"40","806.13(1b1)","damage prop crim misch-200 dollars and under",76
+"41","741.31(4a)","contempt of court - viol injunction protection domestic violence",70
+"42","784.021(1a)","aggrav asslt-w deadly weapon without intent to kill",69
+"43","322.34(5)","drive while lic susp habitual 2nd or subsq cnv",68
+"44","812.015(6)","resist officer-in recovery of stolen property",66
+"45","806.13(1b3)","damage prop crim misch-over 1000 dollars",64
+"46","831.02","fraud-utter false instrument",63
+"47","316.061(1)","lsoa without giving info more than $50 damage",59
+"48","322.34(2)","knowingly drive while lic suspended revoked",58
+"49","539.001(8b8a)","fraud-false owner info pawn items less than 300 dols",58
+"50","320.261","attach license plate not assigned",53
+"51","499.03","drugs-possess new legend drug wo prescription",53
+"52","831.09","pass forged-altered bill or promissory note",53
+"53","322.34(2b)","dwlsr with prior conviction",52
+"54","810.02(3a)","burgl-of dwelling unarmed no asslt or batt",52
+"55","843.15(1a)","bail secured bond-failure to appear for felony offense",51
+"56","918.13","evidence destroying-tamper with or fabricate physical",51
+"57","784.041(2)(a)","domestic battery by strangulation",50
+"58","790.23(1a)","poss weapon or ammo by convicted fla felon",49
+"59","784.045(1a2)","agg battery using deadly weapon",47
+"60","843.01","resist officer-with violence",46
+"61","320.02(1)","no or improper vehicle registration",43
+"62","812.014(3b)","larc-petit second conviction",43
+"63","812.0145(2c)","theft >$300 <$10 000 from person 65 yoa or older",43
+"64","825.103(2c)","crimes against person-exploitation of elderly 100 dollars or more",42
+"65","817.11","fraud-provide inside information for property",40
+"66","812.014(2c)","larc-over 300 dollars under 20000 dollars",37
+"67","810.02(2b)","burgl-dwelling structure or conveyance armed",36
+"68","877.03","disorderly conduct",36
+"69","800.03","indecent exposure",34
+"70","877.03","disturbing peace-breach peace",33
+"71","316.2045(2)","obstruction of public streets wo permit",32
+"72","741.29(6)","viol pretrial release conditions -dv cases",32
+"73","784.03(1a2)","battery-cause bodily harm",32
+"74","790.01(1)","carry concealed weapon or device",31
+"75","316.193(3c1)","dui with injury and/or prop damage",29
+"76","951.22(1)","smuggle contraband-introduce into detention facility",29
+"77","784.011","assault",28
+"78","817.60(1)","larc-of credit card",27
+"79","843.15(1b)*","bail secured bond-failure to appear for misdemeanor offense",27
+"80","831.01","forgery of-alter public record certificate etc",26
+"81","784.045(1a1)","aggravated battery",25
+"82","316.1935(2)","flee/elude leo with lights siren active",24
+"83","741.31*","viol injunction protection domestic violence",24
+"84","787.02(1a)","kidnap false imprisonment-adult",24
+"85","790.01(2)","carry concealed firearm",24
+"86","893.135(1f1)","amphetamine traffic-or methamphetamine 14 grams or over",24
+"87",NA,NA,24
+"88","539.001(8b8b)","fraud-false owner info pawned items 300 dols or more",22
+"89","316.1935(1)","flee/elude police-fail to obey leo & stop",21
+"90","843.03","resist officer-obstruct by disguised person",21
+"91","893.13(6a)","poss marijuana >20 grams",21
+"92","943.0435(9a)","sex offender viol-fail to comply w/ registration law",21
+"93","322.34(10)(a)","drive while dl susp financial responsibility",20
+"94","827.071(5)","obscene material possess-poss photo of sex performance by child",19
+"95","941.02","out of state fug ref-fugitive from justice",19
+"96","941.13","out of state fug ref-fugitive warrant of extradition",19
+"97","831.07","forgery of-alter bank bill or promissory note",18
+"98","509.151","defraud innkeeper under 300 dollars",17
+"99","784.045(1b)","agg batt-victim pregnant",17
+"100","943.0435(9)","sex offender fail to notify sheriff of intent to move",17
+"101","322.34(10)(a)","drive while license suspended or revoked",16
+"102","539.001(8b8a)*","fraud-false ownership information for pawned items",16
+"103","817.61","fraud illeg use credit cards-2 fewer times 6 mos obt goods money less $100",16
+"104","831.09","fraud-utter false bill or promissory note",16
+"105","831.09","pass counterfeited-bill or promissory note",16
+"106","838.021(3b)","crimes against person-corrupt by threat public servant or family",16
+"107","322.03(5)","drive with expired lic for more than 6 months",15
+"108","741.315(4)","domestic violence injunction willful violation",15
+"109","893.13(7a9)","fraud-obtain controlled substance by",15
+"110","316.1939(1)","refuse to submit dui test after lic susp",14
+"111","784.07(2a)","asslt-on officer or firefighter",14
+"112","790.23","possess of weapon-by conv felon firearm or conceal weapon",14
+"113","810.02(1)(b)(2)(a)","burgl of dwelling w/ assault or battery",14
+"114","812.135","robbery resid-home invasion",14
+"115","827.03(2c)","cruelty toward child - abuse child without great bodily harm",14
+"116","893.13(6a)","poss controlled substance",14
+"117","322.34(2b)","driving while lic suspended  rev  cancelled",13
+"118","538.04(4)(a)","fraud-false stmt verif ownership 2ndhand dealer under $300",13
+"119","784.082(3)","battery-by person detained in prison or jail facility",13
+"120","810.09(1a)","trespassing-property not structure or convey",13
+"121","812.014(2c1)*","larc-theft is $300 or more but less than $5000",13
+"122","893.13(1a1)","sell manufac del poss cont subst schedule i",13
+"123","316.1939","refuse submit to test for alcohol",12
+"124","337.406","improper use of state right of way",12
+"125","365.172","public order crimes-misuse 911 or e911 system",12
+"126","741.31","viol injunction protection domestic violence",12
+"127","790.23(1a)","poss weapon/firearm by convicted felon",12
+"128","810.02(3c)*","burgl-structure conveyance unarmed w person inside",12
+"129","810.06","burgl tools possess",12
+"130","812.015(6)","resist retail merchant or farmer",12
+"131","812.155(3)","fraud-fail redeliv hired leased prop 300 dols or ovr",12
+"132","817.61","fraud illeg use credit cards-use more 2 times 6 mos obt gds money $100 more",12
+"133","893.13(1a1)","cocaine sell-schedule ii",12
+"134","893.135(1c1)","opium or deriv traffic-4 grams to under 30 kilograms",12
+"135","914.22(1)","obstructing justice-intimidate threaten witness vict informant",12
+"136","784.08(2c)","battery-on person 65 years of age or older",11
+"137","812.014(2c2)","larc-grand theft $5 000 or more but less than $10 000"",2,""812.014(2c2)",11
+"138","812.13(2c)","robbery-no firearm or weapon",11
+"139","817.481(1)","fraud illeg use credit cards-to obtain goods under 300 dollars",11
+"140","877.08(3)","molest coin opr machine wit larceny 1st off",11
+"141","893.13(1a1)","cocaine possess-with intent to sell mfg deliv etc schedule ii",11
+"142","316.193(1)a","dui alcohol or drugs -",10
+"143","784.03(2)","battery evidencing prejudice",10
+"144","784.041(1)","felony battery",10
+"145","812.014(2d)","larc-grand 3rd degree dwel prop 100 to und 300 dols",10
+"146","812.017(2)","use of fraudulent receipt",10
+"147","823.11","health safety-abandoned vessel",10
+"148","893.13(1a2)","marijuana distrib-schedule i",10
+"149","893.149(1a)","drugs   possess-listed chemical wit manufacture cntrl subs",10
+"150","322.34(10b)1","driving with suspended or revoked license",9
+"151","562.111*","poss alcohol by person under 21",9
+"152","784.048(2)","stalking",9
+"153","812.014(2d)*","larc-grand 3rd degree dwel prop 100 to und 300 dols",9
+"154","812.015(2)","petit theft from transit agency 2nd or subsq off",9
+"155","812.131(2b)","robbery-by sudden snatching wo firearm or weapon",9
+"156","817.034(4b1)","fraud swindle-obtain property communication over 300 dollars",9
+"157","827.03(1)*","cruelty toward child-abuse without great harm",9
+"158","827.03(2d)","child neglect - without great bodily harm",9
+"159","832.05","cash deposit bank item w intent to defraud",9
+"160","837.05(1a)","making false report-knowingly gives false info to any leo allgd crime",9
+"161","870.01(1)","disord conduct-affray",9
+"162","893.13(1a2)","marijuana possess-with intent to sell mfg or deliver schedule i",9
+"163","316.063(1)","hit and run-accident-unattended vehicle or property without leaving id",8
+"164","320.07(3c)","expired mtr veh registration over 6 mos",8
+"165","499.03(3)","drugs-poss wit sell etc new legend drug wo prescr",8
+"166","539.001(8a)","fraud-false ownership information for pawned items",8
+"167","810.02(2a)","burgl-with assault or battery",8
+"168","812.014(2b)","larc-over 20000 dollars under 100000 dollars",8
+"169","812.015(7)","felony retail theft",8
+"170","812.13(2a)","robbery-with firearm or other deadly weapon",8
+"171","827.03(1c)","cruelty toward child-abuse without great harm",8
+"172","893.13(1a2)","amphetamine mfg-schedule ii or iii or iv",8
+"173","893.149(1b)","drugs   possess-listed chemical for manufacture cntrl subs",8
+"174","316.1935(3)","flee/elude police-high speed fleeing/eluding le officer when lights/sirens activated",7
+"175","322.34(10)(b)2","drive with suspended revoked lic subsq off",7
+"176","324.221(2)","other violation financial responsibility law",7
+"177","506.509","possess stolen prop-illegal possess shopping or laundry cart",7
+"178","655.0322(6)","fraud swindle-defraud financial institution",7
+"179","784.047","contempt of court-viol injunction against repeated violence",7
+"180","790.10","weapon offense-improper exhibit firearm or dangerous weapon",7
+"181","790.23(1)(e)","possess of firearm  ammo or weapon by other state felon",7
+"182","810.02(2c2)","burgl-dwelling or struct cause damage over 1000 dols",7
+"183","817.034(4a3)","fraud swindle-obtain property under 20000 dollars",7
+"184","817.568(2a)","fraud imperson-use/poss id of another person wo consent",7
+"185","832.05(2b)","insuff funds check-make utter-make utter issue",7
+"186","877.111","dangerous drugs-inhale ingest harmful chemicals",7
+"187","893.13(1a1)","sell mfg deliv with intent to sell mfg deliv cocaine",7
+"188","893.13(1a2)","possess intent to sell  manufacture  deliver controlled substance",7
+"189","893.135(1b1)","cocaine traffic-over 28 grams to under 150 kilograms",7
+"190","316.192(1)a","reckless driving",6
+"191","316.193(2b)1","dui alcohol or drugs 3rd viol w/in 10 yrs",6
+"192","316.1935(3)","flee/elude police-flee with disregard of safety to persons or property",6
+"193","322.03(4)","no motorcycle endorsement",6
+"194","322.031(1)","violation of non resident requirements for a dl",6
+"195","322.34(10b1)","moving traf viol-drive w/suspended revoked license",6
+"196","328.03","public order crimes-sell or transfer boat wo delivery of title",6
+"197","562.111","poss alcohol by person under 21",6
+"198","775.261(8a)","fail to reg as career off or provide info",6
+"199","784.021(1b)","aggrav asslt-with intent to commit a felony",6
+"200","784.048(3)","aggrav stalking",6
+"201","784.048(4)","aggrav stalking-after injunction for protection",6
+"202","812.014(2c13)","grand theft controlled subst",6
+"203","812.135(2a)","home invasion w/firearm other deadly weapon",6
+"204","817.49","making false report-of commission of crime",6
+"205","827.03(3c)","neglect child-without great harm",6
+"206","827.071(2)","cruelty toward child-use or allow child to engage in sex",6
+"207","831.02*","pass forged-altered instrument",6
+"208","893.13(1a1)","heroin possess-with intent to sell mfg or deliver schedule i",6
+"209","893.13(7a9)*","fraud-obtain controlled substance by",6
+"210","934.215","use 2 way comm device to facil felony",6
+"211","322.03(5)","drive with expired lic for more than 6 months (before 10/1/2010)",5
+"212","322.16 (1c)","violate restrictions placed on drivers license",5
+"213","539.001(8a)*","fraud-false ownership information for pawned items",5
+"214","790.07(2)","weapon offense-use display etc firearm during felony",5
+"215","796.07(2e)","engage commit offer prostitution",5
+"216","810.02(3a)","burgl occupied dwelling unarmed",5
+"217","810.02(3c)","burgl-structure conveyance unarmed w person inside",5
+"218","810.08(2a)*","trespassing-structure or conveyance",5
+"219","812.014(3a)*","larc-petit first offense",5
+"220","812.015(7)","use antishoplifting cntrl device",5
+"221","812.13(2b)*","robbery-with deadly weapon",5
+"222","817.481(1)","fraud illeg use credit cards-to obtain goods over 300 dollars",5
+"223","827.03(1a)","cruelty toward child infliction of physical/mental inury",5
+"224","832.05(4a)","insuf funds check-obtain goods and services 150 dols or more",5
+"225","876.43","trespassing-entry on property unlawfully",5
+"226","893.13(1)(a)","drugs poss - poss cntl sub w/intent to sell mfg deliv",5
+"227","893.13(1a1)","opium or deriv sell-schedule i or ii",5
+"228","893.147(1)","principal to narcotic equip possess or use",5
+"229","944.47(1a1)","smuggle contraband into prison-inmate introduce remove or possess",5
+"230","316.192(1)*","reckless driving",4
+"231","316.193(2)(b)3","dui alcohol or drugs 4th or subsq off",4
+"232","324.201(2)","driving while license suspended for financial responsibility",4
+"233","365.172(11)","public order crimes-misuse of wireless 911 system",4
+"234","379.401(2a)","conservation-viol fwc rule or order level two",4
+"235","784.07(2c)","aggrav asslt pol off",4
+"236","784.07(2d)","aggravated battery on leo",4
+"237","790.233","possess of weapon-poss firearm with in force final domestic violence injunction",4
+"238","794.011(2a)","sex asslt-by over 18 yoa sex battery victim under 12 yoa",4
+"239","810.02(4)","attempt to burgl-of structure conveyance unarmed wo person inside",4
+"240","810.09(2a)","conspiracy to trespassing-property not structure or convey",4
+"241","810.09(2d)","trespassing-construction site",4
+"242","810.145(2c6)","sex offense- video voyeurism first offense",4
+"243","812.014(2c2)","larc-grand theft $5 000 or more but less than $10 000"",1,""812.014(2c2)",4
+"244","812.014(2c2)","larc-grand theft $5 000 or more but less than $10 000"",3,""812.014(2c2)",4
+"245","812.019(2)","stolen prop deal in-organized",4
+"246","812.13(2b)","robbery-with weapon",4
+"247","817.02","fraud imperson-obtain property by",4
+"248","823.10(1)","maintain public nuisance bldg used for controlled substances",4
+"249","831.07","counterfeiting of-bank bill or promissory note",4
+"250","831.09*","pass forged-altered bill or promissory note",4
+"251","831.31(1a)","dangerous drugs-sell etc or poss wit contrft sched i ii iii iv",4
+"252","836.12(2)","threat against law enforcement officer",4
+"253","893.13(1a2)","amphetamine distrib-schedule ii or iii or iv",4
+"254","893.13(1a2)","drugs deliv/distr-other schedule iii or iv",4
+"255","893.13(1a2)","marijuana sell-schedule i",4
+"256","901.36(2)","use of false id adversely affects another",4
+"257","914.22(2b)","tampering in felony 3rd degree proceeding",4
+"258","316.027(1a)","hit and run-fail to stop remain at crash involving injury",3
+"259","316.072(3)","resist officer-fail to obey police or fire department",3
+"260","322.36","permit unauthorized person to drive",3
+"261","327.35","boating under the influence first conviction",3
+"262","38.22*","contempt of court-criminal county court",3
+"263","440.105(4a3)","fraud-employer fail to secure payment compensation",3
+"264","509.143(4)","resist detention public lodge operator",3
+"265","538.04(4b)","false id secondhand dealer 300 dollars or more",3
+"266","538.04(4b)","verif ownrshp 2ndhand dealer 300 dols or more",3
+"267","538.23(3a)","false id regulated metals prop und 300 dols",3
+"268","562.111","liquor-possess by person under 21 yoa 1st offense",3
+"269","741.31(4a)*","viol injunction protection domestic violence",3
+"270","777.04(3)","conspiracy to commit felony",3
+"271","784.047(2)","contempt of court-viol inj w/in 500 ft pet resid sch or employ",3
+"272","787.02(1a)","kidnap adult false imprisonment w/ weapon or firearm",3
+"273","796.07(2e)","prostitution-offer commit engage 3rd offense or more",3
+"274","800.04(7a)","lewd lascv exhibition off 18 yoa older vic less 16 yoa",3
+"275","800.04(7a)","lewd lascv exhibition off less 18yoa vic less 16yoa",3
+"276","800.09(2)(a)","lewd/lasc exh presence employee",3
+"277","806.01(1)","arson-first degree",3
+"278","806.13","damage prop crim misch-200 dollars and under",3
+"279","806.13(1a)","damage prop crim misch-second or subsequent conviction",3
+"280","806.13(1b2)*","crim misch-over 200 dollars under 1000 dollars",3
+"281","810.09(2c)","trespassing-property armed",3
+"282","812.014(2a)","larc-grand first degree over 100000 dollars",3
+"283","812.014(2c)*","larc-over 300 dollars under 20000 dollars",3
+"284","812.015(2)","petit theft from farmer second or subsequent cnv",3
+"285","812.131(2a)","robbery-by sudden snatching w firearm or weapon",3
+"286","812.133(2b)","robbery-carjacking without firearm or weapon",3
+"287","812.14","theft of utility or cable services",3
+"288","817.52(2)","fraud swindle-hire vehicle with intent to defraud",3
+"289","817.60(8)","poss receive retain stolen credit debit card",3
+"290","827.03(2)(c)","abuse causes great bodily harm disability",3
+"291","827.03(2b)","neglect child-with great bodily harm",3
+"292","828.12(1)","conservation animals-torment deprive mutilate kill",3
+"293","831.02*","fraud-utter false instrument",3
+"294","836.05","extort-or threats",3
+"295","838.021(3a)","crimes against person-harm public servant or family",3
+"296","893.13(1a1)","cocaine - possess 2nd degree",3
+"297","893.13(1a1)","drugs   possess - poss meth w intent to sell manufacture deliver",3
+"298","893.13(1e1)","drugs deliv/distr-wi 1000ft worship-busn sch methaq meclog sch i",3
+"299","893.13(6b)","drugs poss-3 grms or less syn cannabinoid or bath salts",3
+"300","893.147(2)","narcotic equip possess-manufacture",3
+"301","316.027(2a)","fail stop rem crsh inv injury oth thn ser bod inj",2
+"302","316.061(1)","lsoa without giving info $50 damage or less",2
+"303","316.193(2a)","dui alcohol or drugs 2nd off",2
+"304","316.193(3c2)","dui and serious bodily injury to another - vehicle",2
+"305","316.1935(1)","attempt to flee/elude police-fail to obey leo & stop",2
+"306","316.1935(4a)","resist officer-flee attempt to elude law enforcement",2
+"307","316.646(4)","misrepresentation of insurance",2
+"308","322.30","drive w lic from other state when fl lic susp",2
+"309","322.32(1)","possess display etc of canc revoked etc dr lic",2
+"310","322.341","drive on permanently revoked driver license",2
+"311","322.57(2)","fail to have req endorsement on dl",2
+"312","365.16(1d)","harassing communication-repeated phone calls",2
+"313","379.3311(3)","resist interfere w/wildlife officer",2
+"314","38.22","contempt of court-criminal county court",2
+"315","538.04(4a)","false id to secondhand dealer under 300 dols",2
+"316","539.001(17c)","fraud-pledge sell misappropriated prop to pawnbroker",2
+"317","741.31(4b)","contempt of court - viol injunct domest viol poss firearm/ammo",2
+"318","775.13","fail to reg as crim reg-fail to register convicted felon",2
+"319","775.13","fail to reg as crim reg-failed to register",2
+"320","775.21(10a)","sex pred violations-fail to change/maintain/renew info on driv lic wi 48 hrs",2
+"321","777.03","accessory aft the fact 3rd deg fel lvl 1 or 2",2
+"322","777.04(4d)-p","principal crim solicit conspire 3rd deg fel lvl 3 to 10",2
+"323","777.04(4f)","attempt solicit conspire 2nd deg misd",2
+"324","784.021(1a)*","aggrav asslt-w deadly weapon without intent to kill",2
+"325","784.03(1a1)*","battery-touch or strike",2
+"326","784.045(1)(a)1","agg battery with great harm and with weapon",2
+"327","784.045(2)","commit aggrav battery",2
+"328","784.0487(4b)","contempt of court - viol inj stalking",2
+"329","784.075","battery-on detention staff member",2
+"330","784.078","battery on jail employee by fluid or material",2
+"331","784.08(2a)","aggrav battery-on person 65 years of age or older",2
+"332","784.081(2)(c)","battery-on public or private  education employee",2
+"333","787.03","kidnap minor-interfere with custody",2
+"334","790.151","weapon offense-use firearm under influence of alcohol",2
+"335","790.19","missile into dwelling veh bldg or aircraft",2
+"336","790.23(1b)","poss weapon or ammo  by fla delinquent adult felony",2
+"337","794.011(3)","sex asslt-w weapon or force sex batt victim over 12 yoa older",2
+"338","794.011(8c)","sex asslt-by ovr 18yoa custodian sex batt vict und 12yoa",2
+"339","796.07(2f)","procure for prostitute-solicit another for lewdness assignt 1st off",2
+"340","800.02","sex offense-unnatural and lascivious act",2
+"341","800.04(4a)","lewd lascv behavior - victim age 12 to 16",2
+"342","800.04(4a)*","sex offense against child 12 yoa up to 15 yoa",2
+"343","806.10","health safety-prevent obstruct firefighter extinguish fire",2
+"344","806.13","damage prop crim misch-$200 or less subsq off",2
+"345","806.13(2)","damage prop crim misch-church synagogue mosque or religious article",2
+"346","810.02(3a)","attempt to burgl-of dwelling unarmed no asslt or batt",2
+"347","810.02(3d)","burgl-of occupied conveyance and unarmed",2
+"348","810.02(4)(a)","attempt to burg-unoccupied structure",2
+"349","812.014 (3a)","accessory before the fact-petit theft",2
+"350","812.014(2c)13","grand theft of controlled substance",2
+"351","812.014(2c2)","larc-grand theft $5 000 or more but less than $10 000"",1,""812.014(2c1)",2
+"352","812.014(2c3)","larc-grand theft $10 000 or more but less than $20 000"",2,""812.014(2c3)",2
+"353","812.014(2d)*","attempt to larc-grand 3rd degree dwel prop 100 to und 300 dols",2
+"354","812.014(3a)","principal to larc-petit first offense",2
+"355","812.0145(2b)","theft from victim >65 yoa->$10k<$50k",2
+"356","812.017(1)","request refund w false receipt",2
+"357","812.133(2a)","robbery-carjacking with firearm or weapon",2
+"358","812.155(2)","fraud swindle-hire or lease wit defraud under 300 dollars",2
+"359","817.025","fraud imperson-obtain access structure wo injury or death",2
+"360","817.034(4a1)","fraud swindle-obtain property over 50000 dollars",2
+"361","817.568(2b)","use id of anotherwo consent 5k dols more",2
+"362","817.5685(3)(a)","fraud-unlawful poss personal id of another 4 or fewer persons",2
+"363","817.62(1)","fraud illeg use credit cards-obtain possess by auth provider over 300 dols",2
+"364","817.625(2a1)","fraud - use scan skim device paym card defraud 1st off",2
+"365","827.03(1)(b)*","cruelty toward child-act  could result in phys mental injury",2
+"366","827.071(3)","cruelty toward child-direct promote sexual performance by child",2
+"367","831.01","counterfeiting of-public record certificate etc",2
+"368","831.08","possess forged-note",2
+"369","831.28(2)(a)","counterfeiting a payment instrument",2
+"370","837.055","obstruct investigation by false info to leo",2
+"371","837.06","fraud false statement-official statement",2
+"372","843.02","principal to resist officer-obstruct wo violence",2
+"373","843.025","obstruct police-deprive of means protection or communication",2
+"374","843.08","fraud imperson-law enforcement officer",2
+"375","847.0135(3a)","obscene communication - use computer to seduce solicit  lure child",2
+"376","877.111","dangerous drugs-possess buy sell transfer harmful chemicals",2
+"377","877.15","health safety-fail to control or report dangerous fire",2
+"378","893.13(1a1)","drugs   produce-mfg methaqualone or mecloqualone deriv sched i",2
+"379","893.13(1a1)","heroin distrib-schedule i",2
+"380","893.13(1a2)","drugs   possess-wit sell etc other schedule iii or iv",2
+"381","893.13(1c1)","opium or deriv possess-wit sell mfg deliv 1000 ft school sched i ii",2
+"382","893.13(1e1)","cocaine possess-wit sel  mfg  deliv wi 1000ft worship or busn sch ii"",1,""893.13(1a1)",2
+"383","893.13(1e1)","cocaine sell-wi 1000ft worship or busn  sch ii"",1,""893.13(1a1)",2
+"384","893.13(1e1)","cocaine sell-wi 1000ft worship or busn  sch ii"",1,""893.13(1e1)",2
+"385","893.13(1e2)","drugs deliv/distr-other wi 1000ft worship-busn sch iii or iv",2
+"386","893.13(1e2)","drugs possess-wit sel mfg del wi 1000ft worship-busn sch iii or iv",2
+"387","893.13(6a)","principal to drugs   possess-controlled substance without prescription",2
+"388","893.13(6d)","drugs - poss cont subst",2
+"389","893.135(1c1)","heroin traffic-4 grams to under 30 kilograms",2
+"390","893.135(5)","cocaine traffic-conspire combine or confederates w another to",2
+"391","893.1351","drugs traffic-rent structure or conveyance for",2
+"392","895.03","rico act / racketeering violation",2
+"393","901.11","contempt of court-fta county subpoena",2
+"394","914.22(2a)","tampering in misdemeanor proceeding",2
+"395","914.22(3)","obstruct justice harass in 2nd deg fel proceeding",2
+"396","914.22(4a)","harassing in misdemeanor proceeding",2
+"397","944.40","escape",2
+"398","99999999999","municipal ord viol",2
+"399","316.191(2)(a)","racing on highway",1
+"400","316.193(3c1)","dui and damage property - bicycle",1
+"401","316.1935(4b)","flee/elude police-fleeing leo causes injury or damage to prop",1
+"402","316.1935(4b)","resist officer-aggrav flee att elude leo w injury or prop dmg",1
+"403","319.33(1d)","property crimes-possess vehicle with altered numbers",1
+"404","322.03(1a)","operate motor vehicle with license expired",1
+"405","322.212(1)","possess counterfeited-drivers license",1
+"406","322.212(1)","possess stolen prop-drivers license",1
+"407","322.212(5a)","use false info except dob to get dr license/id",1
+"408","322.26(3)","use vehicle in commission of felony offense",1
+"409","322.34(10)(a)6","driving lic revoked-habitual offend - second conv",1
+"410","322.34(2a)","drive while license suspended or revoked",1
+"411","322.34(2a)*","drive while license suspended",1
+"412","324.201(1)","refusal to surrender dl/registration",1
+"413","324.221(1)","viol financial responsibility false affidavit",1
+"414","327.54","health safety-violate lease of vessel regulations",1
+"415","328.01","public order crimes-fail to make application for title of vessel",1
+"416","328.21(1)","public order crimes-sell transfer vessel wo delivery certif title",1
+"417","365.16(1a)","obscene communication-phone call",1
+"418","365.172(11)","public order crimes-fourth conv of misuse of wireless 911 system",1
+"419","365.172(14)","public order crimes-misuse 911 or e911 system",1
+"420","376.15","public order crimes-abandon vessel on public waters",1
+"421","379.33","violate fail to comply fwc rule",1
+"422","403.413","dump raw human waste",1
+"423","443.071(1)","fraud false statement-to obtain unemployment compensation",1
+"424","475.42(1a)","unlicensed real estate broker salesman",1
+"425","499.0051(5)","drugs-health or safety - poss sell deliver contraband drug",1
+"426","509.141","guest fail to leave after request",1
+"427","509.143(4)","resist officer-resist detention arrest law enforcement ofc",1
+"428","517.301","fraud-sale of security",1
+"429","538.04(4b)","alter id secondhand dealer 300 dollars or more",1
+"430","539.001(8b8b)*","fraud-false ownership information for pawned items over 300 dollars",1
+"431","775.0846","public order crimes-wear bulletproof vest during certain offenses",1
+"432","775.087(1c)","weapon offense- commit 3rd degree fel w/weapon",1
+"433","775.21(10a)","sex pred violations-fail to  change/maintain/renew info on id card wi 48 hrs",1
+"434","777.04(4d)","conspiracy to att sol conspire 3rd deg fel lvl 3 to 10",1
+"435","782.04(1a1)","attempt-without executing to homicide wilful kill-murder premeditated firearm",1
+"436","782.04(1a1)","homicide wilful kill-murder premeditated",1
+"437","782.04(1a1)","homicide wilful kill-murder premeditated weapon",1
+"438","782.04(1a2)","homicide wilful kill-murder while engaged in certain felony offense",1
+"439","782.04(2)","homicide wilful kill-murder not premeditated no felony offense",1
+"440","782.051","attempt to homicide wilful kill-felony attempted murder",1
+"441","782.051","attempted felony murder with  weapon",1
+"442","782.051","homicide wilful kill-felony attempted murder",1
+"443","782.051(1)","crimes against person-commit specified felony and cause bodily inj",1
+"444","782.07","homicide neglig mansl veh",1
+"445","782.07 (1)","homicide-neglig mansl other than by motor vehilce w/ weapon",1
+"446","784.03(1a1)","principal to battery-touch or strike",1
+"447","784.045(1)(b)","agg battery-victim pregnant",1
+"448","784.05(2)","crimes against person-culpable negligence inflict harm",1
+"449","784.07(2b)","attempt-without executing to battery-on officer or firefighter",1
+"450","784.07(2b)","battery on emergency medical provider",1
+"451","787.02(1b)","kidnap false imprisonment-child under 13 years of age",1
+"452","790.06","license registration weapon-carry concealed weapon or firearm",1
+"453","790.07(1)","weapon offense-use display etc weapon during felony",1
+"454","790.07(4)","weapon offense-engage in criminal offense w weapon subsq off",1
+"455","790.15(1)","fire weapon-discharge firearm in public",1
+"456","790.161(1)","explosives using-throw project etc attempt destructive device",1
+"457","790.162","threat to bomb-throw place discharge destructive device",1
+"458","790.163*","threat to bomb-false report of planting bomb or explosive",1
+"459","790.19","fire weapon-missile into dwelling veh building or aircraft",1
+"460","790.22(2)","adult permits under 16 yoa to possess weapon",1
+"461","790.22(3)","unlawful possession of a firearm by minor",1
+"462","790.221","possess of weapon-short barreled gun rifle or machine gun",1
+"463","790.23(1)(e)*","possess of firearm  ammo or weapon by other state felon",1
+"464","790.23(1c)","possess of weapon-by delinquent act felon other st fa concealed",1
+"465","790.23(1d)","possess of weapon-by convicted felon other state fa or concealed",1
+"466","790.27(1)","alter identification on weap-remove serial number from firearm",1
+"467","790.27(2)","weapon offense-deliver possess sell altered firearm",1
+"468","794.011(4b)","sex asslt - sex bat 18 yr or older by prsn 18 yr old",1
+"469","794.011(5)*","sex asslt-sex batt vict ovr 12 yoa physical force no dmg",1
+"470","794.011(5b)","sex asslt by 18y oldr vic 18y oldr no phy force viol",1
+"471","794.05","sex asslt-unlawful sexual act with certain minors",1
+"472","796.07(2b)","procure for prostitute-offer agree secure for lewd act etc subsq off",1
+"473","796.07(2e)","prostitution-or assignation offer commit engage 1st off",1
+"474","796.07(2e)","prostitution-or assignation offer commit engage subsq off",1
+"475","796.07(2e)","sex offense-engage commit offer lewdness subsequent off",1
+"476","796.07(2e)","solicitation to prostitution-or assignation offer commit engage 1st off",1
+"477","800.04(4a)","sex offense against child 12 yoa up to 15 yoa",1
+"478","800.04(5b)","lewd or lascivious behavior -molest vic less 12yoa offender 18 yoa or older",1
+"479","800.04(5c2)","lewd lascv behavior -vic 12y or oldr younger thn 16yoa off 18y oldr",1
+"480","800.04(7b)","lewd or lascivious conduct/exhibition by person over 18 yoa",1
+"481","800.04(7c)","lewd or lascivious conduct/exhibition by person less than 18 yoa",1
+"482","806.13(1)(b)4","damage prop crim misch-under $200 /subsq off",1
+"483","810.02(1b)(4a)","burg unoccupied structurewearing mask",1
+"484","810.02(2b)","attempt to burgl-dwelling structure or conveyance armed",1
+"485","810.02(3a)*","burgl-of dwelling unarmed no asslt or batt",1
+"486","810.02(3c)","burgl - occupied structure unarmed",1
+"487","810.02(3e)","attempt burg unocc authorized emerg vehicle",1
+"488","810.02(4)","principal to burgl-of structure conveyance unarmed wo person inside",1
+"489","810.02(4)(a)","attempt-without executing to burg-unoccupied structure",1
+"490","810.02(4)(b)","attempt to burglary of an unoccupied conveyance",1
+"491","810.02(4)(b)","attempt-without executing to burglary of an unoccupied conveyance",1
+"492","810.02(4)(b)","principal to burglary of an unoccupied conveyance",1
+"493","810.061(2)","burgl - impair dwelling phone power further burglary",1
+"494","810.08(2b)*","trespassing-occupied structure or conveyance",1
+"495","810.08(2c)","trespassing-armed structure or conveyance",1
+"496","810.09(2a)","principal to trespassing-property not structure or convey",1
+"497","810.09(2b)","attempt to trespassing-fail to leave property",1
+"498","810.097(1)","trespassing-school grounds -was 228.091",1
+"499","810.115","damage prop crim misch-break injure fence",1
+"500","810.145(2ab)(8)","video voyeurism 19 yoa or older",1
+"501","812.014(2c1)*","attempt-without executing to larc-theft is $300 or more but less than $5000",1
+"502","812.014(2c1)*","conspiracy to larc-theft is $300 or more but less than $5000",1
+"503","812.014(2c10)","larc-grand from posted construction site",1
+"504","812.014(2c2)","larc-grand theft $5 000 or more but less than $10 000"",1,""812.014(2c1)*",1
+"505","812.014(2c2)","larc-grand theft $5 000 or more but less than $10 000"",5,""812.014(2c1)",1
+"506","812.014(2c3)","larc-grand theft $10 000 or more but less than $20 000"",1,""812.014(2c3)",1
+"507","812.014(2c6)","attempt to vehicle theft",1
+"508","812.014(2e)","principal to petit theft to und 300 dols",1
+"509","812.014(2e)*","petit theft to und 300 dols",1
+"510","812.014(3a)","attempt-without executing to larc-petit first offense",1
+"511","812.014(3a)","conspiracy to larc-petit first offense",1
+"512","812.014(3c)","attempt-without executing to larc-petit third or subsequent conviction",1
+"513","812.014(3c)*","larc-petit third or subsequent conviction",1
+"514","812.015(8)(a)","retail theft 300 more dols coordinate others",1
+"515","812.015(8c)","retail theft 300 more dols others distract",1
+"516","812.019(1)","principal to stolen prop deal in",1
+"517","812.13(2a)","principal to robbery-with firearm",1
+"518","812.13(2a)","robbery resid home invasion w/ firearm other deadly weapon",1
+"519","812.13(2c)*","robbery-no firearm or weapon",1
+"520","812.131(2a)*","robbery-by sudden snatching w firearm or weapon",1
+"521","812.135(1)(2a)","attempt home invasion robbery w/firearm",1
+"522","817.03","fraud false statement-to obtain credit or property",1
+"523","817.034(4a2)","fraud swindle-obtain property over 20000 dollars",1
+"524","817.155","fraud -false statement to dept of state",1
+"525","817.52(3)","fraud-fail to redeliver hired vehicle",1
+"526","817.563","drugs misbranded-sell in lieu of sched i ii iii iv cntrl subs",1
+"527","817.568(2)","fraud imperson-attempt to use id of another person wo consent",1
+"528","817.568(2)(c)","use of anothers id with $50k-$100k benefit",1
+"529","817.568(5a)","use public rec personal id info commit m/f",1
+"530","817.568(9)","create poss use fictitious personal id info",1
+"531","817.5685(3)(b)2","fraud-unlawful poss personal id of another 5 or more persons",1
+"532","817.61","principal to fraud illeg use credit cards",1
+"533","817.61*","fraud illeg use credit cards-use more 2 times 6 mos obt gds money $100 more",1
+"534","825.102(1)","crimes against person-abuse elderly or disabled adult wo great harm",1
+"535","825.1025(2)","sex asslt-lewd lascivious battery elderly disabled adult",1
+"536","825.103(2c)*","crimes against person-exploitation of elderly 100 dollars or more",1
+"537","825.103(3b)","exploitation of elderly 10k dol to und 50k dol",1
+"538","827.071(4)","obscene material possess-wit promote photo movie sex performance child",1
+"539","828.12(2)","conservation animals-cause cruel death pain and suffering",1
+"540","828.12(2)","prin conserv-animals cause cruel death pain suffering",1
+"541","831.02*","pass counterfeited-instrument",1
+"542","831.07*","forgery of-alter bank bill or promissory note",1
+"543","831.09*","fraud-utter false bill or promissory note",1
+"544","832.05(3)","attempt to cash deposit bank item w/intent to defraud",1
+"545","837.02","perjury-in an official proceeding",1
+"546","843.02","attempt to resist officer-obstruct wo violence",1
+"547","847.0135(3)","obscene communication-use computer srvc to seduce solicit etc child",1
+"548","847.0135(4)(a)","travel to meet after use compute to lure child",1
+"549","847.0137(2)","in state person elec trans child porno",1
+"550","847.0138(2)","transmission of pornography to minor",1
+"551","860.04","fraud swindle-unauthorized persons board train",1
+"552","871.01","disturbing peace-school religious or lawful assembly",1
+"553","876.12","public order crimes-wear hood or mask on street",1
+"554","876.14","public order crimes-wear hood or mask on property of another",1
+"555","877.03","disorderly conduct evidencing prejudice",1
+"556","893.13","drugs produce-produce methamphetamine",1
+"557","893.13(1a1)","drug posses wit sell mfg deliver",1
+"558","893.13(1a1)","drugs poss(methaqualone) w/i phys cntrl of motor vehicle",1
+"559","893.13(1a1)","heroin sell-schedule i",1
+"560","893.13(1a1)","opium or deriv distrib-schedule i or ii",1
+"561","893.13(1a1)","principal to sell manufac del poss cont subst schedule i",1
+"562","893.13(1a1)","synth narcotic sell-schedule i or ii",1
+"563","893.13(1a2)","amphetamine possess-wit sell mfg deliv schedule ii or iii or iv",1
+"564","893.13(1a2)","drugs   possess-wit sell mfg deliver steroids schedule iii",1
+"565","893.13(1a2)","drugs   sell-other schedule iii or iv",1
+"566","893.13(1a2)","hallucinogen possess-wit sell mfg or deliver schedule i iii or iv",1
+"567","893.13(1a2)","marijuana possess-with intent to sell",1
+"568","893.13(1a2)","synth narcotic sell-schedule iii",1
+"569","893.13(1a2)*","drugs deliv/distr-other schedule iii or iv",1
+"570","893.13(1c)48","possess cont substance - spice",1
+"571","893.13(1c1)","cocaine sell-within 1000 ft of school schedule ii",1
+"572","893.13(1c2)","drugs   possess-wit sell mfg deliv sch other sched iii or iv",1
+"573","893.13(1c2)","drugs   sell-wi 1000 ft of school other sched iii or iv",1
+"574","893.13(1c2)","marijuana producing-manufacture within 1000 ft of school sched i",1
+"575","893.13(1d1)","cocaine possess-wit sell mfg deliv 200ft pub park etc sched ii",1
+"576","893.13(1e1)","cocaine distrib-deliv wi 1000ft worship or busn sch ii",1
+"577","893.13(1e1)","cocaine possess-wit sel  mfg  deliv wi 1000ft worship or busn sch ii"",1,""893.13(6a)",1
+"578","893.13(1e1)","cocaine sell-wi 1000ft worship or busn  sch ii"",1,""817.563*",1
+"579","893.13(1e1)","hallucinogen possess-wit sell  mfg  deliv  wi 1000ft worship or busn  sch ii"",3,""893.13(1c2)",1
+"580","893.13(1e1)","hallucinogen possess-wit sell  mfg  deliv  wi 1000ft worship or busn  sch ii"",4,""893.13(6a)",1
+"581","893.13(1e1)","hallucinogen possess-wit sell  mfg  deliv  wi 1000ft worship or busn  sch ii"",5,""893.13(6a)",1
+"582","893.13(1e2)","drugs sell-wi 1000ft worship-busn sch iii or ov",1
+"583","893.13(1e2)","marijuana distrib-del wi 1000ft worship-busn sch i",1
+"584","893.13(1e2)","marijuana sell-wi 1000ft worship-busn sch i",1
+"585","893.13(1f1)","drugs deliv/distr-wi 1000ft  public housing sch methaq mecloq sch i",1
+"586","893.13(2a2)","drugs   possess-wit purchase other schedule iii or iv",1
+"587","893.13(6)(b)","not more than 20 gms of spice",1
+"588","893.13(6c)","synth narcotic possess-over 10 grams schedule i",1
+"589","893.13(7a4)","marijuana distrib-schedule i or ii subsequent violation",1
+"590","893.13(7a7)","fraud-conceal info to obtain prescription first viol",1
+"591","893.13(7a7)","possess blank prescription form subsq violation",1
+"592","893.13(7a8)","fraud-possess blank prescription form first viol",1
+"593","893.135","drugs traffic-4 grams less 30 kg other cntrl subst",1
+"594","893.135(1c3a)","traffic oxycodone- 7 grams less than 14 grams",1
+"595","893.135(1f1c)","amphetamine traffic-or methamphetamine 200 grams or more",1
+"596","893.135(1f2)","amphetamine-mfg capital  400 grams or more",1
+"597","893.135(1k1a)","phenethylamine traffic-10 grams  less than 200 grams",1
+"598","893.149(1a)*","drugs   possess-listed chemical wit manufacture cntrl subs",1
+"599","893.149(1b)","drugs deliv/distr-distribute listed chemical for manufacture",1
+"600","896.101","fraud-money launder trans $100 000 or more"",2,""896.101",1
+"601","900.04","contempt of court-circuit or county",1
+"602","903.0471","condit release violation",1
+"603","914.22(2)","obstructing justice-harass witness victim or informant",1
+"604","943.0435(14a)","sex offender violation - fail to register as required",1
+"605","943.0435(4a)","sex offender viol-fail to report name or residence change",1
+"606","943.0435(7)","sex offender viol-fail report residence change oth state juris",1
+"607","943.0435(8)","sex offender violation-fail cancel oth state juris res change notice",1
+"608","943.325(15a)","obstructing justice",1
+"609","951.22","smuggle contraband-introduce into detention facility",1
+"610","99999999999","loitering city ordinance",1
+"611","99999999999","open container alcohol (city)",1

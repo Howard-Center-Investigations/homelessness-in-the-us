@@ -1,0 +1,189 @@
+---
+title: "readme"
+author: "Ryan E. Little"
+date: "2/17/2020"
+output: github_document
+always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, paged.print=TRUE)
+```
+
+```{r echo = FALSE}
+library(tidyverse)  # attaches purrr and readr
+library(lubridate)
+library(rvest)
+library(downloader)
+library(R.utils)
+library(rlist)
+library(here)
+library(janitor)
+library(scales)
+library(ggrepel)
+library(ggplot2)
+library(here)
+library(tidycensus)
+library(ggthemes)
+library(scales)
+library(mapview)
+library(kableExtra)
+
+# Store census API key
+census_api_key("2badea95d03037d0582d8c5ada5195100b1d92f6")
+
+
+options(scipen=999)
+```
+
+# **Florida Court Records**
+
+## Purpose of this memo
+This memo includes basic information about the Howard Center for Investigative Journalism's analysis of Florida court records as part of an investigation into the criminalization of homelessness. Initial reporting has revealed that Florida has a large homeless population and is home to many C3 continuums of care. It also has exceptional public records law. We have obtained bulk access to court records in multiple counties and an anonymized statewide database.  
+
+This memo includes all of the laws that have been used to criminalize homelessness and every law a homeless person has been charged with. The list will be updated with analysis of current and future datasets. Findings will also be summarised here.
+
+## Identifying homeless people
+Unfortunately, homeless people are not identified as a data point in the Florida court data in Okaloosa and St. John's counties. Homeless people are, however, identifiable in other ways.  
+
+In Okaloosa County, a Fort Walton Beach Police Homeless Outreach Team officer has confirmed that law enforcement organizations in the county use the term "General Delivery" or "At-Large" as the address of a person who is homeless. Anyalysis of the data shows many misspellings.  
+
+**However**, more people have been charged with an unconstitutional crime we know is used to criminalize homeless than those who show up with these addresses. One such person has an address listed that is clearly not a residence, but instead appears to be a ministry. Further analysis of the data will seek to clearly identify people who have been homeless at a given time and been charged with a crime.
+
+In St. John's County, an early analysis of one week of data shows that law enforcement agencies are simply writing "homeless." More data needs to be reviewed.
+
+## Florida laws
+Florida has many laws that criminalize homelessness. In Okaloosa County, these laws are exclusively used to criminalize homelessness. That is true even in cities that have their own ordinances that criminalize homelessness. 
+
+This list of state laws have been aquired through on-the-ground reporting, analysis of the data and a review of the federal courts lawsuits database.
+
+### State laws that crinalize homelessness
+State Law | Unconstitutional? | Description 
+--|--|---------
+[316.130](http://www.leg.state.fl.us/statutes/index.cfm?mode=View%20Statutes&SubMenu=1&App_mode=Display_Statute&Search_String=316.130&URL=0300-0399/0316/Sections/0316.130.html) | ? | A pedestrian shall obey the instructions of any official traffic control device specifically applicable to the pedestrian unless otherwise directed by a police officer
+[316.2045](http://www.leg.state.fl.us/statutes/index.cfm?mode=View%20Statutes&SubMenu=1&App_mode=Display_Statute&Search_String=316.2045&URL=0300-0399/0316/Sections/0316.2045.html) | Yes | Obstruction of public streets, highways, and roads. 
+[810.08(2a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.08.html) | ? | Misdemeanor trespass in structure or conveyance
+[810.08(2b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.08.html) | ? | Misdemeanor trespass in occupied structure
+[810.09(1a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html) | ? | Misdemeanor property not structure or convey
+[810.09(2a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html) | ? | Misdemeanor trespass on property other than structure or conveyance
+[810.09(2b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html) | ? | Misdemeanor trespass on curtilage (i.e. a yard or shed or some other structure near a building)
+[810.09(2d)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html) | ? | Third degree felony trespass on a construction site of a certain size
+[810.097](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0810/Sections/0810.09.html)| ? | Tresspass from school property
+[856.011](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0856/Sections/0856.011.html) | ? | Disorderly intoxication
+[856.021](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0856/Sections/0856.021.html) | ? | Loitering or prowling
+
+### Other state laws that people with no addresses have been charged with
+State Law | Criminalizes? | Description 
+---|---|------------
+[322.34(2c)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0300-0399/0322/Sections/0322.34.html) | No | Driving with suspended license, felony because of third conviction
+[539.011(8b8a)](https://www.husseinandwebber.com/crimes/theft-fraud/giving-false-information-to-a-pawnbroker/) | No | A statement that the pledgor or seller of the item represents and warrants that it is not stolen, that it has no liens or encumbrances against it
+[741.31(4a)](http://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0700-0799/0741/Sections/0741.31.html) | No | Domestic violence injuction/order violation
+[784.021(1a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0700-0799/0784/Sections/0784.021.html) | No | Assault with a deadly weapon
+[784.03(1a1)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0700-0799/0784/Sections/0784.03.html) | No | Felony battery, intentional strike
+[784.07(2b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0700-0799/0784/Sections/0784.07.html) | No | Misdemeanor battery
+[790.23(1a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0700-0799/0790/Sections/0790.23.html) | No | Felon and deliquents possesion of firearms
+[806.12(1b2)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0806/Sections/0806.13.html) | No | Property damage, greater than 200 dollars but less than 1,000, it is a misdemeanor of the first degree
+[806.13(1v3)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0806/Sections/0806.13.html ) | Maybe | Property damage, 1,000 dollars or greater, or if there is interruption or impairment of a business operation or public communication, transportation, supply of water, gas or power, or other public service which costs 1,000 dollar or more in labor and supplies to restore, it is a felony of the third degree
+[810.02(4)](http://www.leg.state.fl.us/statutes/index.cfm?mode=View%20Statutes&SubMenu=1&App_mode=Display_Statute&Search_String=810.02&URL=0800-0899/0810/Sections/0810.02.html) | Yes | Burglary 
+[812.014(2c1)(3a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0812/Sections/0812.014.html) | No | Theft
+[812.019](http://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0812/Sections/0812.019.html) | No | Dealing in stolen property
+[831.02](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0831/Sections/0831.02.html) | No | Uttering forged instruments.
+[832.05(2b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0832/Sections/0832.05.html) | No | Worthless check
+[843.02](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0843/Sections/0843.02.html) | No | Resisting officer without violence to his or her person.
+[843.15(1b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0843/Sections/0843.15.html) | No | Failure of defendant on bail to appear for misdemeanor.
+[870.01](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0870/Sections/0870.01.html) | ? | All persons guilty of an affray shall be guilty of a misdemeanor of the first degree
+[893.12](http://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0893/Sections/0893.12.html) | No | Allows for seizure of illegal drugs
+[893.147(1)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0893/Sections/0893.147.html) | No | Sale controlled substances
+[893.13(6a)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0893/Sections/0893.13.html) | No | Sale controlled substances that could be legally obtained with a prescription (i.e. opioids)
+[893.13(6b)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0893/Sections/0893.13.html) | No | possession cannabis less than 20 grams
+[901.36(1)](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&Search_String=&URL=0900-0999/0901/Sections/0901.36.html) | Maybe | Judicial officers have committing authority.Each state judicial officer is a conservator of the peace and has committing authority to issue warrants of arrest, commit offenders to jail, and recognize them to appear to answer the charge. He or she may require sureties of the peace when the peace has been substantially threatened or disturbed.
+[918.13](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0900-0999/0918/Sections/0918.13.html) | No | Tampering with or fabricating evidence
+[943.0435(9)](http://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0900-0999/0943/Sections/0943.0435.html) | Maybe | Sexual offenders required to register
+[951.22](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&Search_String=&URL=0900-0999/0951/Sections/0951.22.html) | No | Contraband in county jail
+
+## Initial findings
+
+### Ookaloosa County
+List of terms and addresses that identify homeless people:
+general delivery, genral delivery, at large, genreal delivery, general deliverly, homeless, gerneral delivery, general deliver, general delviery, not listed. general deivery, grneral delivery
+
+#### Overall Impact
+This spreadsheet summarizes the impact of Florida law when  homelessness in Okaloosa County. This is the result of an analysis of crimanal felony, misdemeanor and traffic record for 2015 to 2019. Time_span does not necessarily mean the length a given person was or is homeless. In many cases, the state of homelessness persisted before their first arrest in this database and likely has continued since.
+```{r echo = FALSE}
+impacts <- read_csv("data/impacts.csv") %>%
+ arrange(desc(homeless_fines))
+
+kable(impacts[2:8]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "500px")
+```
+
+#### Overall Charges
+This spreadsheet summarizes the charges filed against anyone who has had a homeless-associated address. 
+```{r echo = FALSE }
+
+homeless_charges <- read_csv("data/homeless_charges.csv")%>%
+  arrange(desc(count))
+kable(homeless_charges[2:4]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "500px")
+```
+
+#### What Agencies Are Charging
+Fort Walton Beach police charge more homeless people with Florida statutes that criminalize homelessness than the Okaloosa County Sheriff's Office does. This is despite a much larger jurisdiction that includes Destin.
+```{r echo = FALSE }
+
+agency <- read_csv("data/agency.csv") %>%
+  arrange(desc(perc_of_filtered))
+kable(agency[2:6]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "450px")
+```
+Which agency is charging the most for filtered crimes?
+```{r echo = FALSE }
+
+agency_filtered <- read_csv("data/agency-filtered.csv")
+kable(agency_filtered[2:8]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "500px")
+```
+
+#### Who is charging the crimes?
+I had hoped this analysis would identify the prosecutor who tends to handle the filtered crimes more than others. There does not appear to be a significant outlier. 
+```{r echo = FALSE }
+
+prosecutor <- read_csv("data/prosecutor.csv") %>%
+  arrange(desc(perc_of_filtered))
+kable(prosecutor[2:6]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "500px")
+```
+
+#### Who are the judges?
+Angela D. Mason and Patricia S. Grinsted have seen the vast majority of cases. 
+```{r echo = FALSE }
+
+judge <- read_csv("data/judge.csv") %>%
+  arrange(desc(perc_of_filtered))
+kable(judge[2:6]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "500px")
+```
+
+#### How have charges changed over time?
+In 2018 and 2019, the Okaloosa County Sheriff's Office has begun charging more crimes that criminalize homelessness than the Fort Walton Beach Police Department. Fort Walton Beach has rebounded from drops in 2016 and 2017 before rising again in the same time. 
+```{r echo = FALSE }
+
+time <- read_csv("data/time.csv") 
+kable(time[2:8]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "375px")
+```
+A closer look at the data shows that the people charged by the sheriff's office have addresses listed in Fort Walton Beach. This could be because the people they are arresting are in Fort Walton Beach or just outside of it. More reporting is needed to determine where these people are being arrested and if they really call Fort Walton Beach home or Destin.
+```{r echo = FALSE }
+recent_breakdown <- read_csv("data/recent_breakdown.csv") %>%
+  arrange(desc(count))
+kable(recent_breakdown[3:4]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  scroll_box(height = "300px")
+```
