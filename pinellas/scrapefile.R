@@ -15,31 +15,27 @@ library(stringr)
 
 final_homeless <- readRDS("data/final_homeless.rds")
 
+case_nrs <- final_homeless$case_number %>% unique() 
+
 
 #can one case nr refer to several people?
 
-casenroff <- final_homeless$case_number %>% 
-  unique() %>% 
-  as.data.frame() %>% 
-  head(1723) %>% 
-  rename(case_nr = 1)
-
-
-allcasnrs <- final_homeless$case_number %>%
-  unique() %>% 
-  as.data.frame() %>% 
-  rename(case_nr = 1)
-
-case_nrs <- anti_join(allcasnrs, casenroff)
-df <- case_nrs %>% as.data.frame()
-
-
+final_homeless %>% 
+  group_by(case_number, full_name) %>% 
+  count() %>% 
+  group_by(case_number) %>% 
+  count() %>% 
+  filter(n>1) %>% 
+  nrow()
+#NULL
 
 ####SELENIUM PART ----
 
 #create driver and locate the right page 
-driver <- rsDriver(browser = c("chrome"), chromever = "80.0.3987.106")
-remote_driver <- driver[["client"]] 
+rD1 <- rsDriver(browser = c("chrome"), port = 4960L, 
+                chromever = "80.0.3987.106")
+
+remote_driver <- rD1[["client"]] 
 myurl <- remote_driver$navigate(
   "https://ccmspa.pinellascounty.org/PublicAccess/default.aspx")
 
@@ -55,15 +51,20 @@ temp$clickElement()
 
 
 temp$clickElement()
+pinellasdata<- data.frame(case_number= as.character(), 
+                          to_pay = as.character(), 
+                          paid = as.character(), 
+                          balance = as.character())
 
 
-for (casenr in case_nrs$case_nr) {
+
+for (casenr in case_nrs) {
   print(casenr)
   
   temp <- remote_driver$findElement(using = "id", 
                                     value = "CaseSearchValue")
   temp$clickElement()
-
+  
   temp$sendKeysToElement(list(casenr))
   temp <- remote_driver$findElement(using = "id",value = "SearchSubmit")
   
@@ -73,20 +74,20 @@ for (casenr in case_nrs$case_nr) {
   temp$clickElement()
   Sys.sleep(1)
   
-
-
-##SCRAPE INFORMATION----
-#don't close selenium chrome window 
-
- 
-
-
- 
-pagesource <- remote_driver$getPageSource()
-mynodes <- read_html(pagesource[[1]])
   
- if (str_detect(pagesource, "Financial Information") == TRUE)
- {
+  
+  ##SCRAPE INFORMATION----
+  #don't close selenium chrome window 
+  
+  
+  
+  
+  
+  pagesource <- remote_driver$getPageSource()
+  mynodes <- read_html(pagesource[[1]])
+  
+  if (str_detect(pagesource, "Financial Information") == TRUE)
+  {
     #get financial information 
     fins <- mynodes %>% 
       html_nodes('#RCDFRPC1+ td , #RCDFRBD1+ td b , tr:nth-child(8) td:nth-child(7) , #RCDFRBFA1+ td') %>% 
@@ -103,7 +104,7 @@ mynodes <- read_html(pagesource[[1]])
              "balance" = 3) %>% 
       mutate(case_number = casenr)
     print(c(casenr, fins$balance)) 
-    Sys.time()
+    print(Sys.time())
     
     
     pinellasdata <- bind_rows(pinellasdata, fins) 
@@ -126,34 +127,31 @@ mynodes <- read_html(pagesource[[1]])
     
     temp <- remote_driver$findElement(using = "id", 
                                       value = "CaseSearchValue")
-  
+    
     next
     
- }
-
-Sys.sleep(1)
-temp <- remote_driver$findElement(using = "xpath",
-                                  value = "/html/body/table[2]/tbody/tr/td/table/tbody/tr/td[1]/font/a[6]")
-
-temp$clickElement()
-
-
-Sys.sleep(1)
-
-temp <- remote_driver$findElement(using = "id", 
-                                  value = "Case")
-temp$clickElement()
-
-temp <- remote_driver$findElement(using = "id", 
-                                  value = "CaseNumberOption")
-temp$clickElement()
-
-temp <- remote_driver$findElement(using = "id", 
-                                  value = "CaseSearchValue")
-print(c(casenr, " no fines"))
-Sys.time()
+  }
+  
+  Sys.sleep(1)
+  temp <- remote_driver$findElement(using = "xpath",
+                                    value = "/html/body/table[2]/tbody/tr/td/table/tbody/tr/td[1]/font/a[6]")
+  
+  temp$clickElement()
+  
+  
+  Sys.sleep(1)
+  
+  temp <- remote_driver$findElement(using = "id", 
+                                    value = "Case")
+  temp$clickElement()
+  
+  temp <- remote_driver$findElement(using = "id", 
+                                    value = "CaseNumberOption")
+  temp$clickElement()
+  
+  temp <- remote_driver$findElement(using = "id", 
+                                    value = "CaseSearchValue")
+  print(c(casenr, " no fines"))
+  print(Sys.time())
 }
-
-
-
 
