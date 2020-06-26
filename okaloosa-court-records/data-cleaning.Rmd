@@ -32,6 +32,7 @@ library(scales)
 library(mapview)
 library(here)
 library(svMisc)
+library(blscrapeR)
 
 # Store census API key
 census_api_key("2badea95d03037d0582d8c5ada5195100b1d92f6")
@@ -81,7 +82,7 @@ files <- c(
     "0117", "0217", "0317", "0417", "0517", "0617", "0717", "0817", "0917", "1017", "1117", "1217", 
     "0118", "0218", "0318", "0418", "0518", "0618", "0718", "0818", "0918", "1018", "1118", "1218", 
     "0119", "0219", "0319", "0419", "0519", "0619", "0719", "0819", "0919", "1019", "1119", "1219",
-    "0120", "0220", "0320", "0420", "0520")
+    "0120", "0220", "0320", "0420", "0520", "0620")
 
 # creating empty dataframe, changes to character were made playing wack-a-mole with binding errors
 master_data <- read_csv(here("data", "0115.csv")) %>%
@@ -163,10 +164,10 @@ master_data <- master_data %>%
     unique()
 
 master_data <- master_data %>%
-  mutate(case_close_date = substr(case_close_date, start = 1, stop = 7))
+  mutate(case_open_month = substr(case_open_date, start = 1, stop = 7))
 
 charges_by_month <- master_data %>%
-  group_by(case_close_date) %>%
+  group_by(case_open_month) %>%
   summarise(count = n())
 
 rm(temp)
@@ -642,7 +643,7 @@ trespass_by_month <- trespass_data %>%
   mutate(case_open_sort = substr(case_open_date, start = 1, stop = 7)) %>%
   group_by(case_open_sort) %>%
   summarise(count = n()) %>%
-  inner_join(charges_by_month, by = c("case_open_sort" = "case_close_data")) %>%
+  inner_join(charges_by_month, by = c("case_open_sort" = "case_open_month")) %>%
   mutate(trespass_charges = count.x,
          total_charges = count.y) %>%
   select(-count.x, -count.y)
@@ -755,6 +756,21 @@ demo_by_gender <- temp %>%
 demographics <- temp %>%
   mutate(age = calc_age(date_of_birth)) %>%
   select(-date_of_birth)
+
+
+```
+
+```{r}
+
+temp <- trespass_data %>%
+  group_by(defendant, race, gender, date_of_birth) %>%
+  summarise()
+
+tres_demo_by_race <- temp %>%
+  group_by(race) %>%
+  summarise(count = n())
+
+
 
 ```
 
@@ -979,7 +995,7 @@ jail_stays_per_person <- temp23 %>%
 impacts <- trespass_impacts %>%
   left_join(other_crimes, by = "defendant") %>%
   left_join(other_crimes_charges, by = "defendant") %>%
-  left_join(total_cases, by = "defendant") %>%
+  #left_join(total_cases, by = "defendant") %>%
   left_join(total_charges, by = "defendant") %>%
   left_join(other_crim_fines, by = "defendant") %>%
   left_join(total_fines, by = "defendant") %>%
@@ -987,15 +1003,15 @@ impacts <- trespass_impacts %>%
   # left_join(total_paid, by = "defendant") %>%
   left_join(arrest_dates, by = "defendant") %>%
   left_join(demographics, by = "defendant") %>%
-  left_join(tres_missed_court, by = "defendant") %>%
+  left_join(tres_missed_court, by = "defendant") 
   #left_join(jail_stays_per_person, by = "defendant") %>%
   
 temporary <- impacts %>%  
   select(defendant, race, gender, age, tres_charges, tres_fees, tres_paid, tres_missed_court, other_crimes_charges, other_crim_fines, total_fines, first_arrest, last_arrest, time_span) 
          
-         other_crimes, tres_missed_court, other_crimes, other_crimes_charges, other_crim_fines,  first_arrest, last_arrest, time_span, other_cases, total_fines, total_paid)
+         #other_crimes, tres_missed_court, other_crimes, other_crimes_charges, other_crim_fines,  first_arrest, last_arrest, time_span, other_cases, total_fines, total_paid)
 impacts$tres_missed_court[is.na(impacts$tres_missed_court)] <- 0
- total_days, average_days, median_days, 
+ #total_days, average_days, median_days, 
 
 #impacts$total_days[is.na(impacts$total_days)] <- 0
 #impacts$average_days[is.na(impacts$average_days)] <- 0
@@ -1010,10 +1026,37 @@ impacts$tres_missed_court[is.na(impacts$tres_missed_court)] <- 0
 The code that creates everything we know about Shultz's arrest.
 
 ```{r}
-kenny_jail_stays <- jail_stays %>%
-  filter(name == "kenneth ivan shultz")
-# 988 days in jail since 2010, plus 19 more days for the most recent stint that had not ended by the time the scraper pulled his info, so total days are 917. There have been 3,272 days since Shultz first arrest in 2012, as of May 14, 2020. That means he has spent about 28% of the time in jail. 
+kenny_jail_stays <- read.csv('./data/kenny-jail-stays.csv')
 
+kenny_jail_stays <- kenny_jail_stays %>%
+    mutate(booking_date = mdy(booking_date),
+         release_date = mdy(release_date),
+         days_in_jail = replace_na((release_date - booking_date), 0),
+         name = paste0(first, " ", last),
+         arrest_week = week(booking_date),
+         year = year(booking_date))
+
+kenny_days_by_year <- kenny_jail_stays %>%
+  group_by(year) %>%
+  summarise(days = sum(days_in_jail))
+
+#adjusting cost of okaloosa jail for inflation
+cpi <- bls_api("CUSR0000SA0")
+inflation <- inflation_adjust(2019)
+inflation <- inflation %>%
+  select(year, adj_value) %>%
+  slice(65:74)
+inflation <- inflation %>%
+  mutate(jail_cost = (adj_value * (49.34)),
+         year = as.double(year))
+
+kenny_jail_cost <- kenny_days_by_year %>%
+  inner_join(inflation, by = 'year')
+
+kenny_jail_cost <- kenny_jail_cost %>%
+  mutate(cost_per_year = days*jail_cost)
+
+write.csv(kenny_jail_cost, file='./output/kenny-jail-costs.csv')
 
 
 kenny <- read_csv("data/test/schultz.csv") 
@@ -1581,6 +1624,16 @@ days_kenny <- kenny %>%
 
 ```
 
+
+```{r}
+
+case_numbers <- kenny_all_charges %>%
+  select(case_number) %>%
+  unique()
+
+write.csv(case_numbers, file = 'output/kenny-case-numbers.csv')
+
+```
 
 
 # Saving
