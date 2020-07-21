@@ -1,0 +1,795 @@
+---
+title: "no-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries
+
+```{r}
+library(tidyverse)  # attaches purrr and readr
+library(lubridate)
+library(rvest)
+library(downloader)
+library(R.utils)
+library(rlist)
+library(here)
+library(janitor)
+library(scales)
+library(ggrepel)
+library(ggplot2)
+library(here)
+library(tidycensus)
+library(ggthemes)
+library(scales)
+library(mapview)
+library(here)
+library(svMisc)
+library(blscrapeR)
+
+# Store census API key
+census_api_key("2badea95d03037d0582d8c5ada5195100b1d92f6")
+
+# the function that should be in Tidyverse but isn't
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+options(scipen=999)
+options(digits=2)
+```
+
+```{r}
+
+#clear environment for when I need it
+rm(list = ls())
+
+#why this function isn't in tidyverse, I do not know
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+#function for calculating age, updates to the day; stolen from the internet
+calc_age <- function(birthDate, refDate = Sys.Date()) {
+    require(lubridate)
+    period <- as.period(interval(birthDate, refDate),
+                        unit = "year")
+    period$year
+}
+
+print(Sys.Date())
+
+```
+
+
+#Import and Clean Data
+
+The data had to be downloaded by month by request of Okaloosa County Clerk. They said larger timeframes would tax their system. This means the data had to be downloaded by month, imported and binded together using a for loop.
+
+
+```{r}
+
+# list of file names
+files <- c(
+    "0110", "0210", "0310", "0410", "0510", "0610", "0710", "0810", "0910", "1010", "1110", "1210",
+    "0111", "0211", "0311", "0411", "0511", "0611", "0711", "0811", "0911", "1011", "1111", "1211",
+    "0112", "0212", "0312", "0412", "0512", "0612", "0712", "0812", "0912", "1012", "1112", "1212",
+    "0113", "0213", "0313", "0413", "0513", "0613", "0713", "0813", "0913", "1013", "1113", "1213",
+    "0114", "0214", "0314", "0414", "0514", "0614", "0714", "0814", "0914", "1014", "1114", "1214",
+    "0115", "0215", "0315", "0415", "0515", "0615", "0715", "0815", "0915", "1015", "1115", "1215",
+    "0116", "0216", "0316", "0416", "0516", "0616", "0716", "0816", "0916", "1016", "1116", "1216", 
+    "0117", "0217", "0317", "0417", "0517", "0617", "0717", "0817", "0917", "1017", "1117", "1217", 
+    "0118", "0218", "0318", "0418", "0518", "0618", "0718", "0818", "0918", "1018", "1118", "1218", 
+    "0119", "0219", "0319", "0419", "0519", "0619", "0719", "0819", "0919", "1019", "1119", "1219"
+    )
+
+# creating empty dataframe, changes to character were made playing wack-a-mole with binding errors
+master_data <- read_csv(here("data", "0115.csv")) %>%
+  clean_names() %>%
+  filter(arrest_charge == "nothing") %>%
+  mutate(actual_speed = as.character(actual_speed),
+         blood_alcohol_level = as.character(blood_alcohol_level),
+         commercial_vehicle = as.character(commercial_vehicle),
+         haul_hazard = as.character(haul_hazard),
+         obts_number = as.character(obts_number),
+         vehicle_tag_expiration_year = as.character(vehicle_tag_expiration_year),
+         prosecutor_charge_count = as.character(prosecutor_charge_count))
+
+# importing, binding to empty data frame 
+for (i in files) {
+  #writing filepath
+  name <- paste0(i, ".csv")
+  filepath <- "data/"
+  name_plus_filepath <- paste0(filepath,name)
+  # importing and cleaning files to temp dataframe
+  temp <- read_csv(name_plus_filepath) %>%
+    clean_names() 
+  temp <- unique(temp)
+  # changes to character were made playing wack-a-mole with binding errors
+  temp <- temp %>%
+  mutate(actual_speed = as.character(actual_speed),
+         blood_alcohol_level = as.character(blood_alcohol_level),
+         commercial_vehicle = as.character(commercial_vehicle),
+         haul_hazard = as.character(haul_hazard),
+         obts_number = as.character(obts_number),
+         vehicle_tag_expiration_year = as.character(vehicle_tag_expiration_year),
+         prosecutor_charge_count = as.character(prosecutor_charge_count),
+         zip = as.character(zip),
+         bond_hearing_date = as.character(bond_hearing_date),
+         arrest_charge_count = as.numeric(arrest_charge_count))
+  # binding temp to master_data
+  master_data <- master_data %>%
+    bind_rows(temp)
+  # processing and clearing environment
+  rm(temp, name, filepath, name_plus_filepath)
+}
+
+rm(i)
+rm(files)
+
+# changing columns back to numerics, go lowercase
+master_data <- master_data %>%
+    mutate_all(tolower) %>%  
+    mutate(actual_speed = as.double(actual_speed),
+         blood_alcohol_level = as.double(blood_alcohol_level),
+         commercial_vehicle = as.double(commercial_vehicle),
+         haul_hazard = as.double(haul_hazard),
+         obts_number = as.double(obts_number),
+         vehicle_tag_expiration_year = as.double(vehicle_tag_expiration_year),
+         prosecutor_charge_count = as.double(prosecutor_charge_count),
+         case_open_date = mdy(case_open_date),
+         case_close_date = mdy(case_close_date),
+         disposition_date = mdy(disposition_date),
+         date_of_birth = mdy(date_of_birth),
+         offense_date = mdy(offense_date),
+         arrest_date = mdy(arrest_date),
+         arrest_month = month(arrest_date),
+         arrest_year = year(arrest_date),
+         offense_month = month(offense_date),
+         offense_year = year(offense_date),
+         close_year = year(case_close_date),
+         total_assessed = as.numeric(total_assessed),
+         balance = as.numeric(balance),
+         total_paid = as.numeric(total_paid),
+         obts_number = as.character(obts_number),
+         arrest_charge_count = as.numeric(arrest_charge_count),
+         arrest_week = week(arrest_date),
+         next_day = (arrest_date + 1)
+         ) %>%
+    filter(offense_year %in% c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020")) %>%
+    select(-case_type, -disposition_date, -disposition, -defendant_code, -bond_hearing_date, -posted_speed, -actual_speed, -school_status, -commercial_vehicle, -haul_hazard, -d6_issued_date, -d6_issue_status, -d6_released_date)
+
+master_data <- master_data %>%
+    unique()
+
+master_data <- master_data %>%
+  mutate(case_open_month = substr(case_open_date, start = 1, stop = 7))
+
+charges_by_month <- master_data %>%
+  group_by(case_open_month) %>%
+  summarise(count = n())
+
+rm(temp)
+
+# There are a few people who have errors in the data that have been manually cleaned:
+
+# In every case, typos in name, birthday or drivers license were tested using a combination of the other two datapoints to prove the third
+
+# Example: donavan jason webb - two different birthdays ("1977-12-16" "1977-02-19") were confirmed errors by # comparing driver's license; a mispelling of his name exists
+
+master_data <- master_data %>%
+  mutate(
+    date_of_birth = case_when(
+      defendant == "donavan jason webb" ~ as_date("1977-02-16"),
+      TRUE  ~ date_of_birth
+    )
+  ) %>%
+  mutate(
+    defendant = case_when(
+      defendant == "donovan jason webb" ~ "donavan jason webb",
+      TRUE  ~ defendant
+    )
+  ) %>%
+  #tested with birthday
+  mutate(
+    drivers_license_number = case_when(
+      defendant == "billy ray bottoms" ~ "b352076490060",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+  mutate(
+  date_of_birth = case_when(
+    defendant == "billy ray bottoms" ~ as_date("1949-01-06"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  #tested with birthday
+  mutate(
+    drivers_license_number = case_when(
+      defendant == "timothy roger linville" ~ "l514816561740",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+  #tested with driver's license number
+  mutate(
+  date_of_birth = case_when(
+    defendant == "timothy roger linville" ~ as_date("1956-05-14"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  #tested with driver's license number
+  mutate(
+  date_of_birth = case_when(
+    defendant == "timothy roger linville" ~ as_date("1968-01-07"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  mutate(
+  date_of_birth = case_when(
+    defendant == "daniel lee stetson" ~ as_date("1955-05-31"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%  
+  # used court records to confirm that the date and drivers license were wrong and that she is the other jennifer gail hunt
+  mutate(
+  date_of_birth = case_when(
+    defendant == "jennifer gail hunt" ~ as_date("1979-06-19"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  mutate(
+    drivers_license_number = case_when(
+      defendant == "jennifer gail hunt" ~ "h530427797190",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+  mutate(
+  date_of_birth = case_when(
+    defendant == "joseph kevin sullivan" ~ as_date("1964-12-23"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  # used court records to confirm right birthdate
+    mutate(
+  date_of_birth = case_when(
+    defendant == "mary moore erlich" ~ as_date("1952-05-13"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+  # this person was confirmed the same using both court records and jail inmate records, jail lists him as having been born in 1958	
+      mutate(
+  date_of_birth = case_when(
+    defendant == "phay chaleunsavanh" ~ as_date("1958-02-06"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+    mutate(
+    drivers_license_number = case_when(
+      defendant == "phay chaleunsavanh" ~ "c452660580460",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+        mutate(
+  date_of_birth = case_when(
+    defendant == "robert terry duckworth" ~ as_date("1967-07-24"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+          mutate(
+  date_of_birth = case_when(
+    defendant == "ronald a foster" ~ as_date("1959-04-16"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+      mutate(
+    drivers_license_number = case_when(
+      defendant == "ronald a foster" ~ "f236721591360",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+            mutate(
+  date_of_birth = case_when(
+    defendant == "ronald dean cordero" ~ as_date("1954-05-24"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%	
+  	            mutate(
+  date_of_birth = case_when(
+    defendant == "russell kippen ferguson" ~ as_date("1948-06-30"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%	
+         mutate(
+    drivers_license_number = case_when(
+      defendant == "russell kippen ferguson" ~ "f622731482300",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+   mutate(
+	  date_of_birth = case_when(
+    defendant == "terry antonio mcleod" ~ as_date("1968-03-21"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%	
+         mutate(
+    drivers_license_number = case_when(
+      defendant == "terry antonio mcleod" ~ "m243801681010",
+      TRUE  ~ drivers_license_number
+    )
+  ) %>%
+   mutate(
+	  date_of_birth = case_when(
+    defendant == "william todd bischoff" ~ as_date("1973-01-23"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+     mutate(
+	  date_of_birth = case_when(
+    defendant == "bryan edward may" ~ as_date("1968-01-07"),
+    TRUE  ~ date_of_birth
+    )
+  ) %>%
+ # drivers license matches across all 3 names
+  mutate(
+    defendant = case_when(
+      drivers_license_number == "b652004597540" ~ "andrea kizziah barnes",
+      TRUE ~ defendant
+    )
+  ) %>%
+  # dob and license match
+  mutate(
+	  defendant = case_when(
+    defendant == "charles edward ferribee" ~ "charles edward ferribee ii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+  mutate(
+	  defendant = case_when(
+    defendant == "dennis carr" ~ "dennis mitchell carr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+    mutate(
+	  defendant = case_when(
+    defendant == "gary earl hunnicutt" ~ "gary earl hunniecutt",
+    TRUE  ~ defendant
+    )
+  ) %>%
+  	    mutate(
+	  defendant = case_when(
+    defendant == "gary earl hunniecut" ~ "gary earl hunniecutt",
+    TRUE  ~ defendant
+    )
+  ) %>%
+ 	  	    mutate(
+	  defendant = case_when(
+    defendant == "george hubert spence" ~ "george hubert spence jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+      mutate(
+	  defendant = case_when(
+    defendant == "gregory a denney" ~ "gregory alan denney",
+    TRUE  ~ defendant
+    )
+  ) %>%
+  	    mutate(
+	  defendant = case_when(
+    defendant == "gregory allan denney" ~ "gregory alan denney",
+    TRUE  ~ defendant
+    )
+  ) %>%
+    	    mutate(
+	  defendant = case_when(
+    defendant == "james william beller" ~ "james william beller s",
+    TRUE  ~ defendant
+    )
+  ) %>%
+      	    mutate(
+	  defendant = case_when(
+    defendant == "jerald warren green" ~ "jerald warren green jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+       	    mutate(
+	  defendant = case_when(
+    defendant == "jerald warren green" ~ "jerald warren green jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+         	    mutate(
+	  defendant = case_when(
+    defendant == "jerald warren green" ~ "jerald warren green jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+         	    mutate(
+	  defendant = case_when(
+    defendant == "jerry stanley groshon" ~ "jerry stanley groshorn",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           	    mutate(
+	  defendant = case_when(
+    defendant == "johnnie s roberts" ~ "johnnie s roberts jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+             	    mutate(
+	  defendant = case_when(
+    defendant == "joseph keith sullivan" ~ "joseph kevin sullivan",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           	    mutate(
+	  defendant = case_when(
+    defendant == "kenneth ivan schultz" ~ "kenneth ivan shultz iii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+             	    mutate(
+	  defendant = case_when(
+    defendant == "kenneth ivan shoultz iii" ~ "kenneth ivan shultz iii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+               	    mutate(
+	  defendant = case_when(
+    defendant == "kenneth ivan shultz" ~ "kenneth ivan shultz iii",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                 	    mutate(
+	  defendant = case_when(
+    defendant == "lonnie r duvall" ~ "lonnie rodney duvall",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                     	    mutate(
+	  defendant = case_when(
+    defendant == "lowery allen featherstone" ~ "lowery allen featherson",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                     	    mutate(
+	  defendant = case_when(
+    defendant == "mary moore elrich" ~ "mary moore erlich",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                       	    mutate(
+	  defendant = case_when(
+    defendant == "philip field augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                         	    mutate(
+	  defendant = case_when(
+    defendant == "phillip field augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                           	    mutate(
+	  defendant = case_when(
+    defendant == "phillip schoolcraft augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+   mutate(
+  	  defendant = case_when(
+    defendant == "phillip schoolfield augustine" ~ "philip schoolfield augustine",
+    TRUE  ~ defendant
+    )
+  ) %>%
+     mutate(
+  	  defendant = case_when(
+    defendant == "richard l abercrombie" ~ "richard leon abercrombie",
+    TRUE  ~ defendant
+    )
+  ) %>%
+       mutate(
+  	  defendant = case_when(
+    defendant == "robert dale taft" ~ "robert dale taff",
+    TRUE  ~ defendant
+    )
+  ) %>%
+         mutate(
+  	  defendant = case_when(
+    defendant == "robert dale taft" ~ "robert dale taff",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           mutate(
+  	  defendant = case_when(
+    defendant == "robin harvey rude" ~ "robin harvey rhude",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           mutate(
+  	  defendant = case_when(
+    defendant == "robin rhude" ~ "robin harvey rhude",
+    TRUE  ~ defendant
+    )
+  ) %>%
+           mutate(
+  	  defendant = case_when(
+    defendant == "ronald w borisenko" ~ "ronald walter borisenko",
+    TRUE  ~ defendant
+    )
+  ) %>%
+             mutate(
+  	  defendant = case_when(
+    defendant == "roy ronald rowell" ~ "roy ronald rowell jr",
+    TRUE  ~ defendant
+    )
+  ) %>%
+               mutate(
+  	  defendant = case_when(
+    defendant == "russell k ferguson" ~ "russell kippen ferguson",
+    TRUE  ~ defendant
+    )
+  ) %>%
+               mutate(
+  	  defendant = case_when(
+    defendant == "sterling lemark parker" ~ "sterling lamark parker",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                   mutate(
+  	  defendant = case_when(
+    defendant == "terry glen long" ~ "terry glenn long",
+    TRUE  ~ defendant
+    )
+  ) %>%
+                     mutate(
+  	  defendant = case_when(
+    defendant == "william curtis howard" ~ "william curtis howard jr",
+    TRUE  ~ defendant
+    )
+  )
+
+#importing scraped data from the Okaloosa County Jail website
+jails1 <- read_csv("data/jail-stays-first.csv")
+jails2 <- read_csv("data/jail-stays-second.csv")
+
+#binding and removing entries with no name
+jail_stays <-  jails1 %>%
+  rbind(jails2) %>%
+  filter(last != "none") %>%
+  mutate(booking_date = mdy(booking_date),
+         release_date = mdy(release_date),
+         released_in_am = am(release_time),
+         days_in_jail = replace_na((release_date - booking_date), 0),
+         name = paste0(first, " ", last),
+         arrest_week = week(booking_date),
+         arrest_year = year(booking_date)
+         )
+
+rm(jails1, jails2)
+
+```
+
+# Filtering for Homeless
+Fort Walton Beach Police officer confirms that "General Delivery" is an address law enforcement agencies use when they arrest a homeless person. Fort Walton Beach uses "At Large."
+
+```{r}
+
+# creating a dataframe that only includes addresses that match those we know mean they are homeless
+general_delivery <- master_data %>%
+  filter(address %in% c("general delivery", "genral delivery", "at large", "genreal delivery", "general deliverly", "homeless", "gerneral delivery", "general deliver", "general delviery", "not listed", "general deivery", "grneral delivery", "428 mclaughlin ave", "307 harbor blvd", "183 eglin parkway ne", "117 windham ave", "300 miracle strip", "21 walter martin rd", "123 anywhere st"))
+
+
+#filter for list of defendants
+homeless_names <- general_delivery %>%
+  group_by(defendant) %>%
+  summarise(charges = n()) %>%
+  arrange(desc(charges))
+
+# converting names to vector to feed into for loop
+names <- as.vector(homeless_names$defendant)
+
+#creating blank dataframe to bind in the loop
+homeless_data <- master_data %>%
+  filter(defendant == "nothing")
+
+for (i in names) {
+  # filtering for person
+  temp <- master_data %>%
+    filter(defendant == i)
+  # binding to dataframe
+  homeless_data <- homeless_data %>%
+    bind_rows(temp)
+}
+
+rm(temp, i, general_delivery, homeless_names)
+```
+
+# Trespass
+
+This frame creates a dataframe that is all trespass charges filed against all homeless people.
+
+```{r}
+
+# creating a dataframe just on trespass
+# creating a list of all trespass charges 
+all_charges <- master_data %>%
+  group_by(arrest_charge, arrest_statute) %>%
+  summarise(count = n())
+# filtering for all charges with "tres" in the statute
+tres_charges <- all_charges %>%
+  filter(str_detect(arrest_statute, "tres"))
+tres_charges <- tres_charges %>%
+  select(arrest_charge) %>%
+  unique()
+# converting to vector to feed into for loop
+trespass <- as.vector(tres_charges$arrest_charge)
+
+# creating blank dataframe
+trespass_data <- homeless_data %>%
+  filter(arrest_charge == "nothing")
+
+for (i in trespass) {
+  # filter for trespass statute
+  temp <- homeless_data %>%
+    filter(arrest_charge == i)
+  # bind to dataframe
+  trespass_data <- trespass_data %>%
+    bind_rows(temp)
+}
+
+trespass_names <- trespass_data %>%
+  group_by(defendant) %>%
+  count() %>%
+  arrange(desc(n))
+
+trespass_names <- trespass_names[1:54, 1:2]
+
+top_50 <- as.vector(trespass_names$defendant)
+
+
+#THE REST OF THIS CODE LIMITS THE REFERENCE TO TRESPASS DATA TO ONLY THE TOP 50 PLUS TIES IN MOST CHARGED
+# creating blank dataframe
+trespass_data <- homeless_data %>%
+  filter(arrest_charge == "nothing")
+
+for (i in top_50) {
+  # filter for trespass statute
+  temp <- homeless_data %>%
+    filter(defendant == i)
+  # bind to dataframe
+  trespass_data <- trespass_data %>%
+    bind_rows(temp)
+}
+
+```
+
+
+
+```{r}
+
+
+
+homeless_age <- trespass_data %>%
+  group_by(defendant, race, gender, date_of_birth) %>%
+  summarise() %>%
+  mutate(age = calc_age(date_of_birth)) %>%
+  select(-date_of_birth) %>%
+  arrange(desc(age))
+
+
+# average is 58
+mean(homeless_age$age)
+
+# median age is 58
+median(homeless_age$age)
+```
+
+```{r}
+
+race <- homeless_age %>%
+  group_by(race) %>%
+  summarise(count = n()) %>%
+  mutate(perc = count/sum(count))
+
+```
+
+```{r}
+
+gender <- homeless_age %>%
+  group_by(gender) %>%
+  summarise(count = n()) %>%
+  mutate(perc = count/sum(count))
+
+
+```
+
+
+```{r}
+
+homelesS_charges <- trespass_data %>%
+  group_by(defendant) %>%
+  count() 
+
+
+```
+
+```{r}
+
+# all homeless people charged
+
+homeless_person_charges <- trespass_data %>%
+  group_by(defendant) %>%
+  count()
+
+# average is 32
+mean(homeless_person_charges$n)
+# median is 28
+median(homeless_person_charges$n)
+
+```
+
+```{r}
+
+homeless_person_fees <- trespass_data %>%
+  select(case_number, defendant, total_assessed, total_paid) %>%
+  unique() %>%
+  group_by(defendant) %>%
+  summarise(fees_assessed = sum(total_assessed))
+
+homeless_person_paid <- trespass_data %>%
+  select(case_number, defendant, total_assessed, total_paid) %>%
+  unique() %>%
+  group_by(defendant) %>%
+  summarise(fees_paid = sum(total_paid))
+
+homeless_person_money <- homeless_person_fees %>%
+  inner_join(homeless_person_paid) %>%
+  mutate(total_owed = (fees_assessed - fees_paid))
+
+# Average owed per person is $13,263
+mean(homeless_person_money$total_owed)
+# Median owed per person is 672
+median(homeless_person_money$total_owed)
+
+```
+
+
+```{r}
+
+tres_jail <- trespass_data %>%
+  left_join(jail_stays, by = c("defendant" = "name", "arrest_week" = "arrest_week", "arrest_year" = "arrest_year")) %>%
+  unique()
+
+
+tres_jail$days_in_jail[is.na(tres_jail$days_in_jail)] <- 0
+
+#17 days spent in jail on average
+mean(tres_jail$days_in_jail)
+#9 days spent in jail median
+median(tres_jail$days_in_jail)
+
+```
+
+```{r}
+
+
+#create column that counts missed court charges that resulted from tresspassing
+temp19 <- trespass_data %>%
+  group_by(case_number, defendant) %>%
+  summarise()
+
+temp20 <- homeless_data %>%
+  filter(str_detect(arrest_charge, "843.15")) %>%
+  group_by(case_number) %>%
+  summarise()
+
+temp21 <- temp19 %>%
+  inner_join(temp20, by = "case_number") %>%
+  mutate(missed_court_charge = "yes")
+
+tres_missed_court <- temp21 %>%
+  group_by(defendant) %>%
+  summarise(tres_missed_court = n())
+
+(sum(tres_missed_court$tres_missed_court)/54)
+```
+

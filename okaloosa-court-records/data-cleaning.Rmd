@@ -571,6 +571,31 @@ rm(jails1, jails2)
 ```
 
 
+```{r}
+
+state_data <- read_csv("data/okaloosa-state-tres.csv")
+
+
+```
+
+```{r}
+
+state_data$court_docket_no <- tolower(state_data$court_docket_no)
+
+anti_tres <- trespass_data %>%
+  anti_join(state_data, by = c("uniform_case_number" = "court_docket_no"))
+
+```
+
+```{r}
+
+other_anti <- state_data %>%
+  anti_join(trespass_data, by = c("court_docket_no" = "uniform_case_number"))
+
+
+```
+
+
 # Filtering for Homeless
 Fort Walton Beach Police officer confirms that "General Delivery" is an address law enforcement agencies use when they arrest a homeless person. Fort Walton Beach uses "At Large."
 
@@ -652,8 +677,6 @@ april_may <- trespass_data %>%
   mutate(arrest_sort = substr(arrest_date, start = 1, stop = 7)) %>%
   filter(arrest_sort %in% c("2020-04", "2020-05"))
 
-write.csv(trespass_by_month, file = "trespass_by_mont.csv")
-
 # fWB police only
 
 fwb_charges_by_month <- master_data %>%
@@ -669,7 +692,68 @@ fwb_charges <- master_data %>%
   count()
 
 
+
+
 ```
+
+
+
+
+```{r}
+
+# creating a dataframe just on trespass
+# creating a list of all trespass charges 
+all_charges <- master_data %>%
+  group_by(arrest_charge, arrest_statute) %>%
+  summarise(count = n())
+# filtering for all charges with "tres" in the statute
+tres_charges <- all_charges %>%
+  filter(str_detect(arrest_statute, "tres"))
+tres_charges <- tres_charges %>%
+  select(arrest_charge) %>%
+  unique()
+# converting to vector to feed into for loop
+trespass <- as.vector(tres_charges$arrest_charge)
+
+# creating blank dataframe
+test <- master_data %>%
+  filter(arrest_charge == "nothing")
+
+
+for (i in trespass) {
+  # filter for trespass statute
+  temp <- master_data %>%
+    filter(arrest_charge == i)
+  # bind to dataframe
+  test <- test %>%
+    bind_rows(temp)
+}
+
+
+test %>%
+  group_by(prosecutor) %>%
+  count() %>%
+  arrange(desc(n))
+
+```
+
+```{r}
+anti_test <- test_two %>%
+  anti_join(test_three, by = c('uniform_case_number' = 'court_docket_no'))
+
+
+```
+
+
+```{r}
+
+test_three <- state_data %>%
+  filter(year >= '2010')
+
+
+
+```
+
 
 # Other Crimes
 
@@ -756,7 +840,7 @@ demo_by_gender <- temp %>%
 demographics <- temp %>%
   mutate(age = calc_age(date_of_birth)) %>%
   select(-date_of_birth)
-
+ 
 
 ```
 
@@ -828,6 +912,12 @@ rm(temp, temp1, temp2, temp3)
 sum(trespass_impacts$tres_fees)
 
 ```
+
+
+```{r}
+
+kenny_all
+
 
 
 ## No Show and Resist Crimes
@@ -956,7 +1046,7 @@ total_charges <- homeless_data %>%
 
 ```
 
-# Calculating jail stays
+# Calculating jail stays -- Broken, outdated code
 
 ```{r}
 
@@ -1006,8 +1096,8 @@ impacts <- trespass_impacts %>%
   left_join(tres_missed_court, by = "defendant") 
   #left_join(jail_stays_per_person, by = "defendant") %>%
   
-temporary <- impacts %>%  
-  select(defendant, race, gender, age, tres_charges, tres_fees, tres_paid, tres_missed_court, other_crimes_charges, other_crim_fines, total_fines, first_arrest, last_arrest, time_span) 
+#temporary <- impacts %>%  
+  #select(defendant, race, gender, age, tres_charges, tres_fees, tres_paid, tres_missed_court, other_crimes_charges, other_crim_fines, total_fines, first_arrest, last_arrest, time_span) 
          
          #other_crimes, tres_missed_court, other_crimes, other_crimes_charges, other_crim_fines,  first_arrest, last_arrest, time_span, other_cases, total_fines, total_paid)
 impacts$tres_missed_court[is.na(impacts$tres_missed_court)] <- 0
@@ -1211,11 +1301,11 @@ temp2 <- homeless_data %>%
   mutate(perc_of_homeless = round(temp, 2)) %>%
   select(-temp)
 
-temp3 <- crimes_data %>%
+temp3 <- trespass_data %>%
   group_by(arresting_agency) %>%
-  summarise(crimes_count = n()) %>%
-  mutate(temp = (crimes_count/(nrow(crimes_data))*100)) %>% 
-  mutate(perc_of_crimes = round(temp, 2)) %>%
+  summarise(trespass_count = n()) %>%
+  mutate(temp = (trespass_count/(nrow(trespass_data))*100)) %>% 
+  mutate(perc_of_trespass = round(temp, 2)) %>%
   select(-temp)
 
 temp4 <- filtered_crimes %>%
@@ -1229,7 +1319,7 @@ agency <- temp %>%
   inner_join(temp2, by = "arresting_agency") %>%
   inner_join(temp3, by = "arresting_agency") %>%
   inner_join(temp4, by = "arresting_agency") %>%
-  select(arresting_agency, perc_of_total, perc_of_homeless, perc_of_crimes, perc_of_filtered) %>%
+  select(arresting_agency, perc_of_total, perc_of_homeless, perc_of_trespass, perc_of_filtered) %>%
   arrange(desc(perc_of_filtered))
 
 rm(temp, temp2, temp3)
@@ -1582,8 +1672,32 @@ tresspass <- crimes_data %>%
 ```
 
 
+```{r}
+
+tres_over_time <- trespass_data %>%
+  group_by(arrest_year) %>%
+  summarise(charges = n())
+
+```
 
 
+```{r}
+test <- master_data %>%
+  filter(str_detect(arrest_statute,"TRES")) %>%
+  filter(!str_detect(arrest_charge,"2c|2d|97|13")) 
+%>%
+  group_by(arrest_year) %>%
+  summarise(count=n())
+
+
+
+```
+
+```{r}
+
+trespass_data %>%
+  group_by(arrest_year) %>%
+  count()
 
 
 ```{r}
@@ -1679,6 +1793,8 @@ write.csv(trespass_impacts, file = "output/trespass_impacts.csv")
 write.csv(tresspass, file = "output/trespass.csv")
 
 write.csv(names, file = "names.csv")
+
+write.csv(master_data, file = "master-data.csv")
 
 ```
 
